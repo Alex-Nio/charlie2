@@ -10,6 +10,10 @@ export default defineConfig({
       "/run-python-script": {
         target: "http://localhost:3000",
         changeOrigin: true
+      },
+      "/recognition-updates": {
+        target: "http://localhost:3000",
+        changeOrigin: true
       }
     }
   },

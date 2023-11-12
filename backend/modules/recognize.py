@@ -171,8 +171,8 @@ def va_respond(voice: str):
             YASearch_commands.execute_search_cmd(cmd["cmd"], voice, new_data, counter)
         elif cmd["cmd"] in config.VA_WIKI:
             wiki_parcer_commands.execute_wiki_cmd(cmd["cmd"], voice, new_data, counter)
-        elif cmd["cmd"] in config.VA_CREATE:
-            workflow_commands.execute_workflow_cmd(cmd["cmd"], voice, new_data, counter)
+        # elif cmd["cmd"] in config.VA_CREATE:
+        #     workflow_commands.execute_workflow_cmd(cmd["cmd"], voice, new_data, counter)
         elif cmd["cmd"] in config.VA_REMID:
             reminder.execute_reminder_cmd(cmd["cmd"], voice, new_data, counter)
         elif cmd["cmd"] in config.VA_BEH:

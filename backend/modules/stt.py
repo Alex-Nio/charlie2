@@ -26,16 +26,15 @@ def q_callback(indata, frames, time, status):
 
 def va_listen(callback):
     with sd.RawInputStream(samplerate=samplerate, blocksize=8000, device=device, dtype='int16', channels=1, callback=q_callback):
-
         rec = vosk.KaldiRecognizer(model, samplerate)
         while True:
             data = q.get()
             if rec.AcceptWaveform(data):
                 recognized_speech = json.loads(rec.Result())["text"]
-
                 # Log the recognized speech
                 print(f"Currently listened: {recognized_speech}")
 
+                with open("recognized_speech.txt", "w", encoding="utf-8") as file:
+                    file.write(recognized_speech)
+
                 callback(recognized_speech)
-            # else:
-            #    print(rec.PartialResult())

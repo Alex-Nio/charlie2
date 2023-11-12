@@ -11,7 +11,8 @@
     "serve:native": "concurrently \"npm run serve:tauri\" \"tauri dev\"",
     "build": "cross-env VITE_NETWORK_PROCESSOR=tauri vite build && tauri build",
     "preview": "vite preview",
-    "start:server": "node ../backend/server.js"
+    "start:server": "npm run activate-venv && node ../backend/server.js",
+    "activate-venv": "..\\backend\\venv\\Scripts\\activate"
   },
   "dependencies": {
     "@mdi/font": "7.2.96",

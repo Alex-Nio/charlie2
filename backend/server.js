@@ -1,14 +1,43 @@
 const express = require("express");
-const { exec } = require("child_process");
+const { spawn } = require("child_process");
+const path = require("path");
 const cors = require("cors");
 
 const app = express();
 const port = 3000;
 
-app.use(cors()); // Добавьте эту строку для обработки CORS
+app.use(cors());
 
-const pathToScript = __dirname + "/script.py";
-const pathToRecognize = __dirname + "/main.py";
+const pathToScript = path.join(__dirname, "script.py");
+const pathToRecognize = path.join(__dirname, "main.py");
+const pythonExecutable = path.join(__dirname, "..", "backend", "venv", "Scripts", "python");
+
+const runPythonScript = (scriptPath, args, callback) => {
+  const process = spawn(pythonExecutable, [scriptPath, ...args]);
+
+  let result = "";
+  let errorOutput = "";
+
+  process.stdout.on("data", (data) => {
+    result += data.toString();
+  });
+
+  process.stderr.on("data", (data) => {
+    errorOutput += data.toString();
+  });
+
+  process.on("close", (code) => {
+    if (code === 0) {
+      callback(null, result);
+    } else {
+      callback(`Скрипт завершился с кодом ошибки ${code}. Вывод: ${result}\nОшибка: ${errorOutput}`);
+    }
+  });
+
+  process.on("error", (error) => {
+    callback(`Ошибка при запуске скрипта: ${error.message}`);
+  });
+};
 
 // Скрипт взаимодействия с интерфейсом
 app.get("/run-python-script", (req, res) => {
@@ -23,18 +52,16 @@ app.get("/run-python-script", (req, res) => {
   });
 });
 
-// Функция для распознавания речи
 const recognizeSpeech = () => {
-  exec(`set PYTHONIOENCODING=utf-8 && python ${pathToRecognize}`, (error, stdout, stderr) => {
+  runPythonScript(pathToRecognize, [], (error, result) => {
     if (error) {
-      console.error(`Ошибка выполнения скрипта: ${error.message}`);
-      return;
+      console.error(error);
+    } else {
+      console.log(`Скрипт успешно выполнен: ${result}`);
     }
-    console.log(`Скрипт успешно выполнен: ${stdout}`);
   });
 };
 
-// Вызываем функцию при инициализации сервера
 recognizeSpeech();
 
 app.get("/recognize-speech", (req, res) => {

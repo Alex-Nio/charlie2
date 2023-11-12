@@ -5,10 +5,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run start:server\" \"cross-env VITE_NETWORK_PROCESSOR=tauri vite\"",
+    "dev": "concurrently \"npm run start:server\" \"cross-env VITE_NETWORK_PROCESSOR=tauri vite\" && tauri dev",
     "serve": "vite",
     "serve:tauri": "cross-env VITE_NETWORK_PROCESSOR=tauri vite",
-    "serve:native": "tauri dev",
+    "serve:native": "concurrently \"npm run serve:tauri\" \"tauri dev\"",
     "build": "cross-env VITE_NETWORK_PROCESSOR=tauri vite build && tauri build",
     "preview": "vite preview",
     "start:server": "node ../backend/server.js"

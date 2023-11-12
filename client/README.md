@@ -12,6 +12,16 @@ Poject Charlie
 │   │   ├── app.vue
 │   │   ├── main.js
 │   │   └── style.css
+│   ├── src-tauri
+│   │   ├── icons
+│   │   ├── src
+│   │   |   └── main.rs
+│   │   ├── target
+│   │   ├── .gitignore
+│   │   ├── build.rs
+│   │   ├── Cargo.lock
+│   │   ├── Cargo.toml
+│   │   └── tauri.conf.json
 │   ├── .gitignore
 │   ├── index.html
 │   ├── jsconfig.json
@@ -21,11 +31,9 @@ Poject Charlie
 │   ├── vite.config.js
 │   └── yarn.lock
 ├── backend
-│   ├── icons
-│   ├── target
-│   ├── src-tauri
-│   │   ├── .gitignore
-│   │   ├── build.rs
-│   │   ├── Cargo.lock
-│   │   ├── Cargo.toml
-│   │   └── tauri.conf.json
+│   ├── node_modules
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── script.py
+│   └── server.js
+

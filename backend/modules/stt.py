@@ -31,6 +31,11 @@ def va_listen(callback):
         while True:
             data = q.get()
             if rec.AcceptWaveform(data):
-                callback(json.loads(rec.Result())["text"])
+                recognized_speech = json.loads(rec.Result())["text"]
+
+                # Log the recognized speech
+                print(f"Currently listened: {recognized_speech}")
+
+                callback(recognized_speech)
             # else:
             #    print(rec.PartialResult())

@@ -14,7 +14,6 @@ from modules import recognize
 from modules import timer
 
 if __name__ == "__main__":
-    tts.va_speak("Привет! Это Чарли. Запуск выполнен.Что сделать?")
-
+    tts.va_speak("Привет!")
     # начать прослушивание команд
     stt.va_listen(recognize.va_respond)

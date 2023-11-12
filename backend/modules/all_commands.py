@@ -54,39 +54,6 @@ def execute_cmd(cmd: str, voice: str, new_data, counter):
         elif cmd == "open_workflow":
             subprocess.Popen(settings.todo_list_path, shell=True)
             tts.va_speak("открыла")
-        #! Команды для голосового ввода
-        # ? Клавиша "удалить всё"
-        # elif cmd == "text_delete_cmd":
-        #     KB.keyboard_press_key("ctrl+a")
-        #     KB.keyboard_press_key("delete")
-        # # ? Клавиша "удалить всё"
-        # elif cmd == "simbol_delete_cmd":
-        #     KB.keyboard_press_val(counter, KB.keyboard_press_key("delete"))
-        # # ? Клавиша "enter"
-        # elif cmd == "enter_cmd":
-        #     KB.keyboard_press_val(counter, KB.keyboard_press_key("enter"))
-        # # ? Знак вопроса
-        # elif cmd == "question_mark_cmd":
-        #     import win32api
-
-        #     k_lang = win32api.GetKeyboardLayout()
-        #     lang = methods.check_keyboard_lang(k_lang)
-        #     print(lang)
-        #     if lang == "rus":
-        #         methods.setEngLayout()
-
-        #     KB.keyboard_press_key("shift+?")
-
-        #     # ru 68748313
-        #     # en 67699721
-        #     # Переключить на русскую
-
-        #     # Переключить на англ
-        #     # methods.setEngLayout()
-
-        # # ? Пробел
-        # elif cmd == "space_cmd":
-        #     KB.keyboard_press_val(counter, KB.keyboard_press_key("space"))
         #! ОС Команды
         # ? Закрыть окно
         elif cmd == "escape_cmd":

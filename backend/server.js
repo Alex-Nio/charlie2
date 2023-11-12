@@ -62,12 +62,8 @@ const recognizeSpeech = () => {
   });
 };
 
-recognizeSpeech();
-
-app.get("/recognize-speech", (req, res) => {
-  res.send("Распознавание речи выполнено при старте приложения");
-});
-
 app.listen(port, () => {
   console.log(`Сервер запущен на порту ${port}`);
 });
+
+recognizeSpeech();

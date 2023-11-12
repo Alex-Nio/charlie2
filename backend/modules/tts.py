@@ -5,7 +5,7 @@ import sounddevice as sd
 language = 'ru'
 model_id = 'ru_v3'
 sample_rate = 48000  # 48000
-speaker = 'baya'  # aidar, baya, kseniya, xenia, random
+speaker = 'aidar'  # aidar, baya, kseniya, xenia, random
 put_accent = True
 put_yo = True
 device = torch.device('cpu')  # cpu или gpua

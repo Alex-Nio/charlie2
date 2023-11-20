@@ -4,10 +4,10 @@
     "beforeBuildCommand": "",
     "beforeDevCommand": "node ../backend/server.js",
     "devPath": "http://localhost:8080",
-    "distDir": "../dist"
+    "distDir": "../../build/dist"
   },
   "package": {
-    "productName": "charlie-template",
+    "productName": "charlie-voice-assistant",
     "version": "0.1.0"
   },
   "tauri": {
@@ -36,7 +36,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.khoshghadam.vite-tauri",
+      "identifier": "com.alex-nio.charlie",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -45,7 +45,10 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "./../../backend/modules/model_small",
+        "./../../backend/venv"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {
@@ -63,10 +66,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 700,
         "resizable": true,
         "title": "Charlie app",
-        "width": 800
+        "width": 550
       }
     ]
   }

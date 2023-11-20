@@ -1,8 +1,9 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeBuildCommand": "",
-    "beforeDevCommand": "node ../backend/server.js",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "withGlobalTauri": false,
     "devPath": "http://localhost:8080",
     "distDir": "../../build/dist"
   },
@@ -12,23 +13,25 @@
   },
   "tauri": {
     "allowlist": {
-      "http": {
-        "all": true,
-        "request": true,
+      "all": false,
+      "shell": {
+        "all": false,
+        "open": true
+      },
+      "dialog": {
+        "message": true
+      },
+      "fs": {
         "scope": [
-          "https://**",
-          "http://**"
+          "$RESOURCE/*"
         ]
+      },
+      "path": {
+        "all": true
       }
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
-      "deb": {
-        "depends": []
-      },
-      "externalBin": [],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -37,25 +40,19 @@
         "icons/icon.ico"
       ],
       "identifier": "com.alex-nio.charlie",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
       "resources": [
-        "./../../backend/modules/model_small",
-        "./../../backend/venv"
+        "commands",
+        "sound",
+        "vosk/model_small",
+        "picovoice",
+        "rustpotter",
+        "libvosk.dll",
+        "libstdc++-6.dll",
+        "libwinpthread-1.dll",
+        "libgcc_s_seh-1.dll",
+        "libvosk.lib"
       ],
-      "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      }
+      "targets": "all"
     },
     "security": {
       "csp": null
@@ -66,10 +63,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 700,
-        "resizable": true,
+        "resizable": false,
         "title": "Charlie app",
-        "width": 550
+        "width": 550,
+        "height": 700
       }
     ]
   }

@@ -1,41 +1,45 @@
 {
-  "name": "charlie-template",
-  "description": "Charlie template",
+  "name": "charlie-app",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run start:server\" \"cross-env VITE_NETWORK_PROCESSOR=tauri vite\" && tauri dev",
+    "dev": "vite",
     "serve": "vite",
     "serve:tauri": "cross-env VITE_NETWORK_PROCESSOR=tauri vite",
     "serve:native": "concurrently \"npm run serve:tauri\" \"tauri dev\"",
     "build": "cross-env VITE_NETWORK_PROCESSOR=tauri vite build && tauri build",
-    "preview": "vite preview",
     "start:server": "npm run activate-venv && node ../backend/server.js",
-    "activate-venv": "..\\backend\\venv\\Scripts\\activate"
+    "activate-venv": "..\\backend\\venv\\Scripts\\activate",
+    "dev:vite": "vite",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "tauri": "tauri"
   },
   "dependencies": {
-    "@mdi/font": "7.2.96",
-    "@tauri-apps/api": "1.4.0",
-    "axios": "^1.6.1",
-    "roboto-fontface": "0.10.0",
-    "socket.io-client": "^4.7.2",
-    "unified-network": "0.6.4",
-    "vue": "3.3.4",
-    "vuetify": "3.3.7"
+    "@svelteuidev/composables": "^0.11.1",
+    "@svelteuidev/core": "^0.11.1",
+    "@svelteuidev/motion": "^0.11.1",
+    "@tauri-apps/api": "^1.2.0",
+    "concurrently": "^8.2.2",
+    "howler": "^2.2.3",
+    "radix-icons-svelte": "^1.2.1",
+    "worker-timers": "^7.0.64"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "1.4.0",
-    "@vitejs/plugin-vue": "4.0.0",
-    "concurrently": "^8.2.2",
-    "cross-env": "7.0.3",
-    "http-proxy-middleware": "^2.0.6",
-    "sass": "1.63.6",
-    "vite": "4.4.2",
-    "vite-plugin-vuetify": "1.0.2"
-  },
-  "main": "index.js",
-  "repository": "git@github.com:yooneskh/vite-vuetify-template.git",
-  "author": "Yoones Khoshghadam <yooneskh@gmail.com>",
-  "license": "MIT"
+    "@roxi/routify": "^2.18.11",
+    "@sveltejs/vite-plugin-svelte": "^2.0.0",
+    "@tauri-apps/cli": "^1.2.2",
+    "@tsconfig/svelte": "^3.0.0",
+    "@types/node": "^18.7.10",
+    "@vitejs/plugin-vue": "^4.5.0",
+    "sass": "^1.62.0",
+    "svelte": "^3.54.0",
+    "svelte-check": "^3.0.0",
+    "svelte-preprocess": "^5.0.0",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.5",
+    "vite": "^4.2.1",
+    "vite-tsconfig-paths": "^4.2.0"
+  }
 }

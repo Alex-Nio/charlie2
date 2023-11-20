@@ -5,22 +5,20 @@ export default defineConfig({
   clearScreen: false,
   server: {
     port: 8080,
-    strictPort: true,
-    proxy: {
-      "/run-python-script": {
-        target: "http://localhost:3000",
-        changeOrigin: true
-      },
-      "/recognition-updates": {
-        target: "http://localhost:3000",
-        changeOrigin: true
-      }
-    }
+    strictPort: true
   },
   envPrefix: ["VITE_", "TAURI_"],
+  // build: {
+  //   target: ["es2021", "chrome97", "safari13"],
+  //   minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
+  //   sourcemap: !!process.env.TAURI_DEBUG
+  // },
   build: {
-    target: ["es2021", "chrome97", "safari13"],
+    // Tauri supports es2021
+    target: process.env.TAURI_PLATFORM == "windows" ? "chrome105" : "safari13",
+    // don't minify for debug builds
     minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
+    // produce sourcemaps for debug builds
     sourcemap: !!process.env.TAURI_DEBUG
   },
   plugins: [vue()]

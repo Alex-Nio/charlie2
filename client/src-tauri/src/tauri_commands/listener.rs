@@ -2,12 +2,19 @@ use porcupine::{Porcupine, PorcupineBuilder};
 use std::ops::Sub;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::path::Path;
+use std::fs::File;
+use std::fs::OpenOptions;
+use std::io::{self, Write, Read};
+
 use log::{info, warn, error};
 use rustpotter::{Rustpotter, RustpotterConfig, WavFmt, DetectorConfig, FiltersConfig, ScoreMode, GainNormalizationConfig, BandPassConfig};
 // use dasp::{sample::ToSample, Sample};
 
 // use crate::events::Payload;
 use tauri::Manager;
+
+use reqwest;
+use serde_json::{json, Value};
 
 use rand::seq::SliceRandom;
 use std::time::SystemTime;
@@ -102,6 +109,80 @@ pub fn start_listening(app_handle: tauri::AppHandle) -> Result<bool, String> {
     }
 }
 
+fn read_output_text() -> Result<String, io::Error> {
+    // Open the file in read-only mode
+    let file = File::open("output.txt")?;
+
+    // Create a buffer to read the file contents into
+    let mut buffer = String::new();
+
+    // Read the file contents into the buffer
+    let _bytes_read = file.take(u64::MAX.into()).read_to_string(&mut buffer)?;
+
+    Ok(buffer)
+}
+
+use reqwest::Client;
+use tokio::time::{self, Duration};
+use tokio::task;
+use tokio::runtime::Runtime;
+use tokio::task::spawn;
+
+async fn send_request_to_chatgpt_api_asyncx(text: &str) -> Result<String, reqwest::Error> {
+    // Replace with your actual API key
+    let api_key = "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";
+
+
+    let url = "https://api.openai.com/v1/chat/completions";
+
+    println!("API Text?: {:?}", text);
+
+    // Create a JSON object with the request payload
+    let request_payload = json!({
+        "model": "text-davinci-003", // Updated model name here
+        "messages": [
+            {"role": "system", "content": "Your system message here"},
+            {"role": "user", "content": text}
+        ],
+        "max_tokens": 100,
+        "n": 1,
+        "stop": null
+    });
+
+    println!("API Request: {:?}", request_payload);
+
+
+    // Send a POST request to the ChatGPT API
+    let response = reqwest::Client::new()
+        .post(url)
+        .header("Authorization", format!("Bearer {}", api_key))
+        .header("Content-Type", "application/json")
+        .json(&request_payload)
+        .send()
+        .await?;
+
+    // Parse and return the response
+    let response_text = response.text().await?;
+    Ok(response_text)
+}
+
+async fn send_request_to_chatgpt_api_async(text: &str) -> Result<String, reqwest::Error> {
+    send_request_to_chatgpt_api_asyncx(text).await
+}
+
+async fn process_chatgpt_response(text: String) {
+    match send_request_to_chatgpt_api_async(&text).await {
+        Ok(response) => {
+            // Обработка ответа от ChatGPT API
+            println!("Generated text: {}", response);
+        }
+        Err(err) => {
+            eprintln!("Error communicating with ChatGPT API: {}", err);
+        }
+    }
+}
+
+
 fn keyword_callback(_keyword_index: i32) {
     // vars
     let mut start: SystemTime = SystemTime::now();
@@ -127,10 +208,10 @@ fn keyword_callback(_keyword_index: i32) {
         // vosk part (partials included)
         if let Some(mut test) = vosk::recognize(&frame_buffer, false) {
             if !test.is_empty() {
-                println!("Recognized: {}", test);
 
                 // some filtration
                 test = test.to_lowercase();
+
                 for tbr in config::ASSISTANT_PHRASES_TBR {
                     test = test.replace(tbr, "");
                 }
@@ -149,6 +230,7 @@ fn keyword_callback(_keyword_index: i32) {
                         &cmd_path,
                         &cmd_config,
                         TAURI_APP_HANDLE.get().unwrap(),
+                        &test,
                     );
 
                     match cmd_result {
@@ -174,6 +256,33 @@ fn keyword_callback(_keyword_index: i32) {
                         .emit_all(events::EventTypes::AssistantWaiting.get(), ())
                         .unwrap();
                     break; // return to picovoice after command execution (no matter successfull or not)
+                } else {
+                    // Нет соответствующей команды, обрабатываем неизвестную команду
+                    let mut file = OpenOptions::new()
+                        .create(true)
+                        .write(true) // использовать write вместо append
+                        .truncate(true) // усекать файл до нулевой длины при открытии
+                        .open("output.txt")
+                        .expect("Error opening/creating file");
+
+                    writeln!(file, "{}", test.to_lowercase())
+                        .expect("Error writing to file");
+
+                    match read_output_text() {
+                        Ok(text) => {
+                            // Do something with the text
+                            println!("Text from output.txt: {}", text);
+
+                            // Создаем асинхронный runtime для вызова асинхронной функции
+                            if !text.is_empty() {
+                                // Создаем асинхронный runtime для вызова асинхронной функции
+                                spawn(process_chatgpt_response(text.into()));
+                            }
+                        }
+                        Err(err) => {
+                            eprintln!("Error reading output.txt: {}", err);
+                        }
+                    }
                 }
             }
         }

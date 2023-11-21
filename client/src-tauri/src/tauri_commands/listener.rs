@@ -134,6 +134,7 @@ fn keyword_callback(_keyword_index: i32) {
                 for tbr in config::ASSISTANT_PHRASES_TBR {
                     test = test.replace(tbr, "");
                 }
+
                 test = test.trim().into();
 
                 // infer command
@@ -216,7 +217,7 @@ pub fn data_callback(frame_buffer: &[i16]) {
                 let recognized_phrases = recognized_phrase.split_whitespace();
                 for phrase in recognized_phrases {
                     let recognized_phrase_chars = phrase.trim().to_lowercase().chars().collect::<Vec<_>>();
-            
+
                     // compare
                     let compare_ratio = seqdiff::ratio(&config::VOSK_FETCH_PHRASE.chars().collect::<Vec<_>>(), &recognized_phrase_chars);
                     info!("OG phrase: {:?}", &config::VOSK_FETCH_PHRASE);

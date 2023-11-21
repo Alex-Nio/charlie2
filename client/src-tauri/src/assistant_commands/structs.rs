@@ -35,7 +35,13 @@ pub struct ConfigCommandSection {
     pub cli_cmd: String,
 
     #[serde(default)]
-    pub cli_args: Vec<String>
+    pub cli_args: Vec<String>,
+
+    #[serde(default)]
+    pub gpt_api_url: Option<String>, // Добавлено поле для API URL
+
+    #[serde(default)]
+    pub gpt_api_key: Option<String> // Добавлено поле для API Key
 }
 
 #[derive(Deserialize, Debug)]

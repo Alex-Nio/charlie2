@@ -1,35 +1,55 @@
-use porcupine::{Porcupine, PorcupineBuilder};
-use std::ops::Sub;
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::path::Path;
-use std::fs::File;
-use std::fs::OpenOptions;
-use std::io::{self, Write, Read};
+use std::{
+    env,
+    io::{self, Read, Write},
+    fs::{self, File, OpenOptions},
+    path::Path,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Mutex,
+    },
+    ops::Sub,
+    time::SystemTime,
+    thread,
+};
 
 use log::{info, warn, error};
-use rustpotter::{Rustpotter, RustpotterConfig, WavFmt, DetectorConfig, FiltersConfig, ScoreMode, GainNormalizationConfig, BandPassConfig};
+use rand::seq::SliceRandom;
+use once_cell::sync::OnceCell;
+
+use tauri::Manager;
+
+use reqwest::{self, Client};
+use serde_json::{json, Value};
+
+use porcupine::{Porcupine, PorcupineBuilder};
+use rustpotter::{
+    self,
+    Rustpotter,
+    RustpotterConfig,
+    WavFmt,
+    DetectorConfig,
+    FiltersConfig,
+    ScoreMode,
+    GainNormalizationConfig,
+    BandPassConfig,
+};
+
 // use dasp::{sample::ToSample, Sample};
 
 // use crate::events::Payload;
-use tauri::Manager;
 
-use reqwest;
-use serde_json::{json, Value};
+use tokio::{
+    self,
+    time::{self, Duration},
+    task::{self, spawn},
+    runtime::Runtime,
+};
 
-use rand::seq::SliceRandom;
-use std::time::SystemTime;
-use once_cell::sync::OnceCell;
-use std::sync::Mutex;
+use crate::{
+    assistant_commands, events, config, vosk, recorder,
+    COMMANDS, DB,
+};
 
-use crate::assistant_commands;
-use crate::events;
-
-use crate::config;
-use crate::vosk;
-use crate::recorder::{self, FRAME_LENGTH};
-
-use crate::COMMANDS;
-use crate::DB;
 
 // track listening state
 static LISTENING: AtomicBool = AtomicBool::new(false);
@@ -109,37 +129,70 @@ pub fn start_listening(app_handle: tauri::AppHandle) -> Result<bool, String> {
     }
 }
 
-fn read_output_text() -> Result<String, io::Error> {
-    // Open the file in read-only mode
-    let file = File::open("output.txt")?;
+use std::sync::{Arc};
+use std::io::BufReader;
 
-    // Create a buffer to read the file contents into
-    let mut buffer = String::new();
-
-    // Read the file contents into the buffer
-    let _bytes_read = file.take(u64::MAX.into()).read_to_string(&mut buffer)?;
-
-    Ok(buffer)
+lazy_static! {
+    static ref FILE_MUTEX: Mutex<()> = Mutex::new(());
 }
 
-use reqwest::Client;
-use tokio::time::{self, Duration};
-use tokio::task;
-use tokio::runtime::Runtime;
-use tokio::task::spawn;
+fn write_to_file(output: &str) {
+    let _lock = FILE_MUTEX.lock().unwrap(); // блокируем мьютекс при записи в файл
+
+    let mut file = File::create("output.txt").expect("Error creating file");
+    writeln!(file, "{}", output.to_lowercase()).expect("Error writing to file");
+}
+
+fn read_output_text() -> Result<String, std::io::Error> {
+    let _lock = FILE_MUTEX.lock().unwrap(); // блокируем мьютекс при чтении из файла
+
+    let file = File::open("output.txt")?;
+    let mut reader = BufReader::new(file);
+    let mut output_text = String::new();
+    reader.read_to_string(&mut output_text)?;
+
+    Ok(output_text)
+}
+
+fn read_output_text_and_process() {
+    let output_text = match read_output_text() {
+        Ok(output_text) => output_text,
+        Err(err) => {
+            eprintln!("Error reading output.txt: {}", err);
+            return;
+        }
+    };
+
+    // Создаем асинхронный runtime для вызова асинхронной функции
+    let rt = Runtime::new().unwrap();
+
+    // Запуск асинхронной задачи
+    rt.block_on(async {
+        process_chatgpt_response(output_text.into()).await;
+    });
+}
 
 async fn send_request_to_chatgpt_api_asyncx(text: &str) -> Result<String, reqwest::Error> {
-    // Replace with your actual API key
-    let api_key = "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";
+    // Check if text contains only newline character
+    if text == "\n" {
+        // Code...
+        panic!("Text contains only a newline character");
+    }
 
+    // Load environment variables from the .env file
+    dotenv::dotenv().expect("Failed to load .env file");
+
+    // Replace with your actual API key
+    let api_key = env::var("API_KEY")
+        .expect("API_KEY not found in .env file. Please add it.");
 
     let url = "https://api.openai.com/v1/chat/completions";
 
-    println!("API Text?: {:?}", text);
+    println!("Запрос к API: {:?}", text);
 
     // Create a JSON object with the request payload
     let request_payload = json!({
-        "model": "text-davinci-003", // Updated model name here
+        "model": "gpt-3.5-turbo-1106",
         "messages": [
             {"role": "system", "content": "Your system message here"},
             {"role": "user", "content": text}
@@ -149,8 +202,7 @@ async fn send_request_to_chatgpt_api_asyncx(text: &str) -> Result<String, reqwes
         "stop": null
     });
 
-    println!("API Request: {:?}", request_payload);
-
+    // println!("API Request: {:?}", request_payload);
 
     // Send a POST request to the ChatGPT API
     let response = reqwest::Client::new()
@@ -159,10 +211,10 @@ async fn send_request_to_chatgpt_api_asyncx(text: &str) -> Result<String, reqwes
         .header("Content-Type", "application/json")
         .json(&request_payload)
         .send()
-        .await?;
+        .await;
 
     // Parse and return the response
-    let response_text = response.text().await?;
+    let response_text = response?.text().await?;
     Ok(response_text)
 }
 
@@ -174,7 +226,20 @@ async fn process_chatgpt_response(text: String) {
     match send_request_to_chatgpt_api_async(&text).await {
         Ok(response) => {
             // Обработка ответа от ChatGPT API
-            println!("Generated text: {}", response);
+            let json_response: Value = serde_json::from_str(&response).unwrap(); // Распаковка JSON
+
+            // Доступ к полю content
+            if let Some(choices) = json_response.get("choices").and_then(|choices| choices.as_array()) {
+                if let Some(first_choice) = choices.get(0) {
+                    if let Some(message) = first_choice.get("message") {
+                        if let Some(content) = message.get("content") {
+                            if let Some(content_text) = content.as_str() {
+                                println!("Ответ от Api: {}", content_text);
+                            }
+                        }
+                    }
+                }
+            }
         }
         Err(err) => {
             eprintln!("Error communicating with ChatGPT API: {}", err);
@@ -257,26 +322,25 @@ fn keyword_callback(_keyword_index: i32) {
                         .unwrap();
                     break; // return to picovoice after command execution (no matter successfull or not)
                 } else {
-                    // Нет соответствующей команды, обрабатываем неизвестную команду
-                    let mut file = OpenOptions::new()
-                        .create(true)
-                        .write(true) // использовать write вместо append
-                        .truncate(true) // усекать файл до нулевой длины при открытии
-                        .open("output.txt")
-                        .expect("Error opening/creating file");
-
-                    writeln!(file, "{}", test.to_lowercase())
-                        .expect("Error writing to file");
+                    write_to_file(&test);
 
                     match read_output_text() {
-                        Ok(text) => {
+                        Ok(output_text) => {
                             // Do something with the text
-                            println!("Text from output.txt: {}", text);
+                            println!("Text from output.txt: {}", output_text);
 
                             // Создаем асинхронный runtime для вызова асинхронной функции
-                            if !text.is_empty() {
-                                // Создаем асинхронный runtime для вызова асинхронной функции
-                                spawn(process_chatgpt_response(text.into()));
+                            if !output_text.is_empty() {
+                                println!("Processing output text...");
+                                // Явное создание асинхронного runtime
+                                write_to_file(&test);
+
+                                // Чтение и обработка текста из файла в новом процессе
+                                thread::spawn(|| {
+                                    read_output_text_and_process();
+                                }).join().expect("Thread panicked")
+                            } else {
+                                println!("Output text is empty.");
                             }
                         }
                         Err(err) => {

@@ -1,11 +1,12 @@
 use std::{
     env,
-    io::{self, Read, Write},
+    io::{self, Read, Write, BufReader},
     fs::{self, File, OpenOptions},
     path::Path,
     sync::{
         atomic::{AtomicBool, Ordering},
         Mutex,
+        Arc
     },
     ops::Sub,
     time::SystemTime,
@@ -129,8 +130,7 @@ pub fn start_listening(app_handle: tauri::AppHandle) -> Result<bool, String> {
     }
 }
 
-use std::sync::{Arc};
-use std::io::BufReader;
+
 
 lazy_static! {
     static ref FILE_MUTEX: Mutex<()> = Mutex::new(());
@@ -177,6 +177,7 @@ async fn send_request_to_chatgpt_api_asyncx(text: &str) -> Result<String, reqwes
     if text == "\n" {
         // Code...
         panic!("Text contains only a newline character");
+        return Ok("".to_string());
     }
 
     // Load environment variables from the .env file
@@ -336,9 +337,19 @@ fn keyword_callback(_keyword_index: i32) {
                                 write_to_file(&test);
 
                                 // Чтение и обработка текста из файла в новом процессе
-                                thread::spawn(|| {
-                                    read_output_text_and_process();
-                                }).join().expect("Thread panicked")
+                                let handle = thread::spawn(|| {
+                                    // Ваш код внутри потока
+                                    let result = std::panic::catch_unwind(|| {
+                                        read_output_text_and_process();
+                                    });
+
+                                    if let Err(err) = result {
+                                        eprintln!("Thread panicked: {:?}", err);
+                                        // Здесь вы можете выполнить какие-то действия по обработке паники
+                                    }
+                                });
+
+                                handle.join().expect("Thread panicked");
                             } else {
                                 println!("Output text is empty.");
                             }

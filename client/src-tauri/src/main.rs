@@ -7,6 +7,7 @@ use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 use log::{info};
 use log::LevelFilter;
 use std::sync::Mutex;
+use std::fs::File;
 
 // expose the config
 mod config;
@@ -63,6 +64,8 @@ lazy_static! {
 }
 
 fn main() {
+    let mut file = File::create("output.txt").expect("Error creating file");
+
     // init vosk
     vosk::init_vosk();
 

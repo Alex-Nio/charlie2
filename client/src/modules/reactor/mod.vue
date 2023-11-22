@@ -8,7 +8,6 @@
 </script>
 
 <template>
-  <p>{{ isReactorActive }}</p>
   <div id="arc-reactor" class="reactor-container">
     <div class="reactor-container-inner circle abs-center" :class="{ active: isReactorActive }">
       <ul class="marks">
@@ -114,7 +113,6 @@ $cshadow: rgba(2, 254, 255, 0.8);
   width: 300px;
   height: 320px;
   margin: auto;
-  //  border: 1px dashed #888;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -122,8 +120,7 @@ $cshadow: rgba(2, 254, 255, 0.8);
   border-radius: 50%;
   scale: 0.9;
   opacity: 0.9;
-  //   border: 1px solid #121414;
-  //   box-shadow: 0px 0px 32px 8px #121414, 0px 0px 4px 1px #121414 inset;
+  border: 1px solid #121414;
 
   ul {
     list-style: none;
@@ -137,7 +134,6 @@ $cshadow: rgba(2, 254, 255, 0.8);
   width: 238px;
   background-color: #39aac7;
   box-shadow: 0px 0px 50px 15px $colour3, inset 0px 0px 50px 15px $colour3;
-  // box-shadow: 0px 0px 4px 1px #52fefe;
   transform: scale(1);
   transition: transform 0.3s linear;
 
@@ -267,11 +263,11 @@ $cshadow: rgba(2, 254, 255, 0.8);
   margin: auto;
   border: $size3 solid transparent;
   background: transparent;
-  @include border-radius(50%);
   transform: rotateZ(0deg);
-  transition: box-shadow 3s ease;
   text-align: center;
   opacity: 0.3;
+  transition: box-shadow 3s ease;
+  @include border-radius(50%);
 }
 
 .semi_arc {

@@ -4,107 +4,101 @@
   import { invoke } from "@tauri-apps/api/tauri";
   import { listen } from "@tauri-apps/api/event";
 
-  const is_listening = ref(true);
-  const is_reactorActive = ref(false);
-
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
-  function startListening() {
-    (async () => {
-      invoke("start_listening")
-        .then((message) => {
-          is_listening.value = true;
-          is_reactorActive.value = false;
-        })
-        .catch((error) => {
-          is_listening.value = false;
-          is_reactorActive.value = false;
-          console.error(error);
-        });
-    })().catch((err) => {
-      console.error(err);
-    });
-  }
-
-  function stopListening(callback) {
-    (async () => {
-      invoke("stop_listening")
-        .then((message) => {
-          is_listening.value = false;
-          is_reactorActive.value = false;
-          if (callback) {
-            callback();
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    })().catch((err) => {
-      console.error(err);
-    });
-  }
-
-  let assistant_voice_val = "jarvis-og";
-
-  const listenToAudioPlay = async () => {
-
-    await listen("audio-play", async (event) => {
-      is_reactorActive.value = true;
-
-      let filename =
-        "sound/" + assistant_voice_val + "/" + event.payload["data"] + ".wav";
-      await invoke("play_sound", {
-        filename: filename,
-        sleep: true,
-      });
-
-
-      setTimeout(() => {
-        is_reactorActive.value = false;
-      }, 500)
-    });
-  };
-
+  const isListening = ref(true);
+  const isReactorActive = ref(false);
+  const resourcesRamUsage = ref("-");
+  const assistantVoiceVal = "jarvis-og";
   const selectedMicrophone = ref(0);
   const microphoneLabel = ref("");
+
+  // State
   const nnDetails = ref({
     wwEngine: "",
     sttEngine: "Vosk",
   });
-  const resourcesRamUsage = ref("-");
 
-  onMounted(async () => {
-    setInterval(async () => {
-      try {
-        resourcesRamUsage.value = Number(await invoke("get_current_ram_usage")).toFixed(
-          2
-        );
-      } catch (err) {
-        console.error(err);
+  // Functions
+  const startListening = async () => {
+    try {
+      await invoke("start_listening");
+
+      isListening.value = true;
+      isReactorActive.value = false;
+    } catch (error) {
+      isListening.value = false;
+      isReactorActive.value = false;
+
+      console.error(error);
+    }
+  };
+
+  const stopListening = async (callback) => {
+    try {
+      await invoke("stop_listening");
+      isListening.value = false;
+      isReactorActive.value = false;
+      if (callback) {
+        callback();
       }
-    }, 1000);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const playAudio = async (event) => {
+    isReactorActive.value = true;
+
+    let filename = "sound/" + assistantVoiceVal + "/" + event.payload["data"] + ".wav";
 
     try {
-      selectedMicrophone.value = +Number(
-        await invoke("db_read", { key: "selected_microphone" })
-      );
+      await invoke("play_sound", { filename, sleep: true });
+    } catch (error) {
+      console.error(error);
+    }
 
+    setTimeout(() => {
+      isReactorActive.value = false;
+    }, 500);
+  };
+
+  const listenToAudioPlay = async () => {
+    await listen("audio-play", playAudio);
+  };
+
+  const updateResourcesRamUsage = async () => {
+    try {
+      resourcesRamUsage.value = Number(await invoke("get_current_ram_usage")).toFixed(2);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const setupMicrophone = async () => {
+    const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+    try {
+      selectedMicrophone.value = +Number(await invoke("db_read", { key: "selected_microphone" }));
       microphoneLabel.value = await invoke("pv_get_audio_device_name", {
         idx: selectedMicrophone.value,
       });
 
       console.log(microphoneLabel.value);
 
-      nnDetails.value.wwEngine = capitalizeFirstLetter(
-        await invoke("db_read", { key: "selected_wake_word_engine" })
-      );
+      nnDetails.value.wwEngine = capitalizeFirstLetter(await invoke("db_read", { key: "selected_wake_word_engine" }));
     } catch (err) {
       console.error(err);
     }
+  };
+
+  // Lifecycle hook
+  onMounted(async () => {
+    setInterval(updateResourcesRamUsage, 1000);
+    await setupMicrophone();
   });
 
+  // Initial setup
   startListening();
   listenToAudioPlay();
 </script>

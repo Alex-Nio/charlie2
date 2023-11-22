@@ -1,44 +1,130 @@
-// функция для отправки запроса в ChatGPT
-async fn send_request_to_chatgpt(input: &str) -> Result<String, String> {
-  // Замените URL на ваш URL ChatGPT API
-  let url = "https://api.chatgpt.com/v1/chat"; // замените на ваш URL
+use std::{
+    env,
+    io::{Read, Write, BufReader},
+    fs::{File},
+    sync::{Mutex}
+};
+use serde_json::{json, Value};
+use tokio::{self, runtime::Runtime};
 
-  // Определите ваш токен авторизации для ChatGPT API
-  let authorization_token = "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"; // замените на ваш токен
+//* GPT
+lazy_static! {
+    static ref FILE_MUTEX: Mutex<()> = Mutex::new(());
+}
 
-  // Создайте JSON-объект для запроса
-  let request_body = json!({
-      "messages": [
-          {
-              "role": "system",
-              "content": "user"
-          },
-          {
-              "role": "user",
-              "content": input
-          }
-      ]
-  });
+#[tauri::command]
+pub fn write_to_file(output: &str) {
+    let _lock = FILE_MUTEX.lock().unwrap(); // блокируем мьютекс при записи в файл
 
-  // Отправьте POST-запрос к ChatGPT API
-  let client = reqwest::blocking::Client::new();
-  let response = client
-      .post(url)
-      .header("Authorization", format!("Bearer {}", authorization_token))
-      .header("Content-Type", "application/json")
-      .json(&request_body)
-      .send();
+    let mut file = File::create("output.txt").expect("Error creating file");
+    writeln!(file, "{}", output.to_lowercase()).expect("Error writing to file");
+}
 
-  // Обработка ответа
-  match response {
-      Ok(resp) => {
-          if resp.status().is_success() {
-              let body = resp.text().map_err(|e| format!("Error reading response body: {}", e));
-              Ok(body?)
-          } else {
-              Err(format!("ChatGPT API returned an error: {}", resp.status()))
-          }
-      }
-      Err(err) => Err(format!("Error sending request to ChatGPT: {}", err)),
-  }
+#[tauri::command]
+pub fn read_output_text() -> Result<String, std::io::Error> {
+    let _lock = FILE_MUTEX.lock().unwrap(); // блокируем мьютекс при чтении из файла
+
+    let file = File::open("output.txt")?;
+    let mut reader = BufReader::new(file);
+    let mut output_text = String::new();
+    reader.read_to_string(&mut output_text)?;
+
+    Ok(output_text)
+}
+
+#[tauri::command]
+pub fn read_output_text_and_process() {
+    let output_text = match read_output_text() {
+        Ok(output_text) => output_text,
+        Err(err) => {
+            eprintln!("Error reading output.txt: {}", err);
+            return;
+        }
+    };
+
+    // Создаем асинхронный runtime для вызова асинхронной функции
+    let rt = Runtime::new().unwrap();
+
+    // Запуск асинхронной задачи
+    rt.block_on(async {
+        process_chatgpt_response(output_text.into()).await;
+    });
+}
+
+#[tauri::command]
+pub async fn send_request_to_chatgpt_api_async(text: &str) -> Result<String, reqwest::Error> {
+    send_request_to_chatgpt(text).await
+}
+
+#[tauri::command]
+pub async fn send_request_to_chatgpt(text: &str) -> Result<String, reqwest::Error> {
+    // Check if text contains only newline character
+    if text == "\n" {
+        // Code...
+        panic!("Text contains only a newline character");
+    }
+
+    // Load environment variables from the .env file
+    dotenv::dotenv().expect("Failed to load .env file");
+
+    // Replace with your actual API key
+    let api_key = env::var("API_KEY")
+        .expect("API_KEY not found in .env file. Please add it.");
+
+    let url = "https://api.openai.com/v1/chat/completions";
+
+    println!("Запрос к API: {:?}", text);
+
+    // Create a JSON object with the request payload
+    let request_payload = json!({
+        "model": "gpt-3.5-turbo-1106",
+        "messages": [
+            {"role": "system", "content": "Your system message here"},
+            {"role": "user", "content": text}
+        ],
+        "max_tokens": 100,
+        "n": 1,
+        "stop": null
+    });
+
+    // println!("API Request: {:?}", request_payload);
+
+    // Send a POST request to the ChatGPT API
+    let response = reqwest::Client::new()
+        .post(url)
+        .header("Authorization", format!("Bearer {}", api_key))
+        .header("Content-Type", "application/json")
+        .json(&request_payload)
+        .send()
+        .await;
+
+    // Parse and return the response
+    let response_text = response?.text().await?;
+    Ok(response_text)
+}
+
+#[tauri::command]
+pub async fn process_chatgpt_response(text: String) {
+    match send_request_to_chatgpt_api_async(&text).await {
+        Ok(response) => {
+            // Обработка ответа от ChatGPT API
+            let json_response: Value = serde_json::from_str(&response).unwrap(); // Распаковка JSON
+
+            // Доступ к полю content
+            if let Some(choices) = json_response.get("choices").and_then(|choices| choices.as_array()) {
+                if let Some(first_choice) = choices.get(0) {
+                    if let Some(message) = first_choice.get("message") {
+                        if let Some(content) = message.get("content") {
+                            if let Some(content_text) = content.as_str() {
+                                println!("Ответ от Api: {}", content_text);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Err(err) => {
+            eprintln!("Error communicating with ChatGPT API: {}", err);
+        }
+    }
 }

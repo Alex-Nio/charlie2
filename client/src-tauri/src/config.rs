@@ -1,18 +1,4 @@
-use std::iter::Once;
-
-use once_cell::sync::OnceCell;
-
-// use const_concat::const_concat;
-
-// pub const IS_DEV: bool = cfg!(debug_assertions);// cfg!(debug_assertions);
-// pub const PUBLIC_PATH: &str = if IS_DEV {
-//     "D:/Rust/jarvis-app/public"
-// } else {
-//     "./public"
-// };
-
 // APP
-// pub const WAKE_WORD_ENGINES: [&str; 3] = ["rustpotter", "vosk", "picovoice"];
 pub enum WakeWordEngine {
     Rustpotter,
     Vosk,

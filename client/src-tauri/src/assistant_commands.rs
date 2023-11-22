@@ -133,7 +133,7 @@ pub fn execute_command(
     cmd_path: &PathBuf,
     cmd_config: &Config,
     app_handle: &tauri::AppHandle,
-    speech_result: &str,
+    _speech_result: &str,
 ) -> Result<bool, String> {
     match cmd_config.command.action.as_str() {
         "voice" => {

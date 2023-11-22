@@ -1,14 +1,9 @@
 use std::{
-    env,
-    io::{self, Read, Write, BufReader},
-    fs::{self, File, OpenOptions},
     path::Path,
     sync::{
         atomic::{AtomicBool, Ordering},
         Mutex,
-        Arc
     },
-    ops::Sub,
     time::SystemTime,
     thread,
 };
@@ -18,9 +13,6 @@ use rand::seq::SliceRandom;
 use once_cell::sync::OnceCell;
 
 use tauri::Manager;
-
-use reqwest::{self, Client};
-use serde_json::{json, Value};
 
 use porcupine::{Porcupine, PorcupineBuilder};
 use rustpotter::{
@@ -35,22 +27,11 @@ use rustpotter::{
     BandPassConfig,
 };
 
-// use dasp::{sample::ToSample, Sample};
-
-// use crate::events::Payload;
-
-use tokio::{
-    self,
-    time::{self, Duration},
-    task::{self, spawn},
-    runtime::Runtime,
-};
-
 use crate::{
+    tauri_commands,
     assistant_commands, events, config, vosk, recorder,
     COMMANDS, DB,
 };
-
 
 // track listening state
 static LISTENING: AtomicBool = AtomicBool::new(false);
@@ -110,7 +91,7 @@ pub fn start_listening(app_handle: tauri::AppHandle) -> Result<bool, String> {
 
     // keep app handle
     if TAURI_APP_HANDLE.get().is_none() {
-        TAURI_APP_HANDLE.set(app_handle);
+        let _ = TAURI_APP_HANDLE.set(app_handle);
     }
 
     // call selected wake-word engine listener command
@@ -129,125 +110,6 @@ pub fn start_listening(app_handle: tauri::AppHandle) -> Result<bool, String> {
         }
     }
 }
-
-
-
-lazy_static! {
-    static ref FILE_MUTEX: Mutex<()> = Mutex::new(());
-}
-
-fn write_to_file(output: &str) {
-    let _lock = FILE_MUTEX.lock().unwrap(); // блокируем мьютекс при записи в файл
-
-    let mut file = File::create("output.txt").expect("Error creating file");
-    writeln!(file, "{}", output.to_lowercase()).expect("Error writing to file");
-}
-
-fn read_output_text() -> Result<String, std::io::Error> {
-    let _lock = FILE_MUTEX.lock().unwrap(); // блокируем мьютекс при чтении из файла
-
-    let file = File::open("output.txt")?;
-    let mut reader = BufReader::new(file);
-    let mut output_text = String::new();
-    reader.read_to_string(&mut output_text)?;
-
-    Ok(output_text)
-}
-
-fn read_output_text_and_process() {
-    let output_text = match read_output_text() {
-        Ok(output_text) => output_text,
-        Err(err) => {
-            eprintln!("Error reading output.txt: {}", err);
-            return;
-        }
-    };
-
-    // Создаем асинхронный runtime для вызова асинхронной функции
-    let rt = Runtime::new().unwrap();
-
-    // Запуск асинхронной задачи
-    rt.block_on(async {
-        process_chatgpt_response(output_text.into()).await;
-    });
-}
-
-async fn send_request_to_chatgpt_api_asyncx(text: &str) -> Result<String, reqwest::Error> {
-    // Check if text contains only newline character
-    if text == "\n" {
-        // Code...
-        panic!("Text contains only a newline character");
-        return Ok("".to_string());
-    }
-
-    // Load environment variables from the .env file
-    dotenv::dotenv().expect("Failed to load .env file");
-
-    // Replace with your actual API key
-    let api_key = env::var("API_KEY")
-        .expect("API_KEY not found in .env file. Please add it.");
-
-    let url = "https://api.openai.com/v1/chat/completions";
-
-    println!("Запрос к API: {:?}", text);
-
-    // Create a JSON object with the request payload
-    let request_payload = json!({
-        "model": "gpt-3.5-turbo-1106",
-        "messages": [
-            {"role": "system", "content": "Your system message here"},
-            {"role": "user", "content": text}
-        ],
-        "max_tokens": 100,
-        "n": 1,
-        "stop": null
-    });
-
-    // println!("API Request: {:?}", request_payload);
-
-    // Send a POST request to the ChatGPT API
-    let response = reqwest::Client::new()
-        .post(url)
-        .header("Authorization", format!("Bearer {}", api_key))
-        .header("Content-Type", "application/json")
-        .json(&request_payload)
-        .send()
-        .await;
-
-    // Parse and return the response
-    let response_text = response?.text().await?;
-    Ok(response_text)
-}
-
-async fn send_request_to_chatgpt_api_async(text: &str) -> Result<String, reqwest::Error> {
-    send_request_to_chatgpt_api_asyncx(text).await
-}
-
-async fn process_chatgpt_response(text: String) {
-    match send_request_to_chatgpt_api_async(&text).await {
-        Ok(response) => {
-            // Обработка ответа от ChatGPT API
-            let json_response: Value = serde_json::from_str(&response).unwrap(); // Распаковка JSON
-
-            // Доступ к полю content
-            if let Some(choices) = json_response.get("choices").and_then(|choices| choices.as_array()) {
-                if let Some(first_choice) = choices.get(0) {
-                    if let Some(message) = first_choice.get("message") {
-                        if let Some(content) = message.get("content") {
-                            if let Some(content_text) = content.as_str() {
-                                println!("Ответ от Api: {}", content_text);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        Err(err) => {
-            eprintln!("Error communicating with ChatGPT API: {}", err);
-        }
-    }
-}
-
 
 fn keyword_callback(_keyword_index: i32) {
     // vars
@@ -323,9 +185,9 @@ fn keyword_callback(_keyword_index: i32) {
                         .unwrap();
                     break; // return to picovoice after command execution (no matter successfull or not)
                 } else {
-                    write_to_file(&test);
+                    tauri_commands::write_to_file(&test);
 
-                    match read_output_text() {
+                    match tauri_commands::read_output_text() {
                         Ok(output_text) => {
                             // Do something with the text
                             println!("Text from output.txt: {}", output_text);
@@ -334,13 +196,13 @@ fn keyword_callback(_keyword_index: i32) {
                             if !output_text.is_empty() {
                                 println!("Processing output text...");
                                 // Явное создание асинхронного runtime
-                                write_to_file(&test);
+                                tauri_commands::write_to_file(&test);
 
                                 // Чтение и обработка текста из файла в новом процессе
                                 let handle = thread::spawn(|| {
                                     // Ваш код внутри потока
                                     let result = std::panic::catch_unwind(|| {
-                                        read_output_text_and_process();
+                                        tauri_commands::read_output_text_and_process();
                                     });
 
                                     if let Err(err) = result {
@@ -548,7 +410,7 @@ fn rustpotter_init() -> Result<bool, String> {
 
     // store rustpotter
     if RUSTPOTTER.get().is_none() {
-        RUSTPOTTER.set(Mutex::new(rustpotter));
+        let _ = RUSTPOTTER.set(Mutex::new(rustpotter));
     }
 
     // start recording
@@ -593,7 +455,7 @@ fn picovoice_init() -> Result<bool, String> {
 
     // store
     if PORCUPINE.get().is_none() {
-        PORCUPINE.set(porcupine);
+        let _ = PORCUPINE.set(porcupine);
     }
 
     // start recording

@@ -5,7 +5,7 @@ use once_cell::sync::OnceCell;
 use std::sync::Arc;
 use arc_swap::ArcSwap;
 use std::sync::atomic::{AtomicBool, AtomicI32, AtomicU32, Ordering};
- 
+
 static RECORDER: OnceCell<ArcSwap<Recorder>> = OnceCell::new();
 static SELECTED_MICROPHONE_IDX: AtomicI32 = AtomicI32::new(0);
 static FRAME_LENGTH: AtomicU32 = AtomicU32::new(0);
@@ -22,7 +22,7 @@ pub fn init_microphone(device_index: i32, frame_length: u32) -> bool {
             match pv_recorder {
                 Ok(pv) => {
                     // store
-                    RECORDER.set(ArcSwap::from_pointee(pv));
+                    let _ = RECORDER.set(ArcSwap::from_pointee(pv));
 
                     // remember current configuration
                     SELECTED_MICROPHONE_IDX.store(device_index, Ordering::SeqCst);
@@ -74,7 +74,7 @@ pub fn read_microphone(frame_buffer: &mut [i16]) {
     if !RECORDER.get().is_none() {
         // read to frame buffer
         match RECORDER.get().unwrap().load().read(frame_buffer) {
-            Err(msg) => {
+            Err(_msg) => {
                 // @TODO: Fix somehow. PvRecorder always wait for PCM buffer size of 512.
                 // error!("Failed to read audio frame. {:?}", msg);
                 // eprintln!("Failed to read audio frame. {:?}", msg);

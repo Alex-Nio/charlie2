@@ -2,7 +2,7 @@
 pub enum WakeWordEngine {
     Rustpotter,
     Vosk,
-    Porcupine
+    Porcupine,
 }
 
 pub const DEFAULT_WAKE_WORD_ENGINE: WakeWordEngine = WakeWordEngine::Vosk;

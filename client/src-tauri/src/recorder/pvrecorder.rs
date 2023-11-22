@@ -1,10 +1,10 @@
+use log::{error, info, warn};
 use pv_recorder::{Recorder, RecorderBuilder};
-use log::{info, warn, error};
 
-use once_cell::sync::OnceCell;
-use std::sync::Arc;
 use arc_swap::ArcSwap;
+use once_cell::sync::OnceCell;
 use std::sync::atomic::{AtomicBool, AtomicI32, AtomicU32, Ordering};
+use std::sync::Arc;
 
 static RECORDER: OnceCell<ArcSwap<Recorder>> = OnceCell::new();
 static SELECTED_MICROPHONE_IDX: AtomicI32 = AtomicI32::new(0);
@@ -30,7 +30,7 @@ pub fn init_microphone(device_index: i32, frame_length: u32) -> bool {
 
                     // success
                     true
-                },
+                }
                 Err(msg) => {
                     error!("Failed to initialize pvrecorder.\nError details: {:?}", msg);
 
@@ -38,12 +38,12 @@ pub fn init_microphone(device_index: i32, frame_length: u32) -> bool {
                     false
                 }
             }
-        },
+        }
         _ => {
             // check if re-initialization required (i.e. selecetd microphoneor frame-length was changed )
             if SELECTED_MICROPHONE_IDX.load(Ordering::SeqCst) != device_index
-               ||
-               RECORDER.get().unwrap().load().frame_length() != frame_length as usize {
+                || RECORDER.get().unwrap().load().frame_length() != frame_length as usize
+            {
                 warn!("Selected microphone or frame length was changed, re-initializing ...");
                 // initialize again with new device index
                 if IS_RECORDING.load(Ordering::SeqCst) {
@@ -56,11 +56,13 @@ pub fn init_microphone(device_index: i32, frame_length: u32) -> bool {
                 FRAME_LENGTH.store(frame_length, Ordering::SeqCst);
 
                 // store
-                RECORDER.get().unwrap().store(Arc::new(RecorderBuilder::new()
-                    .device_index(device_index)
-                    .frame_length(frame_length as i32)
-                    .init()
-                    .expect("Failed to initialize pvrecorder")));
+                RECORDER.get().unwrap().store(Arc::new(
+                    RecorderBuilder::new()
+                        .device_index(device_index)
+                        .frame_length(frame_length as i32)
+                        .init()
+                        .expect("Failed to initialize pvrecorder"),
+                ));
             }
 
             // success
@@ -78,8 +80,8 @@ pub fn read_microphone(frame_buffer: &mut [i16]) {
                 // @TODO: Fix somehow. PvRecorder always wait for PCM buffer size of 512.
                 // error!("Failed to read audio frame. {:?}", msg);
                 // eprintln!("Failed to read audio frame. {:?}", msg);
-            },
-            _ => ()
+            }
+            _ => (),
         }
     }
 }
@@ -89,7 +91,12 @@ pub fn start_recording(device_index: i32, frame_length: u32) {
     init_microphone(device_index, frame_length);
 
     // start recording
-    RECORDER.get().unwrap().load().start().expect("Failed to start audio recording!");
+    RECORDER
+        .get()
+        .unwrap()
+        .load()
+        .start()
+        .expect("Failed to start audio recording!");
     IS_RECORDING.store(true, Ordering::SeqCst);
     info!("START recording from microphone ...");
 }
@@ -98,7 +105,12 @@ pub fn stop_recording() {
     // ensure microphone is initialized
     if !RECORDER.get().is_none() && IS_RECORDING.load(Ordering::SeqCst) {
         // stop recording
-        RECORDER.get().unwrap().load().stop().expect("Failed to stop audio recording!");
+        RECORDER
+            .get()
+            .unwrap()
+            .load()
+            .stop()
+            .expect("Failed to stop audio recording!");
         IS_RECORDING.store(false, Ordering::SeqCst);
         info!("STOP recording from microphone ...");
     }

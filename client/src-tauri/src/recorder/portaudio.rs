@@ -6,7 +6,7 @@ use once_cell::sync::OnceCell;
 use std::sync::{Arc, Mutex};
 use arc_swap::ArcSwap;
 use std::sync::atomic::{AtomicBool, AtomicI32, AtomicU32, Ordering};
- 
+
 thread_local!(static RECORDER: OnceCell<ArcSwap<Mutex<Stream<pa::Blocking<pa::stream::Buffer>, pa::Input<i16>>>>> = OnceCell::new());
 static SELECTED_MICROPHONE_IDX: AtomicI32 = AtomicI32::new(0);
 static FRAME_LENGTH: AtomicU32 = AtomicU32::new(0);
@@ -23,17 +23,17 @@ pub fn init_microphone(device_index: i32, frame_length: u32) -> bool {
                     Ok(stream) => {
                         // store
                         r.set(ArcSwap::from_pointee(Mutex::new(stream)));
-    
+
                         // remember current configuration
                         SELECTED_MICROPHONE_IDX.store(device_index, Ordering::SeqCst);
                         FRAME_LENGTH.store(frame_length, Ordering::SeqCst);
-    
+
                         // success
                         true
                     },
                     Err(msg) => {
                         error!("Failed to initialize portaudio.\nError details: {:?}", msg);
-    
+
                         // fail
                         false
                     }
@@ -56,23 +56,23 @@ pub fn init_microphone(device_index: i32, frame_length: u32) -> bool {
                         Ok(stream) => {
                             // store new stream
                             r.get().unwrap().store(Arc::new(Mutex::new(stream)));
-        
+
                             // remember new configuration
                             SELECTED_MICROPHONE_IDX.store(device_index, Ordering::SeqCst);
                             FRAME_LENGTH.store(frame_length, Ordering::SeqCst);
-        
+
                             // success
                             return true
                         },
                         Err(msg) => {
                             error!("Failed to initialize portaudio.\nError details: {:?}", msg);
-        
+
                             // fail
                             return false
                         }
                     }
                 }
-    
+
                 // success
                 true
             }
@@ -82,14 +82,14 @@ pub fn init_microphone(device_index: i32, frame_length: u32) -> bool {
 
 fn create_stream(device_index: i32, frame_length: u32) -> Result<Stream<pa::Blocking<pa::stream::Buffer>, pa::Input<i16>>, pa::Error> {
     let pa_recorder: Result<pa::PortAudio, pa::Error> = pa::PortAudio::new();
-    
+
     match pa_recorder {
         Ok(pa) => {
             let input_settings = match get_input_settings(DeviceIndex(device_index as u32), &pa, SAMPLE_RATE, frame_length, CHANNELS) {
                 Ok(settings) => settings,
                 Err(error) => panic!("{}", String::from(error))
             };
-        
+
             // Construct a stream with input and output sample types of i16
             match pa.open_blocking_stream(input_settings) {
                 Ok(strm) => Ok(strm),

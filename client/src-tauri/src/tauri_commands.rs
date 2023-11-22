@@ -25,3 +25,7 @@ pub use fs::*;
 // import ETC commands
 mod etc;
 pub use etc::*;
+
+// import GPT commands
+mod gpt;
+pub use gpt::*;

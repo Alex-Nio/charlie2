@@ -1,11 +1,9 @@
 // use once_cell::sync::OnceCell;
 use std::sync::atomic::{AtomicU32, Ordering};
-use log::{info, warn, error};
+use log::{info, warn};
 use atomic_enum::atomic_enum;
 
 mod pvrecorder;
-// mod cpal;
-// mod portaudio;
 
 use crate::DB;
 

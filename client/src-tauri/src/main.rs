@@ -64,7 +64,7 @@ lazy_static! {
 }
 
 fn main() {
-    let mut file = File::create("output.txt").expect("Error creating file");
+    File::create("output.txt").expect("Error creating file");
 
     // init vosk
     vosk::init_vosk();

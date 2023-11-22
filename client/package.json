@@ -5,16 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "serve": "vite",
-    "serve:tauri": "cross-env VITE_NETWORK_PROCESSOR=tauri vite",
-    "serve:native": "concurrently \"npm run serve:tauri\" \"tauri dev\"",
-    "build": "cross-env VITE_NETWORK_PROCESSOR=tauri vite build && tauri build",
-    "start:server": "npm run activate-venv && node ../backend/server.js",
-    "activate-venv": "..\\backend\\venv\\Scripts\\activate",
-    "dev:vite": "vite",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json",
-    "tauri": "tauri"
+    "build": "vite build"
   },
   "dependencies": {
     "@svelteuidev/composables": "^0.11.1",

@@ -31,24 +31,6 @@ pub fn get_repository_link() -> String {
 }
 
 #[tauri::command]
-pub fn get_tg_official_link() -> String {
-    if let Some(ver) = config::TG_OFFICIAL_LINK {
-        ver.to_string()
-    } else {
-        String::from("error")
-    }
-}
-
-#[tauri::command]
-pub fn get_feedback_link() -> String {
-    if let Some(res) = config::FEEDBACK_LINK {
-        res.to_string()
-    } else {
-        String::from("error")
-    }
-}
-
-#[tauri::command]
 pub fn get_log_file_path() -> String {
     format!("{}", APP_LOG_DIR.lock().unwrap())
 }

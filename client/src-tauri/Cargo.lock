@@ -382,6 +382,39 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "charlie-app"
+version = "0.0.3"
+dependencies = [
+ "arc-swap",
+ "atomic_enum",
+ "chrono",
+ "dotenv",
+ "hound",
+ "lazy_static",
+ "log",
+ "once_cell",
+ "peak_alloc",
+ "pickledb",
+ "portaudio",
+ "pv_porcupine",
+ "pv_recorder",
+ "rand 0.8.5",
+ "reqwest",
+ "rodio",
+ "rustpotter",
+ "seqdiff",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "simple-logging",
+ "systemstat",
+ "tauri",
+ "tauri-build",
+ "tokio",
+ "vosk",
+]
+
+[[package]]
 name = "chrono"
 version = "0.4.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1591,39 +1624,6 @@ name = "itoa"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "453ad9f582a441959e5f0d088b02ce04cfe8d51a8eaf077f12ac6d3e94164ca6"
-
-[[package]]
-name = "jarvis-app"
-version = "0.0.2"
-dependencies = [
- "arc-swap",
- "atomic_enum",
- "chrono",
- "dotenv",
- "hound",
- "lazy_static",
- "log",
- "once_cell",
- "peak_alloc",
- "pickledb",
- "portaudio",
- "pv_porcupine",
- "pv_recorder",
- "rand 0.8.5",
- "reqwest",
- "rodio",
- "rustpotter",
- "seqdiff",
- "serde",
- "serde_json",
- "serde_yaml",
- "simple-logging",
- "systemstat",
- "tauri",
- "tauri-build",
- "tokio",
- "vosk",
-]
 
 [[package]]
 name = "javascriptcore-rs"

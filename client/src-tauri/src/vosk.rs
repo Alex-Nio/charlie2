@@ -48,14 +48,3 @@ pub fn recognize(data: &[i16], include_partial: bool) -> Option<String> {
         DecodingState::Failed => None,
     }
 }
-
-// pub fn stereo_to_mono(input_data: &[i16]) -> Vec<i16> {
-//     let mut result = Vec::with_capacity(input_data.len() / 2);
-//     result.extend(
-//         input_data
-//             .chunks_exact(2)
-//             .map(|chunk| chunk[0] / 2 + chunk[1] / 2),
-//     );
-
-//     result
-// }

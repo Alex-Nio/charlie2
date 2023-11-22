@@ -41,12 +41,11 @@ pub struct ConfigCommandSection {
     pub gpt_api_url: Option<String>, // Добавлено поле для API URL
 
     #[serde(default)]
-    pub gpt_api_key: Option<String> // Добавлено поле для API Key
+    pub gpt_api_key: Option<String>, // Добавлено поле для API Key
 }
 
 #[derive(Deserialize, Debug)]
 pub struct ConfigVoiceSection {
-
     #[serde(default)]
     pub sounds: Vec<String>,
 }

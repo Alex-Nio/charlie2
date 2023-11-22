@@ -1,10 +1,10 @@
+use serde_json::{json, Value};
 use std::{
     env,
-    io::{Read, Write, BufReader},
-    fs::{File},
-    sync::{Mutex}
+    fs::File,
+    io::{BufReader, Read, Write},
+    sync::Mutex,
 };
-use serde_json::{json, Value};
 use tokio::{self, runtime::Runtime};
 
 //* GPT
@@ -68,8 +68,7 @@ pub async fn send_request_to_chatgpt(text: &str) -> Result<String, reqwest::Erro
     dotenv::dotenv().expect("Failed to load .env file");
 
     // Replace with your actual API key
-    let api_key = env::var("API_KEY")
-        .expect("API_KEY not found in .env file. Please add it.");
+    let api_key = env::var("API_KEY").expect("API_KEY not found in .env file. Please add it.");
 
     let url = "https://api.openai.com/v1/chat/completions";
 
@@ -111,7 +110,10 @@ pub async fn process_chatgpt_response(text: String) {
             let json_response: Value = serde_json::from_str(&response).unwrap(); // Распаковка JSON
 
             // Доступ к полю content
-            if let Some(choices) = json_response.get("choices").and_then(|choices| choices.as_array()) {
+            if let Some(choices) = json_response
+                .get("choices")
+                .and_then(|choices| choices.as_array())
+            {
                 if let Some(first_choice) = choices.get(0) {
                     if let Some(message) = first_choice.get("message") {
                         if let Some(content) = message.get("content") {

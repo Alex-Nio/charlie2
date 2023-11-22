@@ -3,11 +3,11 @@
 
 #[macro_use]
 extern crate lazy_static; // better switch to once_cell ?
-use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
-use log::{info};
+use log::info;
 use log::LevelFilter;
-use std::sync::Mutex;
+use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 use std::fs::File;
+use std::sync::Mutex;
 
 // expose the config
 mod config;
@@ -48,7 +48,10 @@ lazy_static! {
             SerializationMethod::Json
         )
         .unwrap_or_else(|_x: _| {
-            info!("Creating new db file at {} ...", format!("{}/{}", APP_CONFIG_DIR.lock().unwrap(), DB_FILE_NAME));
+            info!(
+                "Creating new db file at {} ...",
+                format!("{}/{}", APP_CONFIG_DIR.lock().unwrap(), DB_FILE_NAME)
+            );
             PickleDb::new(
                 format!("{}/{}", APP_CONFIG_DIR.lock().unwrap(), DB_FILE_NAME),
                 PickleDbDumpPolicy::AutoDump,
@@ -63,7 +66,20 @@ lazy_static! {
     static ref COMMANDS: Vec<AssistantCommand> = assistant_commands::parse_commands().unwrap();
 }
 
+use std::env;
+
 fn main() {
+    // Добавляем путь к папке libs в переменную окружения PATH
+    if let Ok(current_dir) = env::current_dir() {
+        let libs_path = current_dir.join("libs");
+
+        if let Some(path) = env::var_os("PATH") {
+            env::set_var("PATH", format!("{};{}", libs_path.display(), path.to_string_lossy()));
+        } else {
+            env::set_var("PATH", libs_path.display().to_string());
+        }
+    }
+
     File::create("output.txt").expect("Error creating file");
 
     // init vosk
@@ -73,15 +89,29 @@ fn main() {
     tauri::Builder::default()
         .setup(|app| {
             std::fs::create_dir_all(app.path_resolver().app_config_dir().unwrap())?;
-            APP_CONFIG_DIR.lock().unwrap().push_str(app.path_resolver().app_config_dir().unwrap().to_str().unwrap());
+            APP_CONFIG_DIR.lock().unwrap().push_str(
+                app.path_resolver()
+                    .app_config_dir()
+                    .unwrap()
+                    .to_str()
+                    .unwrap(),
+            );
 
             std::fs::create_dir_all(app.path_resolver().app_log_dir().unwrap())?;
-            APP_LOG_DIR.lock().unwrap().push_str(app.path_resolver().app_log_dir().unwrap().to_str().unwrap());
+            APP_LOG_DIR
+                .lock()
+                .unwrap()
+                .push_str(app.path_resolver().app_log_dir().unwrap().to_str().unwrap());
 
             // log to file
-            let log_file_path = format!("{}/{}", APP_LOG_DIR.lock().unwrap(), config::LOG_FILE_NAME);
-            println!("!!!===============!!!\nLOGGING TO {}\n!!!===============!!!\n", &log_file_path);
-            simple_logging::log_to_file(&log_file_path, LevelFilter::max()).expect("Failed to start logger ... is directory writable?");
+            let log_file_path =
+                format!("{}/{}", APP_LOG_DIR.lock().unwrap(), config::LOG_FILE_NAME);
+            println!(
+                "!!!===============!!!\nLOGGING TO {}\n!!!===============!!!\n",
+                &log_file_path
+            );
+            simple_logging::log_to_file(&log_file_path, LevelFilter::max())
+                .expect("Failed to start logger ... is directory writable?");
 
             Ok(())
         })

@@ -12,8 +12,6 @@ pub const LOG_FILE_NAME: &str = "log.txt";
 pub const APP_VERSION: Option<&str> = option_env!("CARGO_PKG_VERSION");
 pub const AUTHOR_NAME: Option<&str> = option_env!("CARGO_PKG_AUTHORS");
 pub const REPOSITORY_LINK: Option<&str> = option_env!("CARGO_PKG_REPOSITORY");
-pub const TG_OFFICIAL_LINK: Option<&str> = Some("https://t.me/howdyho_official");
-pub const FEEDBACK_LINK: Option<&str> = Some("https://t.me/jarvis_feedback_bot");
 
 // RUSPOTTER
 pub const RUSPOTTER_MIN_SCORE: f32 = 0.62;
@@ -25,7 +23,7 @@ pub const KEYWORDS_PATH: &str = "picovoice/keywords/";
 // VOSK
 // pub const VOSK_MODEL_PATH: &str = const_concat!(PUBLIC_PATH, "/vosk/model_small");
 pub const VOSK_FETCH_PHRASE: &str = "чарли";
-pub const VOSK_MODEL_PATH: &str = "vosk/model_small";
+pub const VOSK_MODEL_PATH: &str = "ai/vosk/model_small";
 pub const VOSK_MIN_RATIO: f64 = 70.0;
 
 // ETC

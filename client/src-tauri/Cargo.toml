@@ -1,15 +1,15 @@
 [package]
-name = "jarvis-app"
-version = "0.0.2"
-description = "Jarvis Voice Assistant"
-authors = ["Abraham Tugalov"]
+name = "charlie-app"
+version = "0.0.3"
+description = "Charlie Voice Assistant"
+authors = ["Alex Nio"]
 license = "GPL-3.0-only"
-repository = "https://github.com/Priler/jarvis"
+repository = ""
 edition = "2021"
 
 [lib]
 name = "const_concat"
-path = "src/lib.rs"
+path = "src/libs/lib.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

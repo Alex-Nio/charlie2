@@ -33,6 +33,7 @@
     "bundle": {
       "active": true,
       "icon": [
+        "icons/app-icon.png",
         "icons/32x32.png",
         "icons/128x128.png",
         "icons/128x128@2x.png",
@@ -43,14 +44,14 @@
       "resources": [
         "commands",
         "sound",
-        "vosk/model_small",
-        "picovoice",
-        "rustpotter",
-        "libvosk.dll",
-        "libstdc++-6.dll",
-        "libwinpthread-1.dll",
-        "libgcc_s_seh-1.dll",
-        "libvosk.lib"
+        "ai/vosk/model_small",
+        "ai/picovoice",
+        "ai/rustpotter",
+        "libs/libvosk.dll",
+        "libs/libstdc++-6.dll",
+        "libs/libwinpthread-1.dll",
+        "libs/libgcc_s_seh-1.dll",
+        "libs/libvosk.lib"
       ],
       "targets": "all"
     },

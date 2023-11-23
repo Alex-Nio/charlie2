@@ -5,11 +5,10 @@ use std::{
     io::{BufReader, Read, Write},
     sync::Mutex,
 };
-use tokio::{self, runtime::Runtime};
-// use tts_rust::tts::GTTSClient;
-// use tts_rust::languages::Languages;
 
-//* GPT
+use std::process::{Command};
+use tokio::{self, runtime::Runtime};
+
 lazy_static! {
     static ref FILE_MUTEX: Mutex<()> = Mutex::new(());
 }
@@ -137,8 +136,6 @@ pub async fn process_chatgpt_response(text: String) {
         }
     }
 }
-
-use std::process::{Command, exit};
 
 #[tauri::command]
 pub async fn speak_text(text: &str) -> Result<(), String> {

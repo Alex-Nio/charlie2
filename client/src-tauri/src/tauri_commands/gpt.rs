@@ -151,22 +151,23 @@ pub async fn speak_text(text: &str) -> Result<(), String> {
         Command::new("python3")
     };
 
+    println!("Текст для TTS: {}", text);
     // Set the script path and arguments
-    let command = command.arg("src/tauri_commands/tts_module.py") // Replace with the actual path to tts_module.py
-                         .arg(text);
+    let command = command
+        .arg("src/tauri_commands/tts_module.py")
+        .arg(text)
+        .output();
 
-    // Execute the command
-    let status = match command.status() {
-        Ok(status) => status,
-        Err(err) => {
-            return Err(format!("Error running Python script: {}", err));
-        }
+    let output = match command {
+        Ok(output) => output,
+        Err(err) => return Err(format!("Error running Python script: {}", err)),
     };
 
-    // Check if the Python script ran successfully
-    if !status.success() {
-        return Err(format!("Python script failed with exit code: {}", status.code().unwrap_or(-1)));
+    // Проверьте, выполнился ли скрипт Python успешно
+    if !output.status.success() {
+        return Err(format!("Python script failed with exit code: {}", output.status.code().unwrap_or(-1)));
     }
 
+    // Оставьте возвращаемый тип как Result<(), String>
     Ok(())
 }

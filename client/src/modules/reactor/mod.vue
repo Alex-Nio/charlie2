@@ -135,11 +135,11 @@ $cshadow: rgba(2, 254, 255, 0.8);
   background-color: #39aac7;
   box-shadow: 0px 0px 50px 15px $colour3, inset 0px 0px 50px 15px $colour3;
   transform: scale(1);
-  transition: transform 0.3s linear;
+  transition: transform 0.2s linear;
 
   &.active {
     transform: scale(1.25);
-    transition: transform 0.3s linear;
+    transition: transform 0.2s linear;
   }
 }
 

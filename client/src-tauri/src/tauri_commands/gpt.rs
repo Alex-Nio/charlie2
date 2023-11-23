@@ -6,6 +6,8 @@ use std::{
     sync::Mutex,
 };
 use tokio::{self, runtime::Runtime};
+// use tts_rust::tts::GTTSClient;
+// use tts_rust::languages::Languages;
 
 //* GPT
 lazy_static! {
@@ -119,6 +121,11 @@ pub async fn process_chatgpt_response(text: String) {
                         if let Some(content) = message.get("content") {
                             if let Some(content_text) = content.as_str() {
                                 println!("Ответ от Api: {}", content_text);
+
+                                // Воспроизводим текст с использованием TTS
+                                if let Err(err) = speak_text(content_text).await {
+                                    eprintln!("Error speaking text: {}", err);
+                                }
                             }
                         }
                     }
@@ -129,4 +136,37 @@ pub async fn process_chatgpt_response(text: String) {
             eprintln!("Error communicating with ChatGPT API: {}", err);
         }
     }
+}
+
+use std::process::{Command, exit};
+
+#[tauri::command]
+pub async fn speak_text(text: &str) -> Result<(), String> {
+    // Create a command to run the Python script
+    let mut command = if cfg!(target_os = "windows") {
+        // For Windows
+        Command::new("python")
+    } else {
+        // For other operating systems (Linux, macOS)
+        Command::new("python3")
+    };
+
+    // Set the script path and arguments
+    let command = command.arg("src/tauri_commands/tts_module.py") // Replace with the actual path to tts_module.py
+                         .arg(text);
+
+    // Execute the command
+    let status = match command.status() {
+        Ok(status) => status,
+        Err(err) => {
+            return Err(format!("Error running Python script: {}", err));
+        }
+    };
+
+    // Check if the Python script ran successfully
+    if !status.success() {
+        return Err(format!("Python script failed with exit code: {}", status.code().unwrap_or(-1)));
+    }
+
+    Ok(())
 }

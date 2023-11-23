@@ -43,6 +43,8 @@ reqwest = { version = "0.11", features = ["blocking", "json"] }
 tokio = { version = "1", features = ["full"] }
 chrono = "0.4"
 dotenv = "0.15"
+tts = "0.3.0"
+tts_rust = "0.3.4"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

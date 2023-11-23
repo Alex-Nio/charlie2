@@ -1,0 +1,4 @@
+simpleaudio
+torch
+numpy
+num2words

@@ -3,35 +3,25 @@
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
-    "withGlobalTauri": false,
     "devPath": "http://localhost:8080",
-    "distDir": "../dist"
+    "distDir": "../dist",
+    "withGlobalTauri": false
   },
   "package": {
     "productName": "charlie-voice-assistant",
     "version": "0.1.0"
   },
   "tauri": {
-    "allowlist": {
-      "all": false,
-      "shell": {
-        "all": false,
-        "open": true
-      },
-      "dialog": {
-        "message": true
-      },
-      "fs": {
-        "scope": [
-          "$RESOURCE/*"
-        ]
-      },
-      "path": {
-        "all": true
-      }
+    "systemTray": {
+      "iconPath": "icons/icon.ico",
+      "iconAsTemplate": true
     },
     "bundle": {
       "active": true,
+      "targets": "all",
+      "identifier": "com.alex-nio.charlie",
+      "publisher": "Alex Nio",
+      "copyright": "Alex's Nio Project Copyright",
       "icon": [
         "icons/app-icon.png",
         "icons/32x32.png",
@@ -40,7 +30,6 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.alex-nio.charlie",
       "resources": [
         ".env",
         "commands",
@@ -54,21 +43,139 @@
         "libgcc_s_seh-1.dll",
         "libvosk.lib"
       ],
-      "targets": "all"
+      "externalBin": [],
+      "category": "DeveloperTool",
+      "shortDescription": "",
+      "longDescription": "",
+      "deb": {
+        "depends": []
+      },
+      "macOS": {
+        "frameworks": [],
+        "minimumSystemVersion": "",
+        "exceptionDomain": "",
+        "signingIdentity": null,
+        "entitlements": null
+      },
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": ""
+      }
+    },
+    "allowlist": {
+      "all": false,
+      "clipboard": {
+        "all": false,
+        "readText": false,
+        "writeText": false
+      },
+      "dialog": {
+        "all": false,
+        "ask": false,
+        "confirm": false,
+        "message": true,
+        "open": false,
+        "save": false
+      },
+      "fs": {
+        "all": false,
+        "copyFile": false,
+        "createDir": true,
+        "exists": false,
+        "readDir": true,
+        "readFile": false,
+        "removeDir": false,
+        "removeFile": false,
+        "renameFile": false,
+        "scope": [
+          "$APP/*",
+          "$DOCUMENT/*",
+          "$DOWNLOAD/*",
+          "$RESOURCE/*"
+        ],
+        "writeFile": true
+      },
+      "globalShortcut": {
+        "all": false
+      },
+      "http": {
+        "all": false,
+        "request": false,
+        "scope": []
+      },
+      "path": {
+        "all": true
+      },
+      "process": {
+        "all": false,
+        "exit": false,
+        "relaunch": true,
+        "relaunchDangerousAllowSymlinkMacos": false
+      },
+      "protocol": {
+        "all": false,
+        "asset": false,
+        "assetScope": []
+      },
+      "shell": {
+        "all": false,
+        "execute": false,
+        "open": ".*",
+        "scope": [],
+        "sidecar": false
+      },
+      "window": {
+        "all": false,
+        "center": false,
+        "close": true,
+        "create": false,
+        "hide": false,
+        "maximize": true,
+        "minimize": true,
+        "print": false,
+        "requestUserAttention": false,
+        "setAlwaysOnTop": false,
+        "setCursorGrab": false,
+        "setCursorIcon": false,
+        "setCursorPosition": false,
+        "setCursorVisible": false,
+        "setDecorations": true,
+        "setFocus": true,
+        "setFullscreen": true,
+        "setIcon": false,
+        "setMaxSize": false,
+        "setMinSize": false,
+        "setPosition": false,
+        "setResizable": false,
+        "setSize": true,
+        "setSkipTaskbar": false,
+        "setTitle": false,
+        "show": false,
+        "startDragging": true,
+        "unmaximize": true,
+        "unminimize": true
+      }
     },
     "security": {
-      "csp": null
+      "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'unsafe-eval' 'unsafe-inline' 'self' img-src: 'self'"
     },
     "updater": {
       "active": false
     },
     "windows": [
       {
-        "fullscreen": false,
-        "resizable": false,
         "title": "Charlie app",
-        "width": 550,
-        "height": 700
+        "label": "main",
+        "width": 520,
+        "height": 640,
+        "minWidth": 520,
+        "minHeight": 640,
+        "resizable": false,
+        "fullscreen": false,
+        "visible": true,
+        "decorations": true,
+        "alwaysOnTop": false
       }
     ]
   }

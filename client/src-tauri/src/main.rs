@@ -8,7 +8,6 @@ use log::LevelFilter;
 use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 use std::fs::File;
 use std::sync::Mutex;
-
 // expose the config
 mod config;
 use config::*;

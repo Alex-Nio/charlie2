@@ -37,6 +37,14 @@ dependencies = [
     "post_build"
 ]
 
+[tasks.env]
+script_runner = "python"
+script_extension = "py"
+script = { file = "setup_env.py" }
+
+[tasks.env_activate]
+command = "source venv/Scripts/activate"
+
 [tasks.release]
 dependencies = [
     "format",

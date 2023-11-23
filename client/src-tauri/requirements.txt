@@ -1,0 +1,6 @@
+simpleaudio
+torch
+numpy
+num2words
+transliterate
+pyttsx3

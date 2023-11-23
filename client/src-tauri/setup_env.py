@@ -17,7 +17,7 @@ def activate_virtualenv():
 
 def install_requirements():
     # Установка библиотек из requirements.txt
-    subprocess.run([sys.executable, '-m', 'pip', 'install', '-r', os.path.join('src-tauri', 'src', 'tts', 'requirements.txt')])
+    subprocess.run([sys.executable, '-m', 'pip', 'install', '-r', os.path.join('src', 'tts', 'requirements.txt')])
 
 def main():
     create_virtualenv()

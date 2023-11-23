@@ -3,4 +3,7 @@ torch
 numpy
 num2words
 transliterate
-pyttsx3
+sounddevice
+asyncio
+pydub
+aiohttp

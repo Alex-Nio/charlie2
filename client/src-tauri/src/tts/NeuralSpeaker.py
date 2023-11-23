@@ -1,12 +1,23 @@
 import os
 import time
-
+import asyncio
+import aiohttp
 import torch
 import numpy as np
 import simpleaudio as sa
 from transliterate import translit
 from num2words import num2words
 import re
+from pydub import AudioSegment
+
+def play_audio(audio_data, sample_rate):
+    audio = sa.WaveObject(audio_data.tobytes(), 1, 2, sample_rate)
+    play_obj = audio.play()
+    play_obj.wait_done()
+
+async def play_audio_async(audio_data, sample_rate):
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, play_audio, audio_data, sample_rate)
 
 class NeuralSpeaker:
     def __init__(self):
@@ -27,9 +38,7 @@ class NeuralSpeaker:
         clean_number = match.group().replace(',', '.')
         return num2words(clean_number, lang='ru')
 
-    # Speakers available: aidar, baya, kseniya, xenia, eugene, random
-    # Speaker could be set in message using !1, !2 and alike starting chars
-    def speak(self, words, speaker='xenia', save_file=False, sample_rate=48000):
+    async def speak(self, words, speaker='xenia', save_file=False, sample_rate=48000):
         words = translit(words, 'ru')
         words = re.sub(r'-?[0-9][0-9,._]*', self.__num2words_ru, words)
         print(f'text after translit and num2words {words}')
@@ -50,18 +59,12 @@ class NeuralSpeaker:
         elif possible_speaker == '!0':
             speaker = 'random'
 
-        # Текст который будет озвучен
         example_text = f'{words}'
         if sample_rate not in [48000, 24000, 8000]:
             sample_rate = 48000
         if speaker not in ['aidar', 'baya', 'kseniya', 'xenia', 'eugene', 'random']:
             speaker = 'xenia'
-        # Эта функция сохраняет WAV на диск
-        # model.save_wav(text=example_text,
-        #                speaker=speaker,
-        #                sample_rate=sample_rate)
-        #
-        # Эта часть запускает аудио на колонках.
+
         start = time.time()
         print(f'Model started')
         try:
@@ -75,12 +78,11 @@ class NeuralSpeaker:
         time_elapsed = round(end - start, 2)
         print(f'Model applied in {time_elapsed} seconds')
         audio = audio.numpy()
-        audio *= 32767 / np.max(np.abs(audio))
+        audio *= 20767 / np.max(np.abs(audio))
         audio = audio.astype(np.int16)
-        wave_obj = sa.WaveObject(audio, 1, 2, sample_rate)
+
         if not save_file:
-            play_obj = wave_obj.play()
-            play_obj.wait_done()
+            await play_audio_async(audio, sample_rate)
             return time_elapsed
         else:
-            return wave_obj.audio_data
+            return audio.tobytes()

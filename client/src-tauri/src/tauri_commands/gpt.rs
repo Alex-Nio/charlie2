@@ -83,7 +83,7 @@ pub async fn send_request_to_chatgpt(text: &str) -> Result<String, reqwest::Erro
             {"role": "system", "content": "Your system message here"},
             {"role": "user", "content": text}
         ],
-        "max_tokens": 100,
+        "max_tokens": 250,
         "n": 1,
         "stop": null
     });
@@ -151,10 +151,10 @@ pub async fn speak_text(text: &str) -> Result<(), String> {
         Command::new("python3")
     };
 
-    println!("Текст для TTS: {}", text);
+    println!("Подготовка TTS...");
     // Set the script path and arguments
     let command = command
-        .arg("src/tauri_commands/tts_module.py")
+        .arg("src/tts/tts_module.py")
         .arg(text)
         .output();
 
@@ -168,6 +168,5 @@ pub async fn speak_text(text: &str) -> Result<(), String> {
         return Err(format!("Python script failed with exit code: {}", output.status.code().unwrap_or(-1)));
     }
 
-    // Оставьте возвращаемый тип как Result<(), String>
     Ok(())
 }

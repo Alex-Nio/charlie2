@@ -8,12 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 build
-_old
-backend/modules/model_small/
-backend/venv/
-backend/node_modules/
 client/node_modules/
 venv
+__pycache__
 
 node_modules
 dist

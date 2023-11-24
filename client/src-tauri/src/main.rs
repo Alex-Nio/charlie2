@@ -8,6 +8,8 @@ use log::LevelFilter;
 use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 use std::fs::File;
 use std::sync::Mutex;
+use tauri::{SystemTray, CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem};
+
 // expose the config
 mod config;
 use config::*;
@@ -66,6 +68,8 @@ lazy_static! {
 }
 
 use std::env;
+use tauri::Manager;
+use tauri::SystemTrayEvent;
 
 fn main() {
     // Добавляем путь к папке libs в переменную окружения PATH
@@ -83,6 +87,15 @@ fn main() {
 
     // init vosk
     vosk::init_vosk();
+
+    let quit = CustomMenuItem::new("quit".to_string(), "Закрыть");
+    let hide = CustomMenuItem::new("hide".to_string(), "Скрыть");
+    let tray_menu = SystemTrayMenu::new()
+        .add_item(quit)
+        .add_native_item(SystemTrayMenuItem::Separator)
+        .add_item(hide);
+    let system_tray = SystemTray::new()
+        .with_menu(tray_menu);
 
     // run the app
     tauri::Builder::default()
@@ -140,6 +153,51 @@ fn main() {
             tauri_commands::get_repository_link,
             tauri_commands::get_log_file_path
         ])
+        .system_tray(system_tray)
+        .on_system_tray_event(|app, event| match event {
+            SystemTrayEvent::LeftClick {
+                position: _,
+                size: _,
+                ..
+            } => {
+                let window = app.get_window("main").unwrap();
+                window.show().unwrap();
+                let _ = window.set_focus();
+                let _ = window.unminimize();
+                // println!("system tray received a left click");
+            }
+            SystemTrayEvent::RightClick {
+              position: _,
+              size: _,
+              ..
+            } => {
+                // println!("system tray received a right click");
+            }
+            SystemTrayEvent::DoubleClick {
+                position: _,
+                size: _,
+                ..
+            } => {
+                let window = app.get_window("main").unwrap();
+                window.show().unwrap();
+                let _ = window.set_focus();
+                let _ = window.unminimize();
+                // println!("system tray received a double click");
+            }
+            SystemTrayEvent::MenuItemClick { id, .. } => {
+                match id.as_str() {
+                "quit" => {
+                    std::process::exit(0);
+                }
+                "hide" => {
+                    let window = app.get_window("main").unwrap();
+                    window.hide().unwrap();
+                }
+                _ => {}
+                }
+            }
+            _ => {}
+            })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -165,7 +165,7 @@ fn keyword_callback(_keyword_index: i32) {
                             } else {
                                 // skip forward if chaining is not required
                                 start = start
-                                    .checked_sub(core::time::Duration::from_secs(1000))
+                                    .checked_sub(core::time::Duration::from_secs(500))
                                     .unwrap();
                             }
 

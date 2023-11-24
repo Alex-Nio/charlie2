@@ -70,7 +70,21 @@ list:
   phrases:
   - запусти диспетчер задач
   - открой диспетчер задач
+  - открой диспетчер
   - диспетчер задач
+
+- command:
+    action: ahk
+    exe_path: ahk/Task manager close.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - закрой диспетчер задач
+  - закрой диспетчер
 
 - command:
     action: ahk

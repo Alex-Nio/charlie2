@@ -17,7 +17,7 @@ pub fn play_sound(filename: &str, sleep: bool) {
     let source = Decoder::new(file).unwrap();
 
     // Play the sound directly on the device
-    println!("Playing {} ...", filepath);
+    // println!("Playing {} ...", filepath);
     // stream_handle.play_raw(source.convert_samples());
     sink.append(source);
 

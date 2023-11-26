@@ -29,3 +29,7 @@ pub use etc::*;
 // import GPT commands
 mod gpt;
 pub use gpt::*;
+
+// import TTS
+mod tts;
+pub use tts::*;

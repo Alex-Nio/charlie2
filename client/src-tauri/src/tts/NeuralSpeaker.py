@@ -21,10 +21,10 @@ async def play_audio_async(audio_data, sample_rate):
 
 class NeuralSpeaker:
     def __init__(self):
-        print('Initializing neural model')
+        # print('Initializing neural model')
         start = time.time()
         device = torch.device('cpu')
-        torch.set_num_threads(4)
+        torch.set_num_threads(12)
         local_file = 'model.pt'
         if not os.path.isfile(local_file):
             torch.hub.download_url_to_file('https://models.silero.ai/models/tts/ru/v3_1_ru.pt', local_file)
@@ -41,7 +41,7 @@ class NeuralSpeaker:
     async def speak(self, words, speaker='xenia', save_file=False, sample_rate=48000):
         words = translit(words, 'ru')
         words = re.sub(r'-?[0-9][0-9,._]*', self.__num2words_ru, words)
-        print(f'text after translit and num2words {words}')
+        # print(f'text after translit and num2words {words}')
         if len(words) > 3:
             possible_speaker = words[0:2]
         else:
@@ -66,7 +66,7 @@ class NeuralSpeaker:
             speaker = 'xenia'
 
         start = time.time()
-        print(f'Model started')
+        print(f'[+] TTS модель проинициализирована...')
         try:
             audio = self.__model.apply_tts(text=example_text,
                                            speaker=speaker,
@@ -76,9 +76,9 @@ class NeuralSpeaker:
             return
         end = time.time()
         time_elapsed = round(end - start, 2)
-        print(f'Model applied in {time_elapsed} seconds')
+        print(f'Время инициализации заняло {time_elapsed} секунд')
         audio = audio.numpy()
-        audio *= 20767 / np.max(np.abs(audio))
+        audio *= 22767 / np.max(np.abs(audio))
         audio = audio.astype(np.int16)
 
         if not save_file:

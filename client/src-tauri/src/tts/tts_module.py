@@ -18,10 +18,13 @@ neural_speaker = NeuralSpeaker()
 audio_devices = sd.query_devices()
 
 # Используйте следующую строку, чтобы увидеть доступные аудиоустройства и их параметры
-logger.info("Audio Devices: %s", audio_devices)
+# logger.info("Audio Devices: %s", audio_devices)
 
 # Выберите идентификатор вашего микрофона
 microphone_device_id = 0
+
+# Флаг для прерывания TTS
+stop_requested = False
 
 # Функция для отключения микрофона
 def disable_microphone():
@@ -29,26 +32,42 @@ def disable_microphone():
 
 # Функция для включения микрофона
 def enable_microphone(sample_rate, channels):
-    duration = 1.0  # Вы можете настроить продолжительность в зависимости от ваших потребностей
+    duration = 1.2  # Вы можете настроить продолжительность в зависимости от ваших потребностей
     myrecording = sd.rec(int(sample_rate * duration), channels=channels, dtype=np.int16, device=microphone_device_id)
     sd.wait()
 
 async def tts_speak_async(words, speaker='eugene', save_file=False, sample_rate=48000):
-    logger.info('Received words: %s', words)
+    global stop_requested  # Используем глобальный флаг
 
-    # Отключение микрофона перед воспроизведением речи
-    disable_microphone()
+    logger.info('Запрос к TTS: %s', words)
+
+    # Убираем блок с кодом из текста
+    words = remove_code_block(words)
+
+    # Проверяем флаг остановки
+    if stop_requested:
+        logger.info('Stop requested. Skipping TTS.')
+        return
 
     try:
         result = await neural_speaker.speak(words=words, speaker=speaker, save_file=save_file, sample_rate=sample_rate)
-        logger.info('Обработка выходного текста...')
         return result
     except Exception as e:
         logger.error('Error processing text: %s', e)
         raise
     finally:
-        # Включение микрофона после воспроизведения речи
-        enable_microphone(sample_rate, channels=2)  # Передача параметров sample_rate и channels
+        pass
+
+def remove_code_block(text):
+    # Используем регулярное выражение для удаления блока кода между ``` и ```
+    import re
+    pattern = re.compile(r"```(?:[^`]+)```", re.MULTILINE | re.DOTALL)
+    return pattern.sub('', text)
+
+# Функция для запроса прерывания TTS
+def request_stop():
+    global stop_requested
+    stop_requested = True
 
 if __name__ == "__main__":
     # Получение текста из командной строки

@@ -185,6 +185,12 @@ fn keyword_callback(_keyword_index: i32) {
                 } else {
                     tauri_commands::write_to_file(&test);
 
+                    if test.contains("стоп") {
+                        let _ = tauri_commands::stop_tts();
+                        println!("Выход из цикла. остановка TTS");
+                        break;
+                    }
+
                     match tauri_commands::read_output_text() {
                         Ok(output_text) => {
                             // Do something with the text

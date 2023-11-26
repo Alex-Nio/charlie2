@@ -1,3 +1,4 @@
+use regex::Regex;
 use serde_json::{json, Value};
 use std::{
     env,
@@ -5,9 +6,9 @@ use std::{
     io::{BufReader, Read, Write},
     sync::Mutex,
 };
-
-use std::process::{Command};
+use std::fs::OpenOptions;
 use tokio::{self, runtime::Runtime};
+use crate::tauri_commands;
 
 lazy_static! {
     static ref FILE_MUTEX: Mutex<()> = Mutex::new(());
@@ -19,6 +20,44 @@ pub fn write_to_file(output: &str) {
 
     let mut file = File::create("output.txt").expect("Error creating file");
     writeln!(file, "{}", output.to_lowercase()).expect("Error writing to file");
+}
+
+#[tauri::command]
+pub fn write_code_to_file(response: &str) {
+    let json_response: Value = serde_json::from_str(response).unwrap(); // Распаковка JSON
+
+    // Доступ к полю content
+    if let Some(choices) = json_response
+        .get("choices")
+        .and_then(|choices| choices.as_array())
+    {
+        if let Some(first_choice) = choices.get(0) {
+            if let Some(message) = first_choice.get("message") {
+                if let Some(content) = message.get("content") {
+                    if let Some(content_text) = content.as_str() {
+                        // Используем регулярное выражение для поиска текста между "```"
+                        let re = Regex::new(r"```([\s\S]+?)```").unwrap();
+
+                        // Открываем файл в режиме записи, добавляя новый контент
+                        let mut file = OpenOptions::new()
+                            .write(true)
+                            .truncate(true)
+                            .create(true)
+                            .open("code.txt")
+                            .expect("Error opening file");
+
+                        for cap in re.captures_iter(content_text) {
+                            if let Some(code) = cap.get(1) {
+                                if !code.as_str().is_empty() {
+                                    writeln!(file, "{}", code.as_str()).expect("Error writing to file");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 #[tauri::command]
@@ -54,8 +93,18 @@ pub fn read_output_text_and_process() {
 
 #[tauri::command]
 pub async fn send_request_to_chatgpt_api_async(text: &str) -> Result<String, reqwest::Error> {
+    if text.contains("стоп") {
+        println!("Cancellation detected. Exiting API request.");
+        return Ok(String::new()); // Возвращаем пустую строку, так как запрос прерван
+    }
+
     send_request_to_chatgpt(text).await
 }
+
+use std::sync::atomic::{AtomicUsize, Ordering};
+
+// Определение атомарной переменной для подсчета выполненных запросов
+static REQUEST_COUNT: AtomicUsize = AtomicUsize::new(0);
 
 #[tauri::command]
 pub async fn send_request_to_chatgpt(text: &str) -> Result<String, reqwest::Error> {
@@ -73,21 +122,36 @@ pub async fn send_request_to_chatgpt(text: &str) -> Result<String, reqwest::Erro
 
     let url = "https://api.openai.com/v1/chat/completions";
 
-    println!("Запрос к API: {:?}", text);
+    // Get the previous context from the static variable
+    let previous_context = PREVIOUS_CONTEXT.lock().unwrap().clone();
 
-    // Create a JSON object with the request payload
+    // Clone the previous context before adding the new text
+    let previous_context_clone = previous_context.clone();
+
+    // Create a JSON object with the request payload, including the previous context
     let request_payload = json!({
         "model": "gpt-3.5-turbo-1106",
         "messages": [
-            {"role": "system", "content": "Your system message here"},
-            {"role": "user", "content": text}
+            {"role": "system", "content": "Ты голосовой ассистент по имени Чарли, отвечаешь на русском языке"},
+            {"role": "user", "content": previous_context_clone + text}
         ],
         "max_tokens": 250,
         "n": 1,
         "stop": null
     });
 
-    // println!("API Request: {:?}", request_payload);
+    // Update the static variable with the current context
+    *PREVIOUS_CONTEXT.lock().unwrap() = format!("{}{}", previous_context, text);
+
+    // Увеличение счетчика выполненных запросов
+    let request_count = REQUEST_COUNT.fetch_add(1, Ordering::SeqCst);
+
+    // Если выполнено три запроса, сброс контекста
+    if request_count >= 0 {
+        *PREVIOUS_CONTEXT.lock().unwrap() = String::new();
+        // Сброс счетчика запросов
+        REQUEST_COUNT.store(0, Ordering::SeqCst);
+    }
 
     // Send a POST request to the ChatGPT API
     let response = reqwest::Client::new()
@@ -101,6 +165,11 @@ pub async fn send_request_to_chatgpt(text: &str) -> Result<String, reqwest::Erro
     // Parse and return the response
     let response_text = response?.text().await?;
     Ok(response_text)
+}
+
+// Define a static variable to store the previous context
+lazy_static::lazy_static! {
+    static ref PREVIOUS_CONTEXT: Mutex<String> = Mutex::new(String::new());
 }
 
 #[tauri::command]
@@ -121,10 +190,17 @@ pub async fn process_chatgpt_response(text: String) {
                             if let Some(content_text) = content.as_str() {
                                 println!("Ответ от Api: {}", content_text);
 
+                                // Записываем код в файл
+                                if content_text.contains("javascript") {
+                                    write_code_to_file(&response);
+                                }
+
                                 // Воспроизводим текст с использованием TTS
-                                if let Err(err) = speak_text(content_text).await {
+                                if let Err(err) = tauri_commands::speak_text((&content_text).to_string()).await {
                                     eprintln!("Error speaking text: {}", err);
                                 }
+
+                                println!("TTS End with Ok status");
                             }
                         }
                     }
@@ -137,33 +213,3 @@ pub async fn process_chatgpt_response(text: String) {
     }
 }
 
-#[tauri::command]
-pub async fn speak_text(text: &str) -> Result<(), String> {
-    // Create a command to run the Python script
-    let mut command = if cfg!(target_os = "windows") {
-        // For Windows
-        Command::new("python")
-    } else {
-        // For other operating systems (Linux, macOS)
-        Command::new("python3")
-    };
-
-    println!("Подготовка TTS...");
-    // Set the script path and arguments
-    let command = command
-        .arg("src/tts/tts_module.py")
-        .arg(text)
-        .output();
-
-    let output = match command {
-        Ok(output) => output,
-        Err(err) => return Err(format!("Error running Python script: {}", err)),
-    };
-
-    // Проверьте, выполнился ли скрипт Python успешно
-    if !output.status.success() {
-        return Err(format!("Python script failed with exit code: {}", output.status.code().unwrap_or(-1)));
-    }
-
-    Ok(())
-}

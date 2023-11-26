@@ -5,7 +5,10 @@ pub fn pv_get_audio_devices() -> Vec<String> {
     let audio_devices = RecorderBuilder::default().get_audio_devices();
     match audio_devices {
         Ok(audio_devices) => audio_devices,
-        Err(err) => panic!("Failed to get audio devices: {}", err),
+        Err(err) => {
+            eprintln!("Failed to get audio devices: {}", err);
+            panic!("Failed to get audio devices: {}", err)
+        }
     }
 }
 

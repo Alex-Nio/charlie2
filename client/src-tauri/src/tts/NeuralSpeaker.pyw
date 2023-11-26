@@ -31,7 +31,7 @@ class NeuralSpeaker:
         self.__model = torch.package.PackageImporter(local_file).load_pickle("tts_models", "model")
         self.__model.to(device)
         end = time.time()
-        print(f'Model ready in {round(end - start, 2)} seconds')
+        # print(f'Model ready in {round(end - start, 2)} seconds')
 
     @staticmethod
     def __num2words_ru(match):
@@ -66,17 +66,17 @@ class NeuralSpeaker:
             speaker = 'xenia'
 
         start = time.time()
-        print(f'[+] TTS модель проинициализирована...')
+        # print(f'[+] TTS модель проинициализирована...')
         try:
             audio = self.__model.apply_tts(text=example_text,
                                            speaker=speaker,
                                            sample_rate=sample_rate, )
         except ValueError:
-            print('Bad input')
+            # print('Bad input')
             return
         end = time.time()
         time_elapsed = round(end - start, 2)
-        print(f'Время инициализации заняло {time_elapsed} секунд')
+        # print(f'Время инициализации заняло {time_elapsed} секунд')
         audio = audio.numpy()
         audio *= 22767 / np.max(np.abs(audio))
         audio = audio.astype(np.int16)

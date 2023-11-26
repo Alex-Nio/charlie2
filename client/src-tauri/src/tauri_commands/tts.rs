@@ -58,7 +58,7 @@ impl TTSProcess {
 
         // Устанавливаем путь к скрипту и аргументы
         let command = command
-            .arg("src/tts/tts_module.py")
+            .arg("src/tts/tts_module.pyw")
             .arg(text)
             .spawn();
 

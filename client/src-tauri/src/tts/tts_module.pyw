@@ -39,21 +39,21 @@ def enable_microphone(sample_rate, channels):
 async def tts_speak_async(words, speaker='eugene', save_file=False, sample_rate=48000):
     global stop_requested  # Используем глобальный флаг
 
-    logger.info('Запрос к TTS: %s', words)
+    # logger.info('Запрос к TTS: %s', words)
 
     # Убираем блок с кодом из текста
     words = remove_code_block(words)
 
     # Проверяем флаг остановки
     if stop_requested:
-        logger.info('Stop requested. Skipping TTS.')
+        # logger.info('Stop requested. Skipping TTS.')
         return
 
     try:
         result = await neural_speaker.speak(words=words, speaker=speaker, save_file=save_file, sample_rate=sample_rate)
         return result
     except Exception as e:
-        logger.error('Error processing text: %s', e)
+        # logger.error('Error processing text: %s', e)
         raise
     finally:
         pass
@@ -76,5 +76,5 @@ if __name__ == "__main__":
         import asyncio
         asyncio.run(tts_speak_async(text_from_command_line))
     except Exception as e:
-        logger.error('Error speaking text: %s', e)
+        # logger.error('Error speaking text: %s', e)
         sys.exit(1)

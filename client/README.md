@@ -31,3 +31,4 @@ cargo tauri build
 1. [TTS модель](https://github.com/zxcq544/russian_text_to_speech)
 2. [ruGPT-3.5-13B на Hugging Face](https://huggingface.co/ai-forever/ruGPT-3.5-13B/tree/main)
 3. [nircmd download](https://www.nirsoft.net/utils/nircmd.html)
+4. [ffmpeg download](https://www.gyan.dev/ffmpeg/builds/)

@@ -123,17 +123,17 @@ pub async fn send_request_to_chatgpt(text: &str) -> Result<String, reqwest::Erro
     let url = "https://api.openai.com/v1/chat/completions";
 
     // Get the previous context from the static variable
-    let previous_context = PREVIOUS_CONTEXT.lock().unwrap().clone();
+    // let previous_context = PREVIOUS_CONTEXT.lock().unwrap().clone();
 
     // Clone the previous context before adding the new text
-    let previous_context_clone = previous_context.clone();
+    // let previous_context_clone = previous_context.clone();
 
     // Create a JSON object with the request payload, including the previous context
     let request_payload = json!({
         "model": "gpt-3.5-turbo-1106",
         "messages": [
             {"role": "system", "content": "Ты голосовой ассистент по имени Чарли, отвечаешь на русском языке"},
-            {"role": "user", "content": previous_context_clone + text}
+            {"role": "user", "content": text}
         ],
         "max_tokens": 250,
         "n": 1,
@@ -141,7 +141,7 @@ pub async fn send_request_to_chatgpt(text: &str) -> Result<String, reqwest::Erro
     });
 
     // Update the static variable with the current context
-    *PREVIOUS_CONTEXT.lock().unwrap() = format!("{}{}", previous_context, text);
+    // *PREVIOUS_CONTEXT.lock().unwrap() = format!("{}{}", previous_context, text);
 
     // Увеличение счетчика выполненных запросов
     // let request_count = REQUEST_COUNT.fetch_add(1, Ordering::SeqCst);

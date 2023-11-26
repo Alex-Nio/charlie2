@@ -167,9 +167,9 @@ fn main() {
                 // println!("system tray received a left click");
             }
             SystemTrayEvent::RightClick {
-              position: _,
-              size: _,
-              ..
+                position: _,
+                size: _,
+                ..
             } => {
                 // println!("system tray received a right click");
             }

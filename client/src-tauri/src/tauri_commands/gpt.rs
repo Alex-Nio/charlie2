@@ -144,14 +144,16 @@ pub async fn send_request_to_chatgpt(text: &str) -> Result<String, reqwest::Erro
     *PREVIOUS_CONTEXT.lock().unwrap() = format!("{}{}", previous_context, text);
 
     // Увеличение счетчика выполненных запросов
-    let request_count = REQUEST_COUNT.fetch_add(1, Ordering::SeqCst);
+    // let request_count = REQUEST_COUNT.fetch_add(1, Ordering::SeqCst);
 
     // Если выполнено три запроса, сброс контекста
-    if request_count >= 0 {
-        *PREVIOUS_CONTEXT.lock().unwrap() = String::new();
-        // Сброс счетчика запросов
-        REQUEST_COUNT.store(0, Ordering::SeqCst);
-    }
+    // if request_count >= 0 {
+    //     *PREVIOUS_CONTEXT.lock().unwrap() = String::new();
+    //     // Сброс счетчика запросов
+    //     REQUEST_COUNT.store(0, Ordering::SeqCst);
+    // }
+
+    REQUEST_COUNT.store(0, Ordering::SeqCst);
 
     // Send a POST request to the ChatGPT API
     let response = reqwest::Client::new()

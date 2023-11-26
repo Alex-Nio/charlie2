@@ -461,6 +461,7 @@ dependencies = [
  "pv_porcupine",
  "pv_recorder",
  "rand 0.8.5",
+ "regex",
  "reqwest",
  "rodio 0.17.1",
  "rustpotter",

@@ -3,7 +3,6 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
-
 // Структура, чтобы хранить информацию о процессе TTS
 struct TTSProcess {
     child: Option<Child>,

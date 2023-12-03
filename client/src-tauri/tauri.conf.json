@@ -5,7 +5,7 @@
     "beforeBuildCommand": "npm run build",
     "devPath": "http://localhost:8080",
     "distDir": "../dist",
-    "withGlobalTauri": false
+    "withGlobalTauri": true
   },
   "package": {
     "productName": "charlie-voice-assistant",
@@ -111,7 +111,7 @@
         "writeFile": true
       },
       "globalShortcut": {
-        "all": false
+        "all": true
       },
       "http": {
         "all": false,
@@ -144,7 +144,7 @@
         "center": false,
         "close": true,
         "create": false,
-        "hide": false,
+        "hide": true,
         "maximize": true,
         "minimize": true,
         "print": false,
@@ -165,7 +165,7 @@
         "setSize": true,
         "setSkipTaskbar": false,
         "setTitle": false,
-        "show": false,
+        "show": true,
         "startDragging": true,
         "unmaximize": true,
         "unminimize": true
@@ -188,7 +188,7 @@
         "resizable": false,
         "fullscreen": false,
         "visible": true,
-        "decorations": true,
+        "decorations": false,
         "alwaysOnTop": false
       }
     ]

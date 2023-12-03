@@ -1,0 +1,201 @@
+// *================================================================
+//? Absolute-elements centered
+// *================================================================
+
+//? after
+@mixin absolute-centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+// *================================================================
+//? Pseudo-elements centered
+// *================================================================
+
+//? after
+@mixin after-centered {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+//? before
+@mixin before-centered {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+// *================================================================
+//? Transitions
+// *================================================================
+
+@mixin defaultTransition {
+  transition: all 0.3s linear;
+}
+
+@mixin fastTransition {
+  transition: all 0.1s ease-in-out;
+}
+
+@mixin slowTransition {
+  transition: all 0.5s linear;
+}
+
+// *================================================================
+//? Hovers
+// *================================================================
+
+@mixin base-hover($color) {
+  &:hover {
+    background-color: darken($color: $color, $amount: 8%);
+    @include defaultTransition;
+  }
+}
+
+//? Mobile disabled hover
+@mixin hover {
+  @media (any-hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+// *================================================================
+//? Media queries
+// *================================================================
+
+@mixin media-pc {
+  @media screen and (max-width: $pc) {
+    @content;
+  }
+}
+
+@mixin media-laptop {
+  @media screen and (max-width: $laptop) {
+    @content;
+  }
+}
+
+@mixin media-tablet {
+  @media screen and (max-width: $tablet) {
+    @content;
+  }
+}
+
+@mixin media-mobile {
+  @media screen and (max-width: $mobile) {
+    @content;
+  }
+}
+
+// *================================================================
+//? Сброс margin первого и последнего
+// *================================================================
+
+@mixin reset-horizontal-margin {
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+@mixin reset-vertical-margin {
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// *================================================================
+//? Адаптивное свойство
+// *================================================================
+
+@mixin adaptive-value($property, $startSize, $minSize, $type) {
+  $addSize: $startSize - $minSize;
+  @if $type == 1 {
+    // Только если меньше контейнера
+    #{$property}: $startSize + px;
+
+    @media (max-width: #{$maxWidthContainer + px}) {
+      #{$property}: calc(
+        #{$minSize + px} + #{$addSize} *
+          ((100vw - 320px) / #{$maxWidthContainer - 320})
+      );
+    }
+  } @else if $type == 2 {
+    // Только если больше контейнера
+    #{$property}: $startSize + px;
+
+    @media (min-width: #{$maxWidthContainer + px}) {
+      #{$property}: calc(
+        #{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
+      );
+    }
+  } @else {
+    // Всегда
+    #{$property}: calc(
+      #{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
+    );
+  }
+}
+
+
+// *================================================================
+//? Другое
+// *================================================================
+
+@mixin pagination {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  text-align: center;
+  height: 12px;
+
+  .swiper-pagination-bullet-active {
+    width: 44px;
+    height: 4px;
+    border-radius: 5px;
+    background: $black;
+    @include defaultTransition;
+  }
+
+  & .swiper-pagination-bullet {
+    &:not(.swiper-pagination-bullet-active) {
+      width: 44px;
+      height: 4px;
+      border-radius: 5px;
+      background: #ebebeb;
+      box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.1);
+      opacity: 1;
+      @include defaultTransition;
+
+      &:last-child {
+        width: 22px;
+        height: 4px;
+        border-radius: 5px;
+        background: #ebebeb;
+        box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}

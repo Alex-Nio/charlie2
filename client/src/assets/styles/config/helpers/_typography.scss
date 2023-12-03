@@ -1,0 +1,227 @@
+
+// *================================================================
+//? Шрифты и заголовки
+// *================================================================
+
+//? SemiBold
+
+//40px
+@mixin ns-sb40px {
+  font-family: $ff_NSsb;
+  font-size: 40px;
+  line-height: 56px;
+}
+
+// 32px
+@mixin ns-sb32px {
+  font-family: $ff_NSsb;
+  font-size: 32px;
+  line-height: 46px;
+}
+
+// 24px
+@mixin ns-sb24px {
+  font-family: $ff_NSsb;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+// 22px
+@mixin ns-sb22px {
+  font-family: $ff_NSsb;
+  font-size: 22px;
+  line-height: 32px;
+}
+
+// 20px
+@mixin ns-sb20px {
+  font-family: $ff_NSsb;
+  font-size: 20px;
+  line-height: 30px;
+}
+
+// 18px
+@mixin ns-sb18px {
+  font-family: $ff_NSsb;
+  font-size: 18px;
+  line-height: 26px;
+}
+
+// 16px
+@mixin ns-sb16px {
+  font-family: $ff_NSsb;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+// 14px
+@mixin ns-sb14px {
+  font-family: $ff_NSsb;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+// 12px
+@mixin ns-sb12px {
+  font-family: $ff_NSsb;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+// 10px
+@mixin ns-sb10px {
+  font-family: $ff_NSsb;
+  font-size: 10px;
+  line-height: 16px;
+}
+
+// 8px
+@mixin ns-sb8px {
+  font-family: $ff_NSsb;
+  font-size: 8px;
+  line-height: 12px;
+}
+
+//? Medium
+
+//40px
+@mixin ns-m40px {
+  font-family: $ff_NSm;
+  font-size: 40px;
+  line-height: 56px;
+}
+
+// 32px
+@mixin ns-m32px {
+  font-family: $ff_NSm;
+  font-size: 32px;
+  line-height: 46px;
+}
+
+// 24px
+@mixin ns-m24px {
+  font-family: $ff_NSm;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+// 22px
+@mixin ns-m22px {
+  font-family: $ff_NSm;
+  font-size: 22px;
+  line-height: 32px;
+}
+
+// 20px
+@mixin ns-m20px {
+  font-family: $ff_NSm;
+  font-size: 20px;
+  line-height: 30px;
+}
+
+// 18px
+@mixin ns-m18px {
+  font-family: $ff_NSm;
+  font-size: 18px;
+  line-height: 26px;
+}
+
+// 16px
+@mixin ns-m16px {
+  font-family: $ff_NSm;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+// 14px
+@mixin ns-m14px {
+  font-family: $ff_NSm;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+// 12px
+@mixin ns-m12px {
+  font-family: $ff_NSm;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+// 10px
+@mixin ns-m10px {
+  font-family: $ff_NSm;
+  font-size: 10px;
+  line-height: 16px;
+}
+
+// 8px
+@mixin ns-m8px {
+  font-family: $ff_NSm;
+  font-size: 8px;
+  line-height: 12px;
+}
+
+//? Regular
+
+// 24px
+@mixin ns-r24px {
+  font-family: $ff_NSr;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+// 22px
+@mixin ns-r22px {
+  font-family: $ff_NSr;
+  font-size: 22px;
+  line-height: 32px;
+}
+
+// 20px
+@mixin ns-r20px {
+  font-family: $ff_NSr;
+  font-size: 20px;
+  line-height: 30px;
+}
+
+// 18px
+@mixin ns-r18px {
+  font-family: $ff_NSr;
+  font-size: 18px;
+  line-height: 26px;
+}
+
+// 16px
+@mixin ns-r16px {
+  font-family: $ff_NSr;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+// 14px
+@mixin ns-r14px {
+  font-family: $ff_NSr;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+// 12px
+@mixin ns-r12px {
+  font-family: $ff_NSr;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+// 10px
+@mixin ns-r10px {
+  font-family: $ff_NSr;
+  font-size: 10px;
+  line-height: 16px;
+}
+
+// 8px
+@mixin ns-r8px {
+  font-family: $ff_NSr;
+  font-size: 8px;
+  line-height: 12px;
+}

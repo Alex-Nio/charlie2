@@ -1,0 +1,80 @@
+//? Основные цвета
+$main: #f6f6f6;
+$white: #ffffff;
+$black: #242625;
+$accent: #0a615c;
+// Primary
+$primary-100: #242625;
+$primary-200: #ffffff;
+$primary-300: #0a615c;
+// Secondary
+$secondary-100: #f6f6f6;
+$secondary-100-opacity: #f6f6f6cc;
+$secondary-200: #ebebeb;
+$secondary-300: #a7a7a7;
+$secondary-400: #636363;
+$secondary-500: #303332;
+// Additionally
+$additionally-100: #1c736e;
+$additionally-200: #00c08b;
+$additionally-300: #6c345e;
+$additionally-400: #ffc56d;
+$additionally-500: #5887da;
+$additionally-600: #ea6852;
+
+//? Состояния
+$normal: #0a615c;
+$hover: #1c736e;
+$active: #0a615c;
+$error: #ea6852;
+// $disabled: ;
+
+//? Состояния текста
+// $default-text: ;
+// $hover-text: ;
+// $active-text: ;
+// $disabled-text: ;
+
+//? Фоны
+//? Размер иконок
+$icon-fz-small: 20px;
+$icon-fz-medium: 24px;
+$icon-fz-large: 34px;
+
+//? Border-radius
+$default-br: 5px;
+
+//? Z-index
+$header-z-index: 55;
+$search-popup-z-index: 100;
+
+//? По умолчанию
+$base_fz: 16px; //? Размер шрифта по умолчанию 16px
+$base_ff: "Roboto", sans-serif; //? Шрифт по умолчанию
+$base_hover: $hover; //? Цвет hover по умолчанию
+$base_bg: url("./../../assets/images/main-background.gif") no-repeat center / cover; //? Цвет фона по умолчанию
+$base_color: $white; //? Цвет текста по умолчанию
+
+//! Направление right-to-left или left-to-right
+// $web-direction: rtl;
+$web-direction: ltr;
+
+//? Переменные семейств шрифтов
+// $ff_NSr: 'NotoSans-Regular', sans-serif;
+// $ff_NSm: 'NotoSans-Medium', sans-serif;
+// $ff_NSsb: 'NotoSans-SemiBold', sans-serif;
+
+//? Стиль шрифтов
+$I: italic;
+$O: oblique;
+
+//? Толщина семейства шрифтов
+$th: 100; // Thin
+$el: 200; // Extra Light
+$l: 300; // Light
+$r: 400; // Regular
+$m: 500; // Medium
+$sb: 600; // SemiBold
+$b: 700; // Bold
+$eb: 800; // Extra Bold
+$bl: 900; // Super

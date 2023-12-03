@@ -1,0 +1,95 @@
+// *================================================================
+
+//? Размеры
+$maxWidth: 1920; // Ширина полотна (макета)
+$maxWidthContainer: 1280; // Ширина ПК контейнера
+$minWidth: 320px; // Минимальная ширина страницы
+
+//? Общий отступ у контейнера (Пример формулы расчёта ниже)
+// (если $responsiveType = 1, то 32px / 2 = 16px слева и справа)
+// (если $responsiveType = 2, то 16px * 2 = 32px слева и справа)
+// 0 = нет отступа
+$containerPadding: 16px;
+
+//? Ширина срабатывания первого брейкпоинта
+$containerWidth: $maxWidthContainer + $containerPadding;
+
+//? Высота отступа контента от fixed header
+$headerHeight: 112px;
+
+//! ================================================================
+//! Настройки Контейнера
+/*
+  (i) Стили будут применяться ко
+  всем классам содержащим *__container
+  Например header__container, main__container и т.д.
+*/
+
+[class*='__container'] {
+  max-width: $maxWidthContainer + $containerPadding * 2;
+  margin: 0 auto;
+  padding: 0 $containerPadding;
+}
+
+// Ограничивающий контейнер
+//? Тип адаптива (Выбрать нужный вариант):
+//* 1 = отзывчивость (у контейнера нет брейкпоинтов),
+//* 2 = по брейк-поинтам (контейнер меняет свою ширину по брейк-поинтам см. _variables.scss)
+
+$responsiveType: 2;
+
+// Отзывчивая
+@if ($responsiveType == 1) {
+  [class*='__container'] {
+    // Фулл-сайз
+    @if ($maxWidthContainer > 0) {
+      max-width: rem($maxWidthContainer);
+      margin: 0 auto;
+    }
+
+    // Если padding > 0 делим на 2
+    @if ($containerPadding > 0) {
+      padding: 0 math.div($containerPadding, 2);
+    }
+  }
+}
+
+// По брейк-поинтам
+@else {
+  [class*='__container'] {
+    // макс ширина контейнера + padding * 2
+    @media (max-width: $pc) {
+      max-width: toRem(1200);
+      padding: 0 64px;
+    }
+
+    // макс ширина контейнера + padding * 2
+    @media (max-width: $laptop) {
+      max-width: toRem(992);
+      padding: 0 40px;
+    }
+
+    // макс ширина контейнера + padding * 2
+    @media (max-width: $tablet) {
+      max-width: toRem(768);
+      padding: 0 40px;
+    }
+
+    //! Посмотреть, на какой странице это актуально!
+    // @media (max-width: 840px) {
+    //   padding: 0 16px;
+    // }
+
+    // макс ширина контейнера + padding * 2
+    @media (max-width: $mobile) {
+      max-width: toRem(728);
+      padding: 0 20px;
+    }
+
+    // макс ширина контейнера - padding * 2
+    @media (max-width: $mobileSmall) {
+      max-width: 100%;
+      padding: 0 20px;
+    }
+  }
+}

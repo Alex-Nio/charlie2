@@ -1,6 +1,400 @@
+@import "./config/imports.scss";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 100%;
+  scrollbar-width: 8px;
+  scrollbar-color: $white #d6d6d6;
+
+  // Chrome, Edge, and Safari
+  &::-webkit-scrollbar {
+    width: 8px;
+    background-color: $white;
+  }
+
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(#000, 20%);
+    border-radius: 4px;
+    background: #eee;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    border: 0px none #fff;
+    background-color: lighten($white, 10%);
+    -webkit-transition: all 280ms ease-in-out;
+    transition: all 280ms ease-in-out;
+
+    &:hover {
+      background-color: $white;
+    }
+  }
+}
+
 body {
-  background-color: #000000;
-  color: #ffffff;
-  font-size: 16px;
-  line-height: 140%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  font-size: $base_fz;
+  font-family: $base_ff;
+  font-style: normal;
+  color: $base_color;
+  background: $base_bg;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  backface-visibility: hidden;
+  line-height: 1;
+  -webkit-backface-visibility: hidden;
+  min-width: $minWidth;
+
+  // Скролл заблокирован
+  &.lock {
+    overflow: hidden !important;
+    touch-action: none !important;
+  }
+}
+
+// Оболочка wrapper
+.full-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 48px);
+  flex-grow: 1;
+  padding: 30px;
+
+  // Прижимаем footer
+  > main {
+    flex: 1 1 auto;
+  }
+
+  // Фикс для слайдеров
+  > * {
+    min-width: 0;
+  }
+}
+
+// Добавляем скролл если ширина экрана меньше минимальной ширины
+@media screen and (max-width: $minWidth) {
+  body {
+    overflow-x: scroll;
+  }
+}
+
+main,
+header,
+footer,
+.product-card-header,
+[data-popup] {
+  direction: $web-direction;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  cursor: default; // сброс стандартного курсора при наведении на заголовок и текст
+}
+
+img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+a {
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+
+span {
+  display: inline-block;
+}
+
+ul,
+ol {
+  list-style-type: none;
+}
+
+input,
+textarea {
+  &:focus,
+  :active {
+    outline: none;
+  }
+}
+
+// ------------------------------------------------
+// -------------------Buttons----------------------
+// ------------------------------------------------
+
+button {
+  outline: none;
+  border: transparent;
+  background: transparent;
+  cursor: pointer;
+}
+
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// ------------------------------------------------
+// -------------------Reused-----------------------
+// ------------------------------------------------
+.text-center {
+  text-align: center;
+}
+.mb-88 {
+  margin-bottom: 88px;
+
+  @media screen and (max-width: $pc) {
+    margin-bottom: 80px;
+  }
+
+  @media screen and (max-width: $tablet) {
+    margin-bottom: 64px;
+  }
+}
+// .title {}
+// .subtitle {}
+
+// ------------------------------------------------
+// -----------------KEYFRAMES----------------------
+// ------------------------------------------------
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 100%;
+  scrollbar-width: 8px;
+  scrollbar-color: $white #d6d6d6;
+
+  // Chrome, Edge, and Safari
+  &::-webkit-scrollbar {
+    width: 8px;
+    background-color: $white;
+  }
+
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(#000, 20%);
+    border-radius: 4px;
+    background: #eee;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    border: 0px none #fff;
+    background-color: lighten($white, 10%);
+    -webkit-transition: all 280ms ease-in-out;
+    transition: all 280ms ease-in-out;
+
+    &:hover {
+      background-color: $white;
+    }
+  }
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  font-size: $base_fz;
+  font-family: $base_ff;
+  font-style: normal;
+  color: $base_color;
+  background: $base_bg;
+  overflow-x: hidden;
+  backface-visibility: hidden;
+  line-height: 1;
+  -webkit-backface-visibility: hidden;
+  height: 100%;
+  min-width: $minWidth;
+
+  // Скролл заблокирован
+  &.lock {
+    overflow: hidden !important;
+    touch-action: none !important;
+  }
+}
+
+// Оболочка wrapper
+.full-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  min-height: 100vh;
+
+  // Прижимаем footer
+  > main {
+    flex: 1 1 auto;
+  }
+
+  // Фикс для слайдеров
+  > * {
+    min-width: 0;
+  }
+}
+
+// Добавляем скролл если ширина экрана меньше минимальной ширины
+@media screen and (max-width: $minWidth) {
+  body {
+    overflow-x: scroll;
+  }
+}
+
+main,
+header,
+footer,
+.product-card-header,
+[data-popup] {
+  direction: $web-direction;
+}
+
+// Отступ контентной части от шапки сайта
+// .page {
+//   margin-top: $headerHeight;
+// }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  cursor: default; // сброс стандартного курсора при наведении на заголовок и текст
+}
+
+img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+a {
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+
+span {
+  display: inline-block;
+}
+
+ul,
+ol {
+  list-style-type: none;
+}
+
+input,
+textarea {
+  &:focus,
+  :active {
+    outline: none;
+  }
+}
+
+// ------------------------------------------------
+// -------------------Buttons----------------------
+// ------------------------------------------------
+
+button {
+  outline: none;
+  border: transparent;
+  background: transparent;
+  cursor: pointer;
+}
+
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// ------------------------------------------------
+// -------------------Reused-----------------------
+// ------------------------------------------------
+.text-center {
+  text-align: center;
+}
+.mb-88 {
+  margin-bottom: 88px;
+
+  @media screen and (max-width: $pc) {
+    margin-bottom: 80px;
+  }
+
+  @media screen and (max-width: $tablet) {
+    margin-bottom: 64px;
+  }
+}
+// .title {}
+// .subtitle {}
+
+// ------------------------------------------------
+// -----------------KEYFRAMES----------------------
+// ------------------------------------------------
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
 }

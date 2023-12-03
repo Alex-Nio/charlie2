@@ -265,3 +265,35 @@ list:
   - закрой настройки
   - выключи настройки
   - отключи настройки
+
+- command:
+    action: ahk
+    exe_path: ahk/Open mycomputer.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - открой мой комп
+  - открой мой компютер
+  - открой папку мой компютер
+  - открой папку компютера
+  - открой компютер
+
+- command:
+    action: ahk
+    exe_path: ahk/Close mycomputer.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - закрой мой комп
+  - закрой мой компютер
+  - закрой папку мой компютер
+  - закрой папку компютера
+  - закрой компютер

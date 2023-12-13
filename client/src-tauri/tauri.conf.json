@@ -5,10 +5,10 @@
     "beforeBuildCommand": "npm run build",
     "devPath": "http://localhost:8080",
     "distDir": "../dist",
-    "withGlobalTauri": true
+    "withGlobalTauri": false
   },
   "package": {
-    "productName": "charlie-voice-assistant",
+    "productName": "CharlieApp",
     "version": "0.1.0"
   },
   "tauri": {
@@ -19,7 +19,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.alex-nio.charlie",
+      "identifier": "CharlieApp",
       "publisher": "Alex Nio",
       "copyright": "Alex's Nio Project Copyright",
       "icon": [
@@ -43,7 +43,6 @@
         "icons/icon.png"
       ],
       "resources": [
-        "app-icon.png",
         "src/tts",
         ".env",
         "commands",
@@ -172,7 +171,7 @@
       }
     },
     "security": {
-      "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'unsafe-eval' 'unsafe-inline' 'self' img-src: 'self'"
+      "csp": null
     },
     "updater": {
       "active": false

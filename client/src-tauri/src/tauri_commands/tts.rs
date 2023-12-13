@@ -2,6 +2,7 @@ use std::process::{Command, Child};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
+use std::os::windows::process::CommandExt;
 
 // Структура, чтобы хранить информацию о процессе TTS
 struct TTSProcess {
@@ -46,23 +47,26 @@ impl TTSProcess {
             return Ok(());
         }
 
-        // Создаем команду для запуска Python-скрипта
         let mut command = if cfg!(target_os = "windows") {
             Command::new("python")
         } else {
             Command::new("python3")
         };
 
+        // Добавляем параметры для команды
+        command
+            .arg("src/tts/tts_module.pyw")
+            .arg(text);
+
+        // Если цель - Windows, устанавливаем CREATE_NO_WINDOW
+        if cfg!(target_os = "windows") {
+            command.creation_flags(winapi::um::winbase::CREATE_NO_WINDOW);
+        }
+
         println!("Подготовка TTS...");
 
-        // Устанавливаем путь к скрипту и аргументы
-        let command = command
-            .arg("src/tts/tts_module.pyw")
-            .arg(text)
-            .spawn();
-
         // Сохраняем Child-процесс для последующего управления им
-        match command {
+        match command.spawn() {
             Ok(child) => {
                 self.child = Some(child);
                 Ok(())

@@ -3,7 +3,7 @@ import sys
 import os
 
 def create_virtualenv():
-    # Создание виртуального окружения в папке src-tauri/src/tts
+    # Создание виртуального окружения в папке src-tauri/venv
     subprocess.run([sys.executable, '-m', 'venv', os.path.join('src', 'venv')])
 
 def activate_virtualenv():

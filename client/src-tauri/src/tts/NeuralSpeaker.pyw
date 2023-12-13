@@ -25,7 +25,7 @@ class NeuralSpeaker:
         start = time.time()
         device = torch.device('cpu')
         torch.set_num_threads(12)
-        local_file = 'model.pt'
+        local_file = 'model_ru.pt'
         if not os.path.isfile(local_file):
             torch.hub.download_url_to_file('https://models.silero.ai/models/tts/ru/v3_1_ru.pt', local_file)
         self.__model = torch.package.PackageImporter(local_file).load_pickle("tts_models", "model")
@@ -42,6 +42,7 @@ class NeuralSpeaker:
         words = translit(words, 'ru')
         words = re.sub(r'-?[0-9][0-9,._]*', self.__num2words_ru, words)
         # print(f'text after translit and num2words {words}')
+
         if len(words) > 3:
             possible_speaker = words[0:2]
         else:
@@ -71,6 +72,7 @@ class NeuralSpeaker:
             audio = self.__model.apply_tts(text=example_text,
                                            speaker=speaker,
                                            sample_rate=sample_rate, )
+
         except ValueError:
             # print('Bad input')
             return

@@ -39,7 +39,7 @@ def enable_microphone(sample_rate, channels):
 async def tts_speak_async(words, speaker='eugene', save_file=False, sample_rate=48000):
     global stop_requested  # Используем глобальный флаг
 
-    # logger.info('Запрос к TTS: %s', words)
+    logger.info('Запрос к TTS: %s', words)
 
     # Убираем блок с кодом из текста
     words = remove_code_block(words)

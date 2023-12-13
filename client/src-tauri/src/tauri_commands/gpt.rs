@@ -184,8 +184,6 @@ pub async fn process_chatgpt_response(text: String) {
                                 if let Err(err) = tauri_commands::speak_text((&content_text).to_string()).await {
                                     eprintln!("Error speaking text: {}", err);
                                 }
-
-                                println!("TTS End with Ok status");
                             }
                         }
                     }

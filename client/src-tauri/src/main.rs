@@ -8,7 +8,7 @@ use log::LevelFilter;
 use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 use std::fs::File;
 use std::sync::Mutex;
-use tauri::{SystemTray, CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem};
+use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem};
 
 // expose the config
 mod config;
@@ -67,6 +67,7 @@ lazy_static! {
     static ref COMMANDS: Vec<AssistantCommand> = assistant_commands::parse_commands().unwrap();
 }
 
+use crate::events::Payload;
 use std::env;
 use tauri::Manager;
 use tauri::SystemTrayEvent;
@@ -77,7 +78,10 @@ fn main() {
         let libs_path = current_dir.join("libs");
 
         if let Some(path) = env::var_os("PATH") {
-            env::set_var("PATH", format!("{};{}", libs_path.display(), path.to_string_lossy()));
+            env::set_var(
+                "PATH",
+                format!("{};{}", libs_path.display(), path.to_string_lossy()),
+            );
         } else {
             env::set_var("PATH", libs_path.display().to_string());
         }
@@ -94,8 +98,7 @@ fn main() {
         .add_item(quit)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(hide);
-    let system_tray = SystemTray::new()
-        .with_menu(tray_menu);
+    let system_tray = SystemTray::new().with_menu(tray_menu);
 
     // run the app
     tauri::Builder::default()
@@ -108,6 +111,10 @@ fn main() {
                     .to_str()
                     .unwrap(),
             );
+
+            app.listen_global("tts_started", |event| {
+                println!("TTS started: {:?}", event.payload());
+            });
 
             std::fs::create_dir_all(app.path_resolver().app_log_dir().unwrap())?;
             APP_LOG_DIR
@@ -151,7 +158,7 @@ fn main() {
             tauri_commands::get_app_version,
             tauri_commands::get_author_name,
             tauri_commands::get_repository_link,
-            tauri_commands::get_log_file_path
+            tauri_commands::get_log_file_path,
         ])
         .system_tray(system_tray)
         .on_system_tray_event(|app, event| match event {
@@ -184,8 +191,7 @@ fn main() {
                 let _ = window.unminimize();
                 // println!("system tray received a double click");
             }
-            SystemTrayEvent::MenuItemClick { id, .. } => {
-                match id.as_str() {
+            SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
                 "quit" => {
                     std::process::exit(0);
                 }
@@ -194,10 +200,9 @@ fn main() {
                     window.hide().unwrap();
                 }
                 _ => {}
-                }
-            }
+            },
             _ => {}
-            })
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

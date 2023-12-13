@@ -14,6 +14,8 @@ pub enum EventTypes {
     CommandStart,
     CommandInProcess,
     CommandEnd,
+    TtsStarted,
+    TtsStoped,
 }
 
 impl EventTypes {
@@ -25,28 +27,16 @@ impl EventTypes {
             Self::CommandStart => "command-start",
             Self::CommandInProcess => "command-in-process",
             Self::CommandEnd => "command-end",
+            Self::TtsStarted => "tts-started",
+            Self::TtsStoped => "tts-stoped",
         }
     }
 }
-
-// pub fn play(phrase: &str, app_handle: &tauri::AppHandle) {
-//     app_handle
-//         .emit_all(
-//             EventTypes::AudioPlay.get(),
-//             Payload {
-//                 data: phrase.into(),
-//             },
-//         )
-//         .unwrap();
-// }
 
 use std::thread;
 use std::time::Duration;
 
 pub fn play(phrase: &str, app_handle: &tauri::AppHandle) {
-    // Уменьшаем глобальную громкость
-    decrease_system_volume();
-
     // Воспроизводим аудио
     app_handle
         .emit_all(
@@ -56,20 +46,20 @@ pub fn play(phrase: &str, app_handle: &tauri::AppHandle) {
             },
         )
         .unwrap();
-
-    // Восстанавливаем глобальную громкость через некоторое время
-    thread::spawn(|| {
-        thread::sleep(Duration::from_millis(500));
-        restore_system_volume();
-    });
 }
 
-fn decrease_system_volume() {
+pub fn tts_started(app_handle: &tauri::AppHandle) {
+    println!("Вызов emit tts started...");
 
+    app_handle
+        .emit_all(EventTypes::TtsStarted.get(), Payload { data: "".into() })
+        .unwrap();
 }
 
-fn restore_system_volume() {
+pub fn tts_stoped(app_handle: &tauri::AppHandle) {
+    println!("Вызов emit tts stoped...");
 
+    app_handle
+        .emit_all(EventTypes::TtsStoped.get(), Payload { data: "".into() })
+        .unwrap();
 }
-
-

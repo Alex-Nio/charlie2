@@ -1,6 +1,6 @@
 <script setup>
   // imports
-  import { ref } from "vue";
+  import { ref, onMounted } from "vue";
   import { invoke } from "@tauri-apps/api/tauri";
   import { listen } from "@tauri-apps/api/event";
 
@@ -12,6 +12,7 @@
   // Consts
   const isListening = ref(true);
   const isReactorActive = ref(false);
+  const isTTSActive = ref(false);
   const assistantVoiceVal = "jarvis-og";
 
   // Functions
@@ -62,16 +63,39 @@
     await listen("audio-play", playAudio);
   };
 
+  const listenToTtsStart = async () => {
+    await listen("tts-started", handleTTSStarted);
+  };
+
+  const listenToTtsStop = async () => {
+    await listen("tts-stoped", handleTTSStoped);
+  };
+
+  // Функция, которая будет вызываться при событии tts_started
+  const handleTTSStarted = () => {
+      // Обновляем состояние в соответствии с вашими нуждами
+      isTTSActive.value = true;
+      console.log('Обработка TTS началась...');
+  };
+
+  const handleTTSStoped = () => {
+      // Обновляем состояние в соответствии с вашими нуждами
+      isTTSActive.value = false;
+      console.log('Обработка TTS закончилась...');
+  };
+
   // Initial setup
   startListening();
   listenToAudioPlay();
+  listenToTtsStart();
+  listenToTtsStop();
 </script>
 
 <template>
   <Titlebar />
 
   <div class="full-wrapper">
-    <Reactor :isReactorActive="isReactorActive" />
+    <Reactor :isReactorActive="isReactorActive" :isTTSActive="isTTSActive" />
     <Details />
   </div>
 </template>

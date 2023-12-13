@@ -2,13 +2,16 @@
   const props = defineProps({
     isReactorActive: {
       type: Boolean,
+    },
+    isTTSActive: {
+      type: Boolean,
     }
   });
 
 </script>
 
 <template>
-  <div id="arc-reactor" class="reactor-container">
+  <div id="arc-reactor" class="reactor-container" :class="{ loading: isTTSActive }">
     <div class="reactor-container-inner circle abs-center" :class="{ active: isReactorActive }">
       <ul class="marks">
         <li></li>
@@ -126,6 +129,52 @@ $cshadow: rgba(2, 254, 255, 0.8);
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  &.loading {
+
+    & .core-wrapper,
+    & .e5_1 {
+      animation: myAnim 9s ease 0s infinite normal forwards;
+    }
+  }
+}
+
+@keyframes myAnim {
+  0% {
+    animation-timing-function: ease-out;
+    transform: scale(1);
+    transform-origin: center center;
+  }
+
+  10% {
+    animation-timing-function: ease-in;
+    transform: scale(1.2);
+  }
+
+  17% {
+    animation-timing-function: ease-out;
+    transform: scale(1.3);
+  }
+
+  33% {
+    animation-timing-function: ease-in;
+    transform: scale(1.5);
+  }
+
+  39% {
+    animation-timing-function: ease-in;
+    transform: scale(1.3);
+  }
+
+  48% {
+    animation-timing-function: ease-out;
+    transform: scale(1.2);
+  }
+
+  100% {
+    animation-timing-function: ease-out;
+    transform: scale(1);
   }
 }
 

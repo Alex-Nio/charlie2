@@ -52,8 +52,9 @@ $search-popup-z-index: 100;
 $base_fz: 16px; //? Размер шрифта по умолчанию 16px
 $base_ff: "Roboto", sans-serif; //? Шрифт по умолчанию
 $base_hover: $hover; //? Цвет hover по умолчанию
-$base_bg: url("./../../assets/images/main-background.gif") no-repeat center / cover; //? Цвет фона по умолчанию
+$base_bg: #000; //? Цвет фона по умолчанию
 $base_color: $white; //? Цвет текста по умолчанию
+$main_bg-image: url("/src/assets/images/main-background.gif") no-repeat 45% 7% / 150%;
 
 //! Направление right-to-left или left-to-right
 // $web-direction: rtl;

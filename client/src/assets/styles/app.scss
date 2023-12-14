@@ -50,6 +50,19 @@ body {
   -webkit-backface-visibility: hidden;
   min-width: $minWidth;
 
+  &::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: $main_bg-image;
+    background-color: $base_bg;
+    opacity: 0.75;
+    z-index: -1;
+  }
+
   // Скролл заблокирован
   &.lock {
     overflow: hidden !important;

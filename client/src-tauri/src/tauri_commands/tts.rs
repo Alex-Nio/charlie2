@@ -67,6 +67,9 @@ impl TTSProcess {
         // Добавляем параметры для команды
         command.arg("src/tts/tts_module.pyw").arg(text);
 
+        // tts_started
+        events::tts_started(TAURI_APP_HANDLE.get().unwrap());
+
         // Если цель - Windows, устанавливаем CREATE_NO_WINDOW
         // if cfg!(target_os = "windows") {
         //     command.creation_flags(winapi::um::winbase::CREATE_NO_WINDOW);

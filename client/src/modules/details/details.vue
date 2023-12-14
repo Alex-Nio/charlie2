@@ -75,10 +75,17 @@
 
 <style lang='scss' scoped>
 .details-block {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
   font-size: 16px;
+  padding: 12px;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(17, 25, 40, 0.75);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 .info {

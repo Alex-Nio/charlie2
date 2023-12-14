@@ -45,7 +45,8 @@
   i {
     width: 32px;
     height: 32px;
-    color: $white;
+    color: rgb(255, 255, 255);
+    text-shadow: 0 25px 100px #000000;
     @include defaultTransition;
 
     &::before {

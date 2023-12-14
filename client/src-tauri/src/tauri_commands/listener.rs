@@ -204,9 +204,6 @@ fn keyword_callback(_keyword_index: i32) {
 
                                 // Чтение и обработка текста из файла в новом процессе
                                 let handle = thread::spawn(|| {
-                                    // tts_started
-                                    events::tts_started(TAURI_APP_HANDLE.get().unwrap());
-
                                     // Ваш код внутри потока
                                     let result = std::panic::catch_unwind(|| {
                                         tauri_commands::read_output_text_and_process();

@@ -181,14 +181,14 @@
         "title": "Charlie app",
         "label": "main",
         "width": 520,
-        "height": 640,
+        "height": 630,
         "minWidth": 520,
-        "minHeight": 640,
+        "minHeight": 630,
         "resizable": false,
         "fullscreen": false,
         "visible": true,
         "decorations": false,
-        "alwaysOnTop": false
+        "alwaysOnTop": true
       }
     ]
   }

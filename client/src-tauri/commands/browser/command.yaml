@@ -266,7 +266,7 @@ list:
 
 - command:
     action: ahk
-    exe_path: ahk/Run mail yandex.exe
+    exe_path: ahk/web/Run mail yandex.exe
     exe_args:
   voice:
     sounds:
@@ -282,7 +282,7 @@ list:
 
 - command:
     action: ahk
-    exe_path: ahk/Run mail google.exe
+    exe_path: ahk/web/Run mail google.exe
     exe_args:
   voice:
     sounds:

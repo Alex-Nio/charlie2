@@ -79,6 +79,26 @@ list:
     action: ahk
     exe_path: ahk/Set sound.exe
     exe_args:
+    - 75
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+    - ok4
+  phrases:
+  - звук семьдесят пять
+  - громкость семьдесят пять
+  - поставь звук на семьдесят пять
+  - поставь громкость на семьдесят пять
+  - установи звук на семьдесят пять
+  - установи громкость на семьдесят пять
+  - прибавь звук
+
+- command:
+    action: ahk
+    exe_path: ahk/Set sound.exe
+    exe_args:
     - 100
   voice:
     sounds:

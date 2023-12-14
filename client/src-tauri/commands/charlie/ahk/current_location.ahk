@@ -1,11 +1,11 @@
-; Получаем путь к папке, где находится исполняемый файл скрипта
-ScriptDir := A_ScriptDir
+; Получаем текущую рабочую директорию (папку, в которой запущен скрипт)
+WorkingDir := A_WorkingDir
 
 ; Указываем поддиректорию
 SubDir := "Subfolder"
 
 ; Формируем полный путь к поддиректории
-FullPath := ScriptDir . "\" . SubDir
+FullPath := WorkingDir . "\" . SubDir
 
 ; Открываем папку в проводнике
 Run, explorer %FullPath%

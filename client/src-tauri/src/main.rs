@@ -67,7 +67,6 @@ lazy_static! {
     static ref COMMANDS: Vec<AssistantCommand> = assistant_commands::parse_commands().unwrap();
 }
 
-use crate::events::Payload;
 use std::env;
 use tauri::Manager;
 use tauri::SystemTrayEvent;

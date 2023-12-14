@@ -34,9 +34,6 @@ impl EventTypes {
     }
 }
 
-use std::thread;
-use std::time::Duration;
-
 pub fn play(phrase: &str, app_handle: &tauri::AppHandle) {
     // Воспроизводим аудио
     app_handle

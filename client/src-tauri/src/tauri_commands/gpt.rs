@@ -69,6 +69,10 @@ pub fn read_output_text() -> Result<String, std::io::Error> {
     let mut output_text = String::new();
     reader.read_to_string(&mut output_text)?;
 
+    // Удаляем текст из файла
+    let mut writer = File::create("output.txt")?;
+    writer.write_all(b"")?;
+
     Ok(output_text)
 }
 

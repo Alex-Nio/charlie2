@@ -197,7 +197,7 @@ fn keyword_callback(_keyword_index: i32) {
                             println!("Text from output.txt: {}", output_text);
 
                             // Создаем асинхронный runtime для вызова асинхронной функции
-                            if !output_text.is_empty() {
+                            if !output_text.trim().is_empty() {
                                 // tts_started
                                 events::tts_started(TAURI_APP_HANDLE.get().unwrap());
 
@@ -239,6 +239,7 @@ fn keyword_callback(_keyword_index: i32) {
                     .unwrap()
                     .emit_all(events::EventTypes::AssistantWaiting.get(), ())
                     .unwrap();
+                events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
                 break;
             }
             _ => (),

@@ -5,16 +5,16 @@ use std::thread;
 use std::time::Duration;
 use crate::events;
 
-// Общая переменная для использования внутри асинхронных функций
-// Мьютекс (Mutex) используется для обеспечения безопасности доступа к структуре TTSProcess
-lazy_static::lazy_static! {
-    static ref TTS_PROCESS: Arc<Mutex<TTSProcess>> = Arc::new(Mutex::new(TTSProcess::new()));
-}
-
 // Структура, чтобы хранить информацию о процессе TTS
 struct TTSProcess {
     child: Option<Child>,
     stop_requested: bool,
+}
+
+// Общая переменная для использования внутри асинхронных функций
+// Мьютекс (Mutex) используется для обеспечения безопасности доступа к структуре TTSProcess
+lazy_static::lazy_static! {
+    static ref TTS_PROCESS: Arc<Mutex<TTSProcess>> = Arc::new(Mutex::new(TTSProcess::new()));
 }
 
 impl TTSProcess {
@@ -26,12 +26,20 @@ impl TTSProcess {
     }
 
     fn stop_tts_static(process: &mut TTSProcess) {
-        // Прерываем процесс TTS, если он запущен
+        events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
+
+         // Прерываем процесс TTS, если он запущен
         if let Some(mut child) = process.child.take() {
             // Посылаем сигнал завершения процесса
             let _ = child.kill();
-            // Ждем завершения процесса
-            let _ = child.wait();
+            // Ждем завершения процесса и получаем результат
+            let output = child.wait_with_output().expect("Failed to wait for child process");
+
+            if output.status.success() {
+                println!("TTS процесс успешно завершен");
+            } else {
+                eprintln!("TTS процесс завершился с ошибкой: {:?}", output.status);
+            }
         }
 
         // Добавьте небольшую задержку перед возвращением из функции
@@ -66,9 +74,6 @@ impl TTSProcess {
 
         // Добавляем параметры для команды
         command.arg("src/tts/tts_module.pyw").arg(text);
-
-        // tts_started
-        events::tts_started(TAURI_APP_HANDLE.get().unwrap());
 
         // Если цель - Windows, устанавливаем CREATE_NO_WINDOW
         if cfg!(target_os = "windows") {
@@ -110,16 +115,19 @@ impl TTSProcess {
     fn stop_tts(&mut self) {
         self.stop_requested = true;
         // Прерываем процесс TTS, если он запущен
-        if let Some(mut child) = self.child.take() {
+        if let Some(child) = self.child.as_mut() {
             events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
 
             // Посылаем сигнал завершения процесса
             let _ = child.kill();
+
+            println!("Сигнал о завершении процесса");
             // Ждем завершения процесса
             let _ = child.wait();
         }
     }
 }
+
 use crate::tauri_commands::TAURI_APP_HANDLE;
 
 #[tauri::command]
@@ -134,6 +142,11 @@ pub async fn speak_text(text: String) -> Result<(), String> {
     let handle = thread::spawn(move || {
         // Запускаем TTS
         let mut tts_process = tts_process.lock().unwrap();
+        if tts_process.stop_requested {
+            println!("TTS процесс уже остановлен");
+            return;
+        }
+
         if let Err(err) = tts_process.start_tts(&text_copy) {
             eprintln!("Failed to start TTS: {}", err);
         }
@@ -147,10 +160,18 @@ pub fn stop_tts() -> Result<(), String> {
     // Получаем доступ к общей переменной
     let tts_process = TTS_PROCESS.clone();
 
+    println!("Вызов команды СТОП");
+
+    events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
+
     // Останавливаем TTS в отдельном потоке
     thread::spawn(move || {
         let mut tts_process = tts_process.lock().unwrap();
-        TTSProcess::stop_tts_static(&mut tts_process);
+        if let Some(mut child) = tts_process.child.take() {
+            println!("Остановка процесса");
+            // Используем флаг force для немедленного завершения процесса
+            let _ = child.kill();
+        }
     });
 
     Ok(())

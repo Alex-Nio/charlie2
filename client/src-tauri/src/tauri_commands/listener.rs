@@ -1,3 +1,7 @@
+use log::{error, info, warn};
+use once_cell::sync::OnceCell;
+use rand::seq::SliceRandom;
+use std::time::Duration;
 use std::{
     path::Path,
     sync::{
@@ -7,10 +11,6 @@ use std::{
     thread,
     time::SystemTime,
 };
-
-use log::{error, info, warn};
-use once_cell::sync::OnceCell;
-use rand::seq::SliceRandom;
 
 use tauri::Manager;
 
@@ -239,7 +239,12 @@ fn keyword_callback(_keyword_index: i32) {
                     .unwrap()
                     .emit_all(events::EventTypes::AssistantWaiting.get(), ())
                     .unwrap();
+
+                thread::sleep(Duration::from_secs(5));
+
+                // Вызов функции после задержки
                 events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
+
                 break;
             }
             _ => (),

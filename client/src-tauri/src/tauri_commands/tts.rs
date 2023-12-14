@@ -71,9 +71,9 @@ impl TTSProcess {
         events::tts_started(TAURI_APP_HANDLE.get().unwrap());
 
         // Если цель - Windows, устанавливаем CREATE_NO_WINDOW
-        // if cfg!(target_os = "windows") {
-        //     command.creation_flags(winapi::um::winbase::CREATE_NO_WINDOW);
-        // }
+        if cfg!(target_os = "windows") {
+            command.creation_flags(winapi::um::winbase::CREATE_NO_WINDOW);
+        }
 
         println!("Подготовка TTS...");
 

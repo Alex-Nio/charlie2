@@ -188,7 +188,7 @@
         "fullscreen": false,
         "visible": true,
         "decorations": false,
-        "alwaysOnTop": true
+        "alwaysOnTop": false
       }
     ]
   }

@@ -1,7 +1,7 @@
-WinKill, AHK_exe charlie-app.exe
-Process, Close, charlie-app.exe
+WinKill, AHK_exe CharlieApp.exe
+Process, Close, CharlieApp.exe
 sleep 3000
-Run shell:AppsFolder\com.alex-nio.charlie
+Run shell:AppsFolder\CharlieApp
 sleep 2000
-WinMinimize charlie-app
+WinMinimize CharlieApp
 WinMinimize Charlie Voice Assistant

@@ -91,6 +91,7 @@ impl TTSProcess {
                                 events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
                             } else {
                                 eprintln!("TTS процесс завершился с ошибкой: {:?}", exit_status);
+                                events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
                             }
                         }
                         Err(err) => {

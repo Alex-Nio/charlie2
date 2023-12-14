@@ -1,7 +1,7 @@
 list:
 - command:
     action: ahk
-    exe_path: ahk/Run browser.exe
+    exe_path: ahk/navigation/Run browser.exe
     exe_args:
   voice:
     sounds:
@@ -14,7 +14,7 @@ list:
 
 - command:
     action: ahk
-    exe_path: ahk/Close browser.exe
+    exe_path: ahk/navigation/Close browser.exe
     exe_args:
   voice:
     sounds:
@@ -28,7 +28,7 @@ list:
 
 - command:
     action: ahk
-    exe_path: ahk/Go back.exe
+    exe_path: ahk/navigation/Go back.exe
     exe_args:
   voice:
     sounds:
@@ -41,7 +41,7 @@ list:
 
 - command:
     action: ahk
-    exe_path: ahk/Go forward.exe
+    exe_path: ahk/navigation/Go forward.exe
     exe_args:
   voice:
     sounds:
@@ -54,7 +54,255 @@ list:
 
 - command:
     action: ahk
-    exe_path: ahk/Run youtube.exe
+    exe_path: ahk/navigation/Update tab.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+    - ok4
+  phrases:
+  - обнови вкладку
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Close tab.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+    - ok4
+  phrases:
+  - закрой вкладку
+  - закрой эту вкладку
+  - закрой текущую вкладку
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Tab right.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - следующая вкладка
+  - вкладка право
+  - вкладка вправо
+  - вкладку вправо
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Tab left.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - предыдущая вкладка
+  - вкладка лево
+  - вкладка влево
+  - вкладку влево
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Tab 1.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - переключи на первую вкладку
+  - включи первую вкладку
+  - открой первую вкладку
+  - первая вкладка
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Tab 2.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - переключи на вторую вкладку
+  - включи вторую вкладку
+  - открой вторую вкладку
+  - вторая вкладка
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Tab 3.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - переключи на третью вкладку
+  - включи третью вкладку
+  - открой третью вкладку
+  - третья вкладка
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Tab 4.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - переключи на четвертую вкладку
+  - включи четвертую вкладку
+  - открой четвертую вкладку
+  - четвертая вкладка
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Tab 5.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - переключи на пятую вкладку
+  - включи пятую вкладку
+  - открой пятую вкладку
+  - пятая вкладка
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Tab 6.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - переключи на шестую вкладку
+  - включи шестую вкладку
+  - открой шестую вкладку
+  - шестая вкладка
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Tab 7.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - переключи на седьмую вкладку
+  - включи седьмую вкладку
+  - открой седьмую вкладку
+  - седьмая вкладка
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Tab 8.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - переключи на восьмую вкладку
+  - включи восьмую вкладку
+  - открой восьмую вкладку
+  - восьмая вкладка
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/New tab.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - открой новую вкладку
+  - открой новое вкладку
+  - открой ещё одну вкладку
+  - новая вкладка
+
+- command:
+    action: ahk
+    exe_path: ahk/navigation/Tab end.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - переключи на последнюю вкладку
+  - включи последнюю вкладку
+  - открой последнюю вкладку
+  - последняя вкладка
+
+#!================================================================
+#? --------------------------- Почта -----------------------------
+#!================================================================
+
+- command:
+    action: ahk
+    exe_path: ahk/Run mail yandex.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+    - ok4
+  phrases:
+  - открой яндекс почту
+  - запусти яндекс почту
+  - включи яндекс почту
+  - почта яндекс
+
+- command:
+    action: ahk
+    exe_path: ahk/Run mail google.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+    - ok4
+  phrases:
+  - открой гугл почту
+  - запусти гугл почту
+  - включи гугл почту
+  - почта гугл
+
+#!================================================================
+#? ------------------- Навигация по сайтам -----------------------
+#!================================================================
+
+- command:
+    action: ahk
+    exe_path: ahk/web/Run youtube.exe
     exe_args:
   voice:
     sounds:
@@ -69,23 +317,7 @@ list:
 
 - command:
     action: ahk
-    exe_path: ahk/Run mail.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-    - ok4
-  phrases:
-  - открой почту
-  - запусти почту
-  - включи почту
-  - почта
-
-- command:
-    action: ahk
-    exe_path: ahk/Run translater.exe
+    exe_path: ahk/web/Run translater.exe
     exe_args:
   voice:
     sounds:
@@ -101,7 +333,7 @@ list:
 
 - command:
     action: ahk
-    exe_path: ahk/Run vk.exe
+    exe_path: ahk/web/Run vk.exe
     exe_args:
   voice:
     sounds:
@@ -125,7 +357,7 @@ list:
 
 - command:
     action: ahk
-    exe_path: ahk/Update tab.exe
+    exe_path: ahk/web/Run kinopoisk.exe
     exe_args:
   voice:
     sounds:
@@ -134,11 +366,18 @@ list:
     - ok3
     - ok4
   phrases:
-  - обнови вкладку
+  - открой кинопоиск
+  - запусти кинопоиск
+  - включи кинопоиск
+  - кинопоиск
+  - открой кино поиск
+  - запусти кино поиск
+  - включи кино поиск
+  - кино поиск
 
 - command:
     action: ahk
-    exe_path: ahk/Close tab.exe
+    exe_path: ahk/web/Run github.exe
     exe_args:
   voice:
     sounds:
@@ -147,215 +386,13 @@ list:
     - ok3
     - ok4
   phrases:
-  - закрой вкладку
-  - закрой эту вкладку
-  - закрой текущую вкладку
+  - открой гитхаб
+  - запусти гитхаб
+  - включи гитхаб
+  - гитхаб
+  - открой гит хаб
+  - запусти гит хаб
+  - включи гит хаб
+  - гитхаб
+  - гит хаб
 
-- command:
-    action: ahk
-    exe_path: ahk/Open ChatGPT.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - открой джой пяти
-  - открой часть же пяти
-  - открой чеджу пяти
-  - открой чат же пяти
-  - открой чат что пяти
-  - открой джорджа пяти
-  - открой что пяти
-  - открой джи пяти
-  - открой джипе тебя
-  - запусти джой пяти
-  - запусти часть же пяти
-  - запусти чеджу пяти
-  - запусти чат же пяти
-  - запусти чат что пяти
-  - запусти джорджа пяти
-  - запусти что пяти
-  - запусти джи пяти
-  - запусти джипе тебя
-
-- command:
-    action: ahk
-    exe_path: ahk/Tab right.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - следующая вкладка
-  - вкладка право
-  - вкладка вправо
-  - вкладку вправо
-
-- command:
-    action: ahk
-    exe_path: ahk/Tab left.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - предыдущая вкладка
-  - вкладка лево
-  - вкладка влево
-  - вкладку влево
-
-- command:
-    action: ahk
-    exe_path: ahk/Tab 1.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - переключи на первую вкладку
-  - включи первую вкладку
-  - открой первую вкладку
-  - первая вкладка
-
-- command:
-    action: ahk
-    exe_path: ahk/Tab 2.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - переключи на вторую вкладку
-  - включи вторую вкладку
-  - открой вторую вкладку
-  - вторая вкладка
-
-- command:
-    action: ahk
-    exe_path: ahk/Tab 3.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - переключи на третью вкладку
-  - включи третью вкладку
-  - открой третью вкладку
-  - третья вкладка
-
-- command:
-    action: ahk
-    exe_path: ahk/Tab 4.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - переключи на четвертую вкладку
-  - включи четвертую вкладку
-  - открой четвертую вкладку
-  - четвертая вкладка
-
-- command:
-    action: ahk
-    exe_path: ahk/Tab 5.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - переключи на пятую вкладку
-  - включи пятую вкладку
-  - открой пятую вкладку
-  - пятая вкладка
-
-- command:
-    action: ahk
-    exe_path: ahk/Tab 6.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - переключи на шестую вкладку
-  - включи шестую вкладку
-  - открой шестую вкладку
-  - шестая вкладка
-
-- command:
-    action: ahk
-    exe_path: ahk/Tab 7.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - переключи на седьмую вкладку
-  - включи седьмую вкладку
-  - открой седьмую вкладку
-  - седьмая вкладка
-
-- command:
-    action: ahk
-    exe_path: ahk/Tab 8.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - переключи на восьмую вкладку
-  - включи восьмую вкладку
-  - открой восьмую вкладку
-  - восьмая вкладка
-
-- command:
-    action: ahk
-    exe_path: ahk/New tab.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - открой новую вкладку
-  - открой новое вкладку
-  - открой ещё одну вкладку
-  - новая вкладка
-
-- command:
-    action: ahk
-    exe_path: ahk/Tab end.exe
-    exe_args:
-  voice:
-    sounds:
-    - ok1
-    - ok2
-    - ok3
-  phrases:
-  - переключи на последнюю вкладку
-  - включи последнюю вкладку
-  - открой последнюю вкладку
-  - последняя вкладка

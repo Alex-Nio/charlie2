@@ -1,5 +1,6 @@
+use crate::events;
+use crate::tauri_commands::TAURI_APP_HANDLE;
 use tauri::Manager;
-
 // the payload type must implement `Serialize` and `Clone`.
 #[derive(Clone, serde::Serialize)]
 pub struct Payload {
@@ -50,6 +51,8 @@ pub fn play(phrase: &str, app_handle: &tauri::AppHandle) {
 
 pub fn tts_started(app_handle: &tauri::AppHandle) {
     println!("Вызов emit tts started...");
+
+    events::play("load", TAURI_APP_HANDLE.get().unwrap());
 
     app_handle
         .emit_all(EventTypes::TtsStarted.get(), Payload { data: "".into() })

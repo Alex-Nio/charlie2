@@ -1,0 +1,38 @@
+list:
+- command:
+    action: ahk
+    exe_path: ahk/Open vscode.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - запусти вскод
+  - запусти вс код
+  - открой вскод
+  - открой вс код
+  - включи вскод
+  - включи вс код
+  - запусти редактор кода
+  - открой редактор кода
+  - включи редактор кода
+  - редактор кода
+
+- command:
+    action: ahk
+    exe_path: ahk/Close vscode.exe
+    exe_args:
+  voice:
+    sounds:
+    - ok1
+    - ok2
+    - ok3
+  phrases:
+  - закрой вскод
+  - закрой вс код
+  - выключи вскод
+  - выключи вс код
+  - закрой редактор кода
+  - выключи редактор кода

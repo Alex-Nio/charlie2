@@ -135,7 +135,7 @@ $cshadow: rgba(2, 254, 255, 0.8);
 
     .e5_1,
     .e5_2 {
-      color: unset;
+      color: #ff0202;
       animation: rotate_anti 2s linear infinite;
       transition: animation-duration 10s ease-in-out, color 1s linear;
     }
@@ -143,6 +143,11 @@ $cshadow: rgba(2, 254, 255, 0.8);
     .coil-container {
       animation: 4s infinite linear reactor-anim;
       transition: animation-duration 10s ease-in-out;
+    }
+
+    .core-outer {
+      background-color: #850505;
+      transition: background-color 3s ease-in;
     }
 
     .coil {
@@ -193,6 +198,7 @@ $cshadow: rgba(2, 254, 255, 0.8);
   border: 1px solid #52fefe;
   background-color: #ffffff;
   box-shadow: 0px 0px 2px 1px #52fefe, 0px 0px 10px 5px #52fefe inset;
+  transition: background-color 3s ease-in;
 }
 
 .core-wrapper {
@@ -785,6 +791,7 @@ $cshadow: rgba(2, 254, 255, 0.8);
     border: 1px solid #52fefe;
     background-color: #ffffff;
     box-shadow: 0px 0px 2px 1px #52fefe, 0px 0px 10px 5px #52fefe inset;
+    transition: background-color 3s ease-in;
   }
 
   .core-wrapper {

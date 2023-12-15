@@ -145,8 +145,8 @@ fn keyword_callback(_keyword_index: i32) {
                     assistant_commands::fetch_command(&test, &COMMANDS)
                 {
                     // println!("Recognized (filtered): {}", test);
-                    // println!("Command found: {:?}", cmd_path);
-                    // println!("Executing ...");
+                    println!("[+] Команда найдена: {:?}", cmd_path);
+                    println!("Исполнение ...");
 
                     let cmd_result = assistant_commands::execute_command(
                         &cmd_path,

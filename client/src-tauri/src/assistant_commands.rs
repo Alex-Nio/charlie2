@@ -75,40 +75,35 @@ pub fn fetch_command<'a>(
     phrase: &str,
     commands: &'a Vec<AssistantCommand>,
 ) -> Option<(&'a PathBuf, &'a Config)> {
-    // result scmd
-    let mut result_scmd: Option<(&PathBuf, &Config)> = None;
+    // Лучший найденный результат
+    let mut best_match: Option<(&PathBuf, &Config)> = None;
+    // Текущий максимальный коэффициент соответствия
     let mut current_max_ratio = config::CMD_RATIO_THRESHOLD;
 
-    // convert fetch phrase to sequence
+    // Преобразование фразы для поиска в последовательность символов
     let fetch_phrase_chars = phrase.chars().collect::<Vec<_>>();
 
-    // list all the commands
+    // Перебор всех команд
     for cmd in commands {
-        // list all subcommands
         for scmd in &cmd.commands.list {
-            // list all phrases in command
             for cmd_phrase in &scmd.phrases {
-                // convert cmd phrase to sequence
                 let cmd_phrase_chars = cmd_phrase.chars().collect::<Vec<_>>();
-
-                // compare fetch phrase with cmd phrase
                 let ratio = ratio(&fetch_phrase_chars, &cmd_phrase_chars);
 
-                // return, if it fits the given threshold
+                // Обновление результатов при нахождении лучшего соответствия
                 if ratio >= current_max_ratio {
-                    result_scmd = Some((&cmd.path, &scmd));
+                    best_match = Some((&cmd.path, &scmd));
                     current_max_ratio = ratio;
-                    // println!("Ratio is: {}", ratio);
-                    // return Some((&cmd.path, &scmd))
                 }
             }
         }
     }
 
-    if let Some((cmd_path, scmd)) = result_scmd {
-        println!("Ratio is: {}", current_max_ratio);
+    // Вывод результатов, если они найдены
+    if let Some((cmd_path, scmd)) = best_match {
+        println!("Соотношение: {}", current_max_ratio);
         info!(
-            "CMD is: {cmd_path:?}, SCMD is: {scmd:?}, Ratio is: {}",
+            "CMD: {cmd_path:?}, SCMD: {scmd:?}, Соотношение: {}",
             current_max_ratio
         );
         Some((&cmd_path, &scmd))
@@ -138,6 +133,17 @@ pub fn execute_command(
     _speech_result: &str,
 ) -> Result<bool, String> {
     match cmd_config.command.action.as_str() {
+        "search" => {
+            println!("Выполнена новая команда: {:?}", &cmd_config);
+            let random_cmd_sound = cmd_config
+                .voice
+                .sounds
+                .choose(&mut rand::thread_rng())
+                .unwrap();
+            events::play(random_cmd_sound, app_handle);
+
+            Ok(true)
+        }
         "voice" => {
             // VOICE command type
             let random_cmd_sound = cmd_config

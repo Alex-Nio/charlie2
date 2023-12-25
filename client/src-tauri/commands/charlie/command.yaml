@@ -97,7 +97,7 @@ list:
       - интересная шутка
 
   - command:
-      action: "search"
+      action: "test"
     voice:
       sounds:
         - load_r2d2

@@ -133,7 +133,7 @@ pub fn execute_command(
     _speech_result: &str,
 ) -> Result<bool, String> {
     match cmd_config.command.action.as_str() {
-        "search" => {
+        "test" => {
             println!("Выполнена новая команда: {:?}", &cmd_config);
             let random_cmd_sound = cmd_config
                 .voice

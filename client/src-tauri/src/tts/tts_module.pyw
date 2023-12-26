@@ -13,7 +13,6 @@ import numba as nb
 import gradio as gr
 import edge_tts
 import torch
-from spleeter.separator import Separator
 from config import Config
 from lib.infer_pack.models import (
     SynthesizerTrnMs256NSFsid,
@@ -306,9 +305,8 @@ if __name__ == "__main__":
     rmvpe_model = RMVPE(rmvpe_model_root, config.is_half, config.device)
     print("rmvpe model loaded.")
 
-    tgt_sr, net_g, vc, version, index_file, if_f0 = model_data(
-        "charlie"
-    )  # Загрузка модели "charlie"
+    # Загрузка модели "charlie"
+    tgt_sr, net_g, vc, version, index_file, if_f0 = model_data("charlie")
 
     print("Models loaded. Starting main...")
     main()

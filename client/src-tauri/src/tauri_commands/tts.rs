@@ -61,7 +61,7 @@ impl TTSProcess {
         };
 
         // Добавляем параметры для команды
-        command.arg("src/tts/tts_module.pyw").arg(text);
+        command.arg("src/tts/main.py").arg("--text").arg(text);
 
         // Если цель - Windows, устанавливаем CREATE_NO_WINDOW
         if cfg!(target_os = "windows") {

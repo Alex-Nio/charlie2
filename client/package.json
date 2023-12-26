@@ -1,7 +1,10 @@
 {
   "name": "charlie-app",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
+  "tauri": {
+    "icon": "./src-tauri/icons/icon.png"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",

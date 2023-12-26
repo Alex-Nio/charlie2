@@ -1,2 +1,0 @@
-Открыть Vscode:Open vscode
-Закрыть Vscode:Close vscode

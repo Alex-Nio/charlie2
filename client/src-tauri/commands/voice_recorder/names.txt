@@ -1,2 +1,0 @@
-Открыть диктофон:Open voice recorder
-Закрыть диктофон:Close voice recorder

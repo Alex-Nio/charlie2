@@ -22,7 +22,9 @@ from lib.infer_pack.models import (
 )
 from rmvpe import RMVPE
 from vc_infer_pipeline import VC
-from dotenv import load_dotenv  # Import the library
+import colorama
+from colorama import Fore, Style
+from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
@@ -39,8 +41,15 @@ rmvpe_model_root = os.getenv("RMVPE_MODEL_ROOT")
 limitation = os.getenv("SYSTEM") == "spaces"
 
 
+def log_message(message, color=Fore.WHITE):
+    """
+    Log a message with color.
+    """
+    print(f"{color}[{Style.BRIGHT}INFO{Style.RESET_ALL}] {message}{Style.RESET_ALL}")
+
+
 def load_hubert():
-    print("[+] Loading hubert model...")
+    log_message("[+] Loading hubert model...", Fore.CYAN)
 
     global hubert_model
 
@@ -111,10 +120,10 @@ async def tts_process_async(
 
     tgt_sr, net_g, vc, version, index_file, if_f0 = model_data(model_name)
 
-    print(" ")
-    print("text:")
-    print(tts_text)
-    print(f"voice: {tts_voice}")
+    log_message(" ")
+    log_message("text:")
+    log_message(tts_text, Fore.YELLOW)
+    log_message(f"voice: {tts_voice}", Fore.YELLOW)
 
     t0 = time.time()
 
@@ -123,7 +132,7 @@ async def tts_process_async(
         tts_text, "-".join(tts_voice.split("-")[:-1]), rate=speed_str
     ).save(edge_output_filename)
 
-    print("selected TTS")
+    log_message("selected TTS")
 
     t1 = time.time()
     edge_time = t1 - t0
@@ -177,7 +186,8 @@ async def tts_process_async(
 
     info = f"Successfully! Time of processing: edge-tts: {edge_time}s, npy: {times[0]}s, f0: {times[1]}s, infer: {times[2]}s"
 
-    print(info)
+    # Print the final log message with a different color
+    log_message(info, Fore.GREEN)
 
     audio_data_bytes = np.array(audio_opt, dtype=np.int16).tobytes()
     audio_segment = AudioSegment(
@@ -299,11 +309,12 @@ if __name__ == "__main__":
     config = Config()
 
     hubert_model = load_hubert()
-    print("[+] Hubert model loaded.")
-    print("[+] Loading rmvpe model...")
+    # Example of logging an error message with color
+    log_message("Hubert model loaded.", Fore.GREEN)
+    log_message("Loading rmvpe model...", Fore.CYAN)
 
     rmvpe_model = RMVPE(rmvpe_model_root, config.is_half, config.device)
-    print("rmvpe model loaded.")
+    log_message("rmvpe model loaded.", Fore.GREEN)
 
     # Загрузка модели "charlie"
     tgt_sr, net_g, vc, version, index_file, if_f0 = model_data("charlie")

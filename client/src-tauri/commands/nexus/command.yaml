@@ -1,0 +1,44 @@
+list:
+  - command:
+      action: ahk
+      exe_path: ahk/Open nexus.exe
+      exe_args:
+    voice:
+      sounds:
+        - ok1
+        - ok2
+        - ok3
+    phrases:
+      - открой нексус
+      - запусти нексус
+      - включи нексус
+
+  - command:
+      action: ahk
+      exe_path: ahk/Close nexus.exe
+      exe_args:
+    voice:
+      sounds:
+        - ok1
+        - ok2
+        - ok3
+    phrases:
+      - закрой нексус
+      - отключи нексус
+      - выключи нексус
+
+  - command:
+      action: ahk
+      exe_path: ahk/Restart nexus.exe
+      exe_args:
+    voice:
+      sounds:
+        - ok1
+        - ok2
+        - ok3
+    phrases:
+      - перезапусти нексус
+      - перезапуск нексус
+      - рестартни нексус
+      - открой и закрой нексус
+      - выключи и включи нексус

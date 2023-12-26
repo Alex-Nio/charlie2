@@ -11,7 +11,7 @@
   // State
   const nnDetails = ref({
     sttEngine: "Vosk",
-    ttsEngine: "Silero",
+    ttsEngine: "RVC Charlie TTS",
     gptEngine: "gpt-3.5-turbo-1106",
   });
 

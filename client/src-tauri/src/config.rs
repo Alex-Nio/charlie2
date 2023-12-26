@@ -30,8 +30,8 @@ pub const VOSK_MIN_RATIO: f64 = 70.0;
 pub const CMD_RATIO_THRESHOLD: f64 = 65f64;
 pub const CMS_WAIT_DELAY: std::time::Duration = std::time::Duration::from_secs(15);
 
-pub const ASSISTANT_GREET_PHRASES: [&str; 3] = ["greet1", "greet2", "greet3"];
-pub const ASSISTANT_PHRASES_TBR: [&str; 17] = [
+pub const ASSISTANT_GREET_PHRASES: [&str; 2] = ["greet1", "greet2"];
+pub const ASSISTANT_PHRASES_TBR: [&str; 18] = [
     "чарли",
     "сэр",
     "слушаю сэр",
@@ -49,4 +49,5 @@ pub const ASSISTANT_PHRASES_TBR: [&str; 17] = [
     "есть",
     "загружаю сэр",
     "очень тонкое замечание сэр",
+    "мы подключены и готовы",
 ];

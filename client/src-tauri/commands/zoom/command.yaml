@@ -1,0 +1,34 @@
+list:
+  - command:
+      action: ahk
+      exe_path: ahk/Open zoom.exe
+      exe_args:
+    voice:
+      sounds:
+        - ok1
+        - ok2
+        - ok3
+    phrases:
+      - открой зумм
+      - открой зум
+      - запусти зумм
+      - запусти зум
+      - включи зумм
+      - включи зум
+
+  - command:
+      action: ahk
+      exe_path: ahk/Close zoom.exe
+      exe_args:
+    voice:
+      sounds:
+        - ok1
+        - ok2
+        - ok3
+    phrases:
+      - закрой зумм
+      - закрой зум
+      - отключи зумм
+      - отключи зум
+      - выключи зумм
+      - выключи зум

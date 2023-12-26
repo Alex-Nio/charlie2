@@ -1,0 +1,28 @@
+list:
+  - command:
+      action: ahk
+      exe_path: ahk/Open ktalk.exe
+      exe_args:
+    voice:
+      sounds:
+        - ok1
+        - ok2
+        - ok3
+    phrases:
+      - открой толк
+      - запусти толк
+      - включи толк
+
+  - command:
+      action: ahk
+      exe_path: ahk/Close ktalk.exe
+      exe_args:
+    voice:
+      sounds:
+        - ok1
+        - ok2
+        - ok3
+    phrases:
+      - закрой толк
+      - отключи толк
+      - выключи толк

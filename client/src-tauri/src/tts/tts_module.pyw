@@ -1,122 +1,64 @@
 import asyncio
 import os
-import sys
-import argparse
-import pygame
 import time
-import edge_tts
-import gradio as gr
+import pygame
+import numpy as np
 import librosa
-import torch
+from pydub import AudioSegment
+import subprocess
 import yt_dlp
 import soundfile as sf
-import subprocess
-import multiprocessing
+from fairseq import checkpoint_utils
 import numba as nb
-import numpy as np
+import gradio as gr
+import edge_tts
+import torch
+from spleeter.separator import Separator
+from config import Config
+from lib.infer_pack.models import (
+    SynthesizerTrnMs256NSFsid,
+    SynthesizerTrnMs256NSFsid_nono,
+    SynthesizerTrnMs768NSFsid,
+    SynthesizerTrnMs768NSFsid_nono,
+)
+from rmvpe import RMVPE
+from vc_infer_pipeline import VC
+from dotenv import load_dotenv  # Import the library
 
-if __name__ == '__main__':
-    from pydub import AudioSegment
-    from spleeter.separator import Separator
-    from fairseq import checkpoint_utils
-    from config import Config
-    from lib.infer_pack.models import (
-        SynthesizerTrnMs256NSFsid,
-        SynthesizerTrnMs256NSFsid_nono,
-        SynthesizerTrnMs768NSFsid,
-        SynthesizerTrnMs768NSFsid_nono,
-    )
-    from rmvpe import RMVPE
-    from vc_infer_pipeline import VC
-    separator = Separator('spleeter:2stems')
-    limitation = os.getenv("SYSTEM") == "spaces"
-    config = Config()
-    target_sample_rate = 48000
-    edge_output_filename = "edge_output.mp3"
-    tts_voice_list = asyncio.get_event_loop().run_until_complete(edge_tts.list_voices())
-    tts_voices = [f"{v['ShortName']}-{v['Gender']}" for v in tts_voice_list]
-    model_root = "C:\\Users\\volpe\\Desktop\\Coding\\Apps\\charlie2\\client\\src-tauri\\src\\tts\\weights"
-    models = [
-        d for d in os.listdir(model_root) if os.path.isdir(os.path.join(model_root, d))
-    ]
-    if len(models) == 0:
-        raise ValueError("No model found in `weights` folder")
-    models.sort()
+# Load environment variables from .env file
+load_dotenv()
 
-def model_data(model_name):
-    pth_files = [
-        os.path.join(model_root, model_name, f)
-        for f in os.listdir(os.path.join(model_root, model_name))
-        if f.endswith(".pth")
-    ]
-    if len(pth_files) == 0:
-        raise ValueError(f"No pth file found in {model_root}/{model_name}")
-    pth_path = pth_files[0]
-    print(f"Loading {pth_path}")
-    cpt = torch.load(pth_path, map_location="cpu")
-    tgt_sr = cpt["config"][-1]
-    cpt["config"][-3] = cpt["weight"]["emb_g.weight"].shape[0]
-    if_f0 = cpt.get("f0", 1)
-    version = cpt.get("version", "v1")
-    if version == "v1":
-        if if_f0 == 1:
-            net_g = SynthesizerTrnMs256NSFsid(*cpt["config"], is_half=config.is_half)
-        else:
-            net_g = SynthesizerTrnMs256NSFsid_nono(*cpt["config"])
-    elif version == "v2":
-        if if_f0 == 1:
-            net_g = SynthesizerTrnMs768NSFsid(*cpt["config"], is_half=config.is_half)
-        else:
-            net_g = SynthesizerTrnMs768NSFsid_nono(*cpt["config"])
-    else:
-        raise ValueError("Unknown version")
-    del net_g.enc_q
-    net_g.load_state_dict(cpt["weight"], strict=False)
-    print("Model loaded")
-    net_g.eval().to(config.device)
-    if config.is_half:
-        net_g = net_g.half()
-    else:
-        net_g = net_g.float()
-    vc = VC(tgt_sr, config)
-    index_files = [
-        os.path.join(model_root, model_name, f)
-        for f in os.listdir(os.path.join(model_root, model_name))
-        if f.endswith(".index")
-    ]
-    if len(index_files) == 0:
-        print("No index file found")
-        index_file = ""
-    else:
-        index_file = index_files[0]
-        print(f"Index file found: {index_file}")
-    return tgt_sr, net_g, vc, version, index_file, if_f0
+pygame.init()
+
+target_sample_rate = 48000
+edge_output_filename = "edge_output.mp3"
+
+voice_model_root = os.getenv("VOICE_MODEL_ROOT")
+hubert_model_root = os.getenv("HUBERT_MODEL_ROOT")
+rmvpe_model_root = os.getenv("RMVPE_MODEL_ROOT")
+
+limitation = os.getenv("SYSTEM") == "spaces"
+
 
 def load_hubert():
+    print("[+] Loading hubert model...")
+
     global hubert_model
+
     models, _, _ = checkpoint_utils.load_model_ensemble_and_task(
-        ["C:\\Users\\volpe\\Desktop\\Coding\\Apps\\charlie2\\client\\src-tauri\\src\\tts\\hubert_base.pt"],
+        [hubert_model_root],
         suffix="",
     )
+
     hubert_model = models[0]
     hubert_model = hubert_model.to(config.device)
+
     if config.is_half:
         hubert_model = hubert_model.half()
     else:
         hubert_model = hubert_model.float()
     return hubert_model.eval()
 
-if __name__ == '__main__':
-    print("Loading hubert model...")
-
-    hubert_model = load_hubert()
-
-    print("Hubert model loaded.")
-    print("Loading rmvpe model...")
-
-    rmvpe_model = RMVPE("C:\\Users\\volpe\\Desktop\\Coding\\Apps\\charlie2\\client\\src-tauri\\src\\tts\\rmvpe.pt", config.is_half, config.device)
-
-    print("rmvpe model loaded.")
 
 @nb.jit(nopython=True, parallel=True, fastmath=True)
 def process_audio(audio, tgt_sr, filter_radius, rms_mix_rate):
@@ -124,7 +66,25 @@ def process_audio(audio, tgt_sr, filter_radius, rms_mix_rate):
         audio[i] = audio[i] * 2.0
     return audio
 
-def tts_process(
+
+def play_audio(file_path, play=True):
+    try:
+        pygame.mixer.music.load(file_path)
+
+        if play:
+            pygame.mixer.music.play()
+
+            while pygame.mixer.music.get_busy():
+                pygame.time.Clock().tick(10)
+
+    except pygame.error as e:
+        print(f"Ошибка воспроизведения аудио: {e}")
+    finally:
+        if play:
+            pygame.quit()
+
+
+async def tts_process_async(
     model_name,
     f0_key,
     f0_method,
@@ -143,30 +103,12 @@ def tts_process(
     bitrate,
 ):
     # Определение пути к файлу
-    voice_path = 'tts_voice.' + audio_format
+    voice_path = f"tts_voice.{audio_format}"
 
     # Удаление файла, если он существует
     if os.path.exists(voice_path):
         os.remove(voice_path)
         print(f"Удален существующий файл: {voice_path}")
-
-    print(f'''Model: {model_name},
-    f0Key: {f0_key},
-    f0Method: {f0_method},
-    Vol: {volume},
-    VC: {vc_gain},
-    normal: {is_normal},
-    idxRate: {index_rate},
-    prot: {protect},
-    text: {tts_text},
-    voice: {tts_voice},
-    spd: {speed},
-    filtrad: {filter_radius},
-    resample: {resample_sr},
-    mix: {rms_mix_rate},
-    format_audio: {audio_format},
-    bitr: {bitrate}''')
-
 
     tgt_sr, net_g, vc, version, index_file, if_f0 = model_data(model_name)
 
@@ -177,15 +119,10 @@ def tts_process(
 
     t0 = time.time()
 
-    if speed >= 0:
-        speed_str = f"+{speed}%"
-    else:
-        speed_str = f"{speed}%"
-    asyncio.run(
-        edge_tts.Communicate(
-            tts_text, "-".join(tts_voice.split("-")[:-1]), rate=speed_str
-        ).save(edge_output_filename)
-    )
+    speed_str = f"+{speed}%" if speed >= 0 else f"{speed}%"
+    await edge_tts.Communicate(
+        tts_text, "-".join(tts_voice.split("-")[:-1]), rate=speed_str
+    ).save(edge_output_filename)
 
     print("selected TTS")
 
@@ -245,10 +182,7 @@ def tts_process(
 
     audio_data_bytes = np.array(audio_opt, dtype=np.int16).tobytes()
     audio_segment = AudioSegment(
-        audio_data_bytes,
-        frame_rate=tgt_sr,
-        sample_width=2,
-        channels=1
+        audio_data_bytes, frame_rate=tgt_sr, sample_width=2, channels=1
     )
 
     if is_normal:
@@ -256,11 +190,12 @@ def tts_process(
 
     audio_segment.export(voice_path, format=audio_format, bitrate=str(bitrate) + "k")
     voice_audio = AudioSegment.from_file(voice_path)
-    resampled_voice_audio = voice_audio.set_channels(2).set_frame_rate(target_sample_rate)
+    resampled_voice_audio = voice_audio.set_channels(2).set_frame_rate(
+        target_sample_rate
+    )
     resampled_voice_audio = resampled_voice_audio + (vc_gain)
     resampled_voice_audio.export(voice_path, format=audio_format)
 
-    # Воспроизведение аудио
     play_audio(voice_path)
 
     return (
@@ -269,254 +204,111 @@ def tts_process(
         voice_path,
     )
 
-def play_audio(file_path):
-    # Инициализация Pygame
-    pygame.init()
 
-    try:
-        # Загрузка аудиофайла
-        pygame.mixer.music.load(file_path)
+def model_data(model_name):
+    pth_files = [
+        os.path.join(voice_model_root, model_name, f)
+        for f in os.listdir(os.path.join(voice_model_root, model_name))
+        if f.endswith(".pth")
+    ]
 
-        # Воспроизведение аудио
-        pygame.mixer.music.play()
+    if len(pth_files) == 0:
+        raise ValueError(f"No pth file found in {voice_model_root}/{model_name}")
 
-        # Ждем, пока аудио не закончит воспроизведение
-        while pygame.mixer.music.get_busy():
-            pygame.time.Clock().tick(10)
+    pth_path = pth_files[0]
 
-    except pygame.error as e:
-        print(f"Ошибка воспроизведения аудио: {e}")
-    finally:
-        # Завершение Pygame
-        pygame.quit()
+    print(f"Loading {pth_path}")
 
-def audio_file_process(
-        model_name,
-        f0_key,
-        f0_method,
-        volume,
-        mus_gain,
-        vc_gain,
-        is_normal,
-        index_rate,
-        protect,
-        mode,
-        youtube_url,
-        audio_file,
-        sound_speed,
-        is_ff,
-        is_spleeter,
-        ff_start_multi,
-        ff_max_length,
-        filter_radius,
-        resample_sr,
-        rms_mix_rate,
-        audio_format,
-        bitrate,
-):
-    global separator
+    cpt = torch.load(pth_path, map_location="cpu")
+    tgt_sr = cpt["config"][-1]
+    cpt["config"][-3] = cpt["weight"]["emb_g.weight"].shape[0]
+    if_f0 = cpt.get("f0", 1)
+    version = cpt.get("version", "v1")
 
-    if __name__ == '__main__':
-        temp_audio_file = 'temp_audio.'+audio_format
-        voice_path = 'voice.'+audio_format
-        music_path = 'music.'+audio_format
-        combined_file = 'combined.'+audio_format
-        vc_output_path = 'vc_output.'+audio_format
-        audio_path = 'input.'+audio_format
-
-        if mode == 'youtube-url':
-            youtube = youtube_url.split('&')
-            ydl_opts = {
-                'format': 'bestaudio/best',
-                'postprocessors': [{
-                    'key': 'FFmpegExtractAudio',
-                    'preferredcodec': audio_format,
-                    'preferredquality': str(bitrate),
-                }],
-                'outtmpl': 'input',
-            }
-
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                ydl.download([youtube[0]])
+    if version == "v1":
+        if if_f0 == 1:
+            net_g = SynthesizerTrnMs256NSFsid(*cpt["config"], is_half=config.is_half)
         else:
-            audio_path = audio_file.name
-        if is_ff:
-            print("using ffmpeg")
-            audio_clip, audio_clip_sample_rate = sf.read(audio_path)
-            command = ["ffmpeg", "-y", "-i", audio_path, "-ss", str((len(audio_clip) / audio_clip_sample_rate) / ff_start_multi), "-to",
-                    str(len(audio_clip) / audio_clip_sample_rate), "-t", str(ff_max_length), temp_audio_file]
-            subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            net_g = SynthesizerTrnMs256NSFsid_nono(*cpt["config"])
+    elif version == "v2":
+        if if_f0 == 1:
+            net_g = SynthesizerTrnMs768NSFsid(*cpt["config"], is_half=config.is_half)
         else:
-            temp_audio_file = audio_path
+            net_g = SynthesizerTrnMs768NSFsid_nono(*cpt["config"])
+    else:
+        raise ValueError("Unknown version")
 
-        if is_spleeter:
-            multiprocessing.freeze_support()
-            print('using spleeter')
-            audio_data, sample_rate = sf.read(temp_audio_file)
-            results = separator.separate(audio_data)
-            sf.write(voice_path, results['vocals'], sample_rate)
-            sf.write(music_path, results['accompaniment'], sample_rate)
-            music_audio = AudioSegment.from_file(music_path)
-            resampled_music_audio = music_audio.set_channels(2).set_frame_rate(target_sample_rate)
-            resampled_music_audio = resampled_music_audio + (mus_gain)
-            resampled_music_audio.export(music_path, format=audio_format)
-            voice_audio = AudioSegment.from_file(voice_path)
-            resampled_voice_audio = voice_audio.set_channels(2).set_frame_rate(target_sample_rate)
-            resampled_voice_audio = resampled_voice_audio + (vc_gain)
-            resampled_voice_audio.export(voice_path, format=audio_format)
+    del net_g.enc_q
 
-        print(f"Model: {model_name}")
+    net_g.load_state_dict(cpt["weight"], strict=False)
 
-        print(f"Key: {f0_key}, Index: {index_rate}, Protect: {protect}, slow_speed: {sound_speed}, ffmpeg: {is_ff}, start_cut_mulit: {ff_start_multi}, duration: {ff_max_length}, spleeter: {True}")
+    print("Model loaded")
 
-        tgt_sr, net_g, vc, version, index_file, if_f0 = model_data(model_name)
+    net_g.eval().to(config.device)
 
-        if is_spleeter:
-            print("selected Audio File: ", voice_path)
-            audio, sr = librosa.load(voice_path, sr=(sound_speed * 160), mono=True)
-            duration = len(audio) / sr
-            print(f"Estimate work time: {duration}s")
-        else:
-            print("selected Audio File: ", temp_audio_file)
-            audio, sr = librosa.load(temp_audio_file, sr=(sound_speed * 160), mono=True)
-            duration = len(audio) / sr
-            print(f"Estimate work time: {duration}s")
+    if config.is_half:
+        net_g = net_g.half()
+    else:
+        net_g = net_g.float()
 
-        f0_key = int(f0_key)
+    vc = VC(tgt_sr, config)
 
-        if not hubert_model:
-            load_hubert()
+    index_files = [
+        os.path.join(voice_model_root, model_name, f)
+        for f in os.listdir(os.path.join(voice_model_root, model_name))
+        if f.endswith(".index")
+    ]
 
-        vc.model_rmvpe = rmvpe_model
-        times = [0, 0, 0]
-        audio = process_audio(audio, tgt_sr, filter_radius, rms_mix_rate)
+    if len(index_files) == 0:
+        print("No index file found")
+        index_file = ""
+    else:
+        index_file = index_files[0]
+        print(f"Index file found: {index_file}")
+    return tgt_sr, net_g, vc, version, index_file, if_f0
 
-        if is_spleeter:
-            audio_opt = vc.pipeline(
-                hubert_model,
-                net_g,
-                0,
-                audio,
-                voice_path,
-                times,
-                f0_key,
-                f0_method,
-                index_file,
-                index_rate,
-                if_f0,
-                filter_radius,
-                tgt_sr,
-                resample_sr,
-                rms_mix_rate,
-                version,
-                protect,
-                None,
-                volume,
-            )
-        else:
-            audio_opt = vc.pipeline(
-                hubert_model,
-                net_g,
-                0,
-                audio,
-                temp_audio_file,
-                times,
-                f0_key,
-                f0_method,
-                index_file,
-                index_rate,
-                if_f0,
-                filter_radius,
-                tgt_sr,
-                resample_sr,
-                rms_mix_rate,
-                version,
-                protect,
-                None,
-                volume,
-            )
 
-        if tgt_sr != resample_sr >= 16000:
-            tgt_sr = resample_sr
+async def main_async():
+    config = Config()
+    text_from_command_line = config.text
+    await tts_process_async(
+        "charlie",
+        0,
+        "rmvpe",
+        100,
+        0,
+        True,
+        0.5,
+        0.5,
+        text_from_command_line,
+        "ru-RU-DmitryNeural-Male",
+        0,
+        3,
+        0,
+        0.25,
+        "mp3",
+        128,
+    )
 
-        info = f"Successfully! Time of processing: npy: {times[0]}s, f0: {times[1]}s, infer: {times[2]}s"
-
-        print(info)
-
-        audio_data_bytes = np.array(audio_opt, dtype=np.int16).tobytes()
-
-        audio_segment = AudioSegment(
-            audio_data_bytes,
-            frame_rate=tgt_sr,
-            sample_width=2,
-            channels=1
-        )
-
-        if is_spleeter:
-            audio_segment = audio_segment.set_channels(2).set_frame_rate(target_sample_rate)
-            audio_segment.export(vc_output_path, format=audio_format, bitrate=str(bitrate) + "k")
-            audio1 = AudioSegment.from_file(vc_output_path)
-            audio2 = AudioSegment.from_file(music_path)
-            if len(audio1) < len(audio2):
-                audio1 = audio1 + AudioSegment.silent(duration=len(audio2) - len(audio1))
-            else:
-                audio2 = audio2 + AudioSegment.silent(duration=len(audio1) - len(audio2))
-            combined_audio = audio1.overlay(audio2)
-            if is_normal:
-                combined_audio = combined_audio.normalize()
-            combined_audio.export(combined_file, format=audio_format)
-        else:
-            if is_normal:
-                audio_segment = audio_segment.normalize()
-            audio_segment.export(vc_output_path, format=audio_format, bitrate=str(bitrate) + "k")
-
-        return (
-            info,
-            temp_audio_file,
-            voice_path,
-            music_path,
-            vc_output_path,
-            combined_file,
-        )
-
-'''
-Изменения:
-
-1. Удалён запуск интерфейса из функции ниже
-'''
-
-'''
-Параметры TTS:
-
-Model: charlie,
-f0Key: 0,
-f0Method: rmvpe,
-Vol: 100,
-VC: 0,
-normal: True,
-idxRate: 0.5,
-prot: 0.5,
-text: Запуск тестирования модели "Чарли" версии один ноль ноль,
-voice: ru-RU-DmitryNeural-Male,
-spd: 0,
-filtrad: 3,
-resample: 0,
-mix: 0.25,
-format_audio: mp3,
-bitr: 128
-
-'''
 
 def main():
-    # Создайте объект Config
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main_async())
+
+
+if __name__ == "__main__":
     config = Config()
 
-    # Получите текст из аргументов командной строки
-    text_from_command_line = config.text
+    hubert_model = load_hubert()
+    print("[+] Hubert model loaded.")
+    print("[+] Loading rmvpe model...")
 
-    print(f"Текст из командной строки: {text_from_command_line}")
+    rmvpe_model = RMVPE(rmvpe_model_root, config.is_half, config.device)
+    print("rmvpe model loaded.")
 
-    tts_process("charlie", 0, "rmvpe", 100, 0, True, 0.5, 0.5, text_from_command_line, "ru-RU-DmitryNeural-Male", 0, 3, 0, 0.25, "mp3", 128)
+    tgt_sr, net_g, vc, version, index_file, if_f0 = model_data(
+        "charlie"
+    )  # Загрузка модели "charlie"
 
-if __name__ == '__main__':
+    print("Models loaded. Starting main...")
     main()

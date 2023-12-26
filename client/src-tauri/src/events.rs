@@ -56,7 +56,7 @@ pub fn tts_started(app_handle: &tauri::AppHandle) {
         .unwrap();
 }
 
-pub fn tts_stoped(app_handle: &tauri::AppHandle) {
+pub fn tts_stopped(app_handle: &tauri::AppHandle) {
     println!("Вызов emit tts stoped...");
 
     app_handle

@@ -1,10 +1,11 @@
+use crate::events;
+use dotenv::dotenv;
+use std::env;
 use std::os::windows::process::CommandExt;
-use std::process::{Child, Command};
+use std::process::{Child, Command, Stdio};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
-use std::env;
-use crate::events;
 
 // Структура, чтобы хранить информацию о процессе TTS
 struct TTSProcess {
@@ -23,7 +24,7 @@ impl TTSProcess {
     fn stop_tts_static(process: &mut TTSProcess) {
         // Прерываем процесс TTS, если он запущен
         if let Some(mut child) = process.child.take() {
-            events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
+            events::tts_stopped(TAURI_APP_HANDLE.get().unwrap());
 
             // Посылаем сигнал завершения процесса
             let _ = child.kill();
@@ -35,7 +36,6 @@ impl TTSProcess {
         // Это может дать процессу TTS немного времени на полное завершение
         thread::sleep(Duration::from_millis(200));
     }
-
 
     fn start_tts(&mut self, text: &str) -> Result<(), String> {
         println!("TTS процесс запущен");
@@ -51,39 +51,37 @@ impl TTSProcess {
         // Проверяем, был ли запрошен останов TTS
         if self.stop_requested {
             self.stop_requested = false; // Сбрасываем флаг
-            events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
+            events::tts_stopped(TAURI_APP_HANDLE.get().unwrap());
 
             return Ok(());
         }
 
-        // let mut command = if cfg!(target_os = "windows") {
-        //     Command::new("python")
-        // } else {
-        //     Command::new("python3")
-        // };
+        // Загрузить переменные окружения из файла .env
+        dotenv().ok();
 
-        let _python_executable = if cfg!(target_os = "windows") {
-            "python.exe"
-        } else {
-            "python3"
-        };
+        // Получить значение переменной PYTHON_PATH из переменных окружения
+        let python_path = env::var("PYTHON_PATH").expect("PYTHON_PATH not set in .env");
 
         // Путь к исполняемому файлу Python
-        let python_path = if cfg!(target_os = "windows") {
-            "C:\\Users\\volpe\\.pyenv\\pyenv-win\\versions\\3.10.0\\python.exe"
-        } else {
-            "/path/to/python3"  // Замените "/path/to/python3" на фактический путь в вашей системе
-        };
-
-        let mut command = Command::new(python_path);
+        let mut command = Command::new(&python_path);
 
         // Добавляем параметры для команды
-        command.arg("src/tts/tts_module.pyw").arg("--text").arg(text);
+        command
+            .arg("src/tts/tts_module.pyw")
+            .arg("--text")
+            .arg(text);
 
         // Если цель - Windows, устанавливаем CREATE_NO_WINDOW
-        // if cfg!(target_os = "windows") {
-        //     command.creation_flags(winapi::um::winbase::CREATE_NO_WINDOW);
-        // }
+        if cfg!(target_os = "windows") {
+            let stdout = Stdio::null();
+            let stderr = Stdio::null();
+
+            // Устанавливаем флаги создания процесса
+            command
+                .stdout(stdout)
+                .stderr(stderr)
+                .creation_flags(winapi::um::winbase::CREATE_NO_WINDOW);
+        }
 
         println!("Подготовка TTS...");
 
@@ -102,7 +100,7 @@ impl TTSProcess {
     fn stop_tts(&mut self) {
         self.stop_requested = true;
 
-        events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
+        events::tts_stopped(TAURI_APP_HANDLE.get().unwrap());
 
         // Прерываем процесс TTS, если он запущен
         if let Some(mut child) = self.child.take() {
@@ -145,7 +143,7 @@ pub async fn speak_text(text: String) -> Result<(), String> {
 
 #[tauri::command]
 pub fn stop_tts() -> Result<(), String> {
-    events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
+    events::tts_stopped(TAURI_APP_HANDLE.get().unwrap());
 
     // Получаем доступ к общей переменной
     let tts_process = TTS_PROCESS.clone();

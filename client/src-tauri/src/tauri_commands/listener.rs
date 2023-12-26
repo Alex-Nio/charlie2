@@ -243,7 +243,7 @@ fn keyword_callback(_keyword_index: i32) {
                 thread::sleep(Duration::from_secs(5));
 
                 // Вызов функции после задержки
-                events::tts_stoped(TAURI_APP_HANDLE.get().unwrap());
+                events::tts_stopped(TAURI_APP_HANDLE.get().unwrap());
 
                 break;
             }

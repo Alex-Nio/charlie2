@@ -2,7 +2,6 @@ import asyncio
 import os
 import sys
 import argparse
-
 import pygame
 import time
 import edge_tts
@@ -36,7 +35,7 @@ if __name__ == '__main__':
     edge_output_filename = "edge_output.mp3"
     tts_voice_list = asyncio.get_event_loop().run_until_complete(edge_tts.list_voices())
     tts_voices = [f"{v['ShortName']}-{v['Gender']}" for v in tts_voice_list]
-    model_root = "weights"
+    model_root = "C:\\Users\\volpe\\Desktop\\Coding\\Apps\\charlie2\\client\\src-tauri\\src\\tts\\weights"
     models = [
         d for d in os.listdir(model_root) if os.path.isdir(os.path.join(model_root, d))
     ]
@@ -96,7 +95,7 @@ def model_data(model_name):
 def load_hubert():
     global hubert_model
     models, _, _ = checkpoint_utils.load_model_ensemble_and_task(
-        ["hubert_base.pt"],
+        ["C:\\Users\\volpe\\Desktop\\Coding\\Apps\\charlie2\\client\\src-tauri\\src\\tts\\hubert_base.pt"],
         suffix="",
     )
     hubert_model = models[0]
@@ -115,7 +114,7 @@ if __name__ == '__main__':
     print("Hubert model loaded.")
     print("Loading rmvpe model...")
 
-    rmvpe_model = RMVPE("rmvpe.pt", config.is_half, config.device)
+    rmvpe_model = RMVPE("C:\\Users\\volpe\\Desktop\\Coding\\Apps\\charlie2\\client\\src-tauri\\src\\tts\\rmvpe.pt", config.is_half, config.device)
 
     print("rmvpe model loaded.")
 
@@ -387,6 +386,7 @@ def audio_file_process(
 
         if not hubert_model:
             load_hubert()
+
         vc.model_rmvpe = rmvpe_model
         times = [0, 0, 0]
         audio = process_audio(audio, tgt_sr, filter_radius, rms_mix_rate)

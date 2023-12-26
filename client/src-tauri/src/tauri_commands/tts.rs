@@ -3,6 +3,7 @@ use std::process::{Child, Command};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
+use std::env;
 use crate::events;
 
 // Структура, чтобы хранить информацию о процессе TTS
@@ -35,6 +36,7 @@ impl TTSProcess {
         thread::sleep(Duration::from_millis(200));
     }
 
+
     fn start_tts(&mut self, text: &str) -> Result<(), String> {
         println!("TTS процесс запущен");
 
@@ -54,19 +56,34 @@ impl TTSProcess {
             return Ok(());
         }
 
-        let mut command = if cfg!(target_os = "windows") {
-            Command::new("python")
+        // let mut command = if cfg!(target_os = "windows") {
+        //     Command::new("python")
+        // } else {
+        //     Command::new("python3")
+        // };
+
+        let _python_executable = if cfg!(target_os = "windows") {
+            "python.exe"
         } else {
-            Command::new("python3")
+            "python3"
         };
 
+        // Путь к исполняемому файлу Python
+        let python_path = if cfg!(target_os = "windows") {
+            "C:\\Users\\volpe\\.pyenv\\pyenv-win\\versions\\3.10.0\\python.exe"
+        } else {
+            "/path/to/python3"  // Замените "/path/to/python3" на фактический путь в вашей системе
+        };
+
+        let mut command = Command::new(python_path);
+
         // Добавляем параметры для команды
-        command.arg("src/tts/main.py").arg("--text").arg(text);
+        command.arg("src/tts/tts_module.pyw").arg("--text").arg(text);
 
         // Если цель - Windows, устанавливаем CREATE_NO_WINDOW
-        if cfg!(target_os = "windows") {
-            command.creation_flags(winapi::um::winbase::CREATE_NO_WINDOW);
-        }
+        // if cfg!(target_os = "windows") {
+        //     command.creation_flags(winapi::um::winbase::CREATE_NO_WINDOW);
+        // }
 
         println!("Подготовка TTS...");
 

@@ -1,5 +1,7 @@
+use crate::config;
 use crate::events;
 use crate::tauri_commands::TAURI_APP_HANDLE;
+use rand::prelude::SliceRandom;
 use tauri::Manager;
 // the payload type must implement `Serialize` and `Clone`.
 #[derive(Clone, serde::Serialize)]
@@ -58,6 +60,13 @@ pub fn tts_started(app_handle: &tauri::AppHandle) {
 
 pub fn tts_stopped(app_handle: &tauri::AppHandle) {
     println!("Вызов emit tts stoped...");
+
+    events::play(
+        config::ASSISTANT_WAIT_PHRASES
+            .choose(&mut rand::thread_rng())
+            .unwrap(),
+        TAURI_APP_HANDLE.get().unwrap(),
+    );
 
     app_handle
         .emit_all(EventTypes::TtsStoped.get(), Payload { data: "".into() })

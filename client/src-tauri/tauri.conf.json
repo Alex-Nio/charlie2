@@ -47,8 +47,6 @@
         ".env",
         "commands",
         "sound",
-        "ai/picovoice",
-        "ai/rustpotter",
         "ai/vosk",
         "libvosk.dll",
         "libstdc++-6.dll",

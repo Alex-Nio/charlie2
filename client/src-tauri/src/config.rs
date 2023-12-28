@@ -1,8 +1,6 @@
 // APP
 pub enum WakeWordEngine {
-    Rustpotter,
     Vosk,
-    Porcupine,
 }
 
 pub const DEFAULT_WAKE_WORD_ENGINE: WakeWordEngine = WakeWordEngine::Vosk;
@@ -13,12 +11,7 @@ pub const APP_VERSION: Option<&str> = option_env!("CARGO_PKG_VERSION");
 pub const AUTHOR_NAME: Option<&str> = option_env!("CARGO_PKG_AUTHORS");
 pub const REPOSITORY_LINK: Option<&str> = option_env!("CARGO_PKG_REPOSITORY");
 
-// RUSPOTTER
-pub const RUSPOTTER_MIN_SCORE: f32 = 0.62;
-
-// PICOVOICE
 pub const COMMANDS_PATH: &str = "commands/";
-pub const KEYWORDS_PATH: &str = "picovoice/keywords/";
 
 // VOSK
 // pub const VOSK_MODEL_PATH: &str = const_concat!(PUBLIC_PATH, "/vosk/model_small");
@@ -31,6 +24,9 @@ pub const CMD_RATIO_THRESHOLD: f64 = 65f64;
 pub const CMS_WAIT_DELAY: std::time::Duration = std::time::Duration::from_secs(15);
 
 pub const ASSISTANT_GREET_PHRASES: [&str; 2] = ["greet1", "greet2"];
+pub const ASSISTANT_WAIT_PHRASES: [&str; 8] = [
+    "wait1", "wait2", "wait3", "wait4", "wait5", "wait6", "wait7", "wait8",
+];
 pub const ASSISTANT_PHRASES_TBR: [&str; 18] = [
     "чарли",
     "сэр",

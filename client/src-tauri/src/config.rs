@@ -25,8 +25,8 @@ pub const CMS_WAIT_DELAY: std::time::Duration = std::time::Duration::from_secs(1
 
 pub const ASSISTANT_GREET_PHRASES: [&str; 2] = ["greet1", "greet2"];
 
-pub const ASSISTANT_WAIT_PHRASES: [&str; 9] = [
-    "wait1", "wait2", "wait3", "wait4", "wait5", "wait6", "wait7", "wait8", "wait9",
+pub const ASSISTANT_WAIT_PHRASES: [&str; 8] = [
+    "wait1", "wait2", "wait3", "wait4", "wait5", "wait6", "wait7", "wait8",
 ];
 
 pub const ASSISTANT_PHRASES_TBR: [&str; 18] = [

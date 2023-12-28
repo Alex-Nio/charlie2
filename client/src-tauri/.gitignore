@@ -5,3 +5,4 @@ venv
 app.db
 log.txt
 output.txt
+.vscode

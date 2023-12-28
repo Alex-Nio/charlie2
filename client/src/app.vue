@@ -68,7 +68,7 @@
   };
 
   const listenToTtsStop = async () => {
-    await listen("tts-stoped", handleTTSStoped);
+    await listen("tts-stopped", handleTTSStopped);
   };
 
   // Функция, которая будет вызываться при событии tts_started
@@ -78,7 +78,7 @@
       console.log('Обработка TTS началась...');
   };
 
-  const handleTTSStoped = () => {
+  const handleTTSStopped = () => {
       // Обновляем состояние в соответствии с вашими нуждами
       isTTSActive.value = false;
       console.log('Обработка TTS закончилась...');

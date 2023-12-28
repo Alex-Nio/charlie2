@@ -169,7 +169,10 @@ fn keyword_callback(_keyword_index: i32) {
 
                     if test.contains("стоп") {
                         let _ = tauri_commands::stop_tts();
+
                         println!("Выход из цикла. остановка TTS");
+
+                        events::play("stop", TAURI_APP_HANDLE.get().unwrap());
 
                         break;
                     }
@@ -184,7 +187,8 @@ fn keyword_callback(_keyword_index: i32) {
                                 // tts_started
                                 events::tts_started(TAURI_APP_HANDLE.get().unwrap());
 
-                                println!("Processing output text...");
+                                println!("[+] Чтение текста из файла output.txt...");
+
                                 // Явное создание асинхронного runtime
                                 tauri_commands::write_to_file(&test);
 
@@ -203,7 +207,7 @@ fn keyword_callback(_keyword_index: i32) {
 
                                 handle.join().expect("Thread panicked");
                             } else {
-                                println!("Output text is empty.");
+                                println!("[+] Файл output.txt пуст.");
                             }
                         }
                         Err(err) => {
@@ -216,17 +220,24 @@ fn keyword_callback(_keyword_index: i32) {
 
         match start.elapsed() {
             Ok(elapsed) if elapsed > config::CMS_WAIT_DELAY => {
-                // return to picovoice after N seconds
+                // return to vosk after N seconds
                 TAURI_APP_HANDLE
                     .get()
                     .unwrap()
                     .emit_all(events::EventTypes::AssistantWaiting.get(), ())
                     .unwrap();
 
-                thread::sleep(Duration::from_secs(5));
+                thread::sleep(Duration::from_secs(8));
 
                 // Вызов функции после задержки
                 events::tts_stopped(TAURI_APP_HANDLE.get().unwrap());
+
+                events::play(
+                    config::ASSISTANT_WAIT_PHRASES
+                        .choose(&mut rand::thread_rng())
+                        .unwrap(),
+                    TAURI_APP_HANDLE.get().unwrap(),
+                );
 
                 break;
             }
@@ -289,7 +300,7 @@ fn start_recording() -> Result<bool, String> {
     recorder::init(); // init
     recorder::start_recording(); // start
     LISTENING.store(true, Ordering::SeqCst);
-    info!("START listening ...");
+    info!("[+] Запуск слушателя...");
 
     // greet user
     events::play("run", TAURI_APP_HANDLE.get().unwrap());
@@ -330,7 +341,7 @@ fn stop_recording() {
 
     LISTENING.store(false, Ordering::SeqCst);
     STOP_LISTENING.store(false, Ordering::SeqCst);
-    info!("STOP listening ...");
+    info!("[+] Остановка слушателя...");
 }
 
 fn vosk_init() -> Result<bool, String> {

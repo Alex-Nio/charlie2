@@ -3,7 +3,6 @@ import torch.nn as nn
 from time import time as ttime
 import torch.nn.functional as F
 
-
 class BiGRU(nn.Module):
     def __init__(self, input_features, hidden_features, num_layers):
         super(BiGRU, self).__init__()
@@ -17,7 +16,6 @@ class BiGRU(nn.Module):
 
     def forward(self, x):
         return self.gru(x)[0]
-
 
 class ConvBlockRes(nn.Module):
     def __init__(self, in_channels, out_channels, momentum=0.01):

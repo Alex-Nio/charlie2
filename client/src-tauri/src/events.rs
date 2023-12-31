@@ -1,6 +1,7 @@
 use crate::events;
 use crate::tauri_commands::TAURI_APP_HANDLE;
 use tauri::Manager;
+
 // the payload type must implement `Serialize` and `Clone`.
 #[derive(Clone, serde::Serialize)]
 pub struct Payload {

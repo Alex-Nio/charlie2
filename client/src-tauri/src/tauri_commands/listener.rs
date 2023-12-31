@@ -1,13 +1,12 @@
+use crate::tauri_commands::TTS_PROCESS;
 use log::info;
 use once_cell::sync::OnceCell;
 use rand::seq::SliceRandom;
-use std::time::Duration;
 use std::{
     sync::atomic::{AtomicBool, Ordering},
     thread,
     time::SystemTime,
 };
-
 use tauri::Manager;
 
 use crate::{assistant_commands, config, events, recorder, tauri_commands, vosk, COMMANDS, DB};
@@ -167,10 +166,11 @@ fn keyword_callback(_keyword_index: i32) {
                 } else {
                     tauri_commands::write_to_file(&test);
 
-                    if test.contains("стоп") {
+                    // ASSISTANT_STOP_PHRASES
+                    if config::ASSISTANT_STOP_PHRASES.contains(&test.as_str()) {
                         let _ = tauri_commands::stop_tts();
 
-                        println!("Выход из цикла. остановка TTS");
+                        println!("Выход из цикла. Остановка TTS");
 
                         events::play("stop", TAURI_APP_HANDLE.get().unwrap());
 
@@ -220,24 +220,27 @@ fn keyword_callback(_keyword_index: i32) {
 
         match start.elapsed() {
             Ok(elapsed) if elapsed > config::CMS_WAIT_DELAY => {
-                // return to vosk after N seconds
-                TAURI_APP_HANDLE
-                    .get()
-                    .unwrap()
-                    .emit_all(events::EventTypes::AssistantWaiting.get(), ())
-                    .unwrap();
+                let tts_process = TTS_PROCESS.lock().unwrap();
 
-                thread::sleep(Duration::from_secs(8));
+                println!("ТТС процесс запущен: {}", !tts_process.is_active());
 
-                // Вызов функции после задержки
-                events::tts_stopped(TAURI_APP_HANDLE.get().unwrap());
-
-                events::play(
-                    config::ASSISTANT_WAIT_PHRASES
-                        .choose(&mut rand::thread_rng())
-                        .unwrap(),
-                    TAURI_APP_HANDLE.get().unwrap(),
-                );
+                // Проверяем, было ли уже проиграно ожидание
+                if !tts_process.is_active() {
+                    // return to vosk after N seconds
+                    TAURI_APP_HANDLE
+                        .get()
+                        .unwrap()
+                        .emit_all(
+                            events::EventTypes::AssistantWaiting.get(),
+                            events::play(
+                                config::ASSISTANT_WAIT_PHRASES
+                                    .choose(&mut rand::thread_rng())
+                                    .unwrap(),
+                                TAURI_APP_HANDLE.get().unwrap(),
+                            ),
+                        )
+                        .unwrap();
+                }
 
                 break;
             }

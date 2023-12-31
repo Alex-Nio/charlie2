@@ -1,4 +1,5 @@
 use crate::events;
+use crate::tauri_commands::TAURI_APP_HANDLE;
 use dotenv::dotenv;
 use std::env;
 use std::os::windows::process::CommandExt;
@@ -8,9 +9,10 @@ use std::thread;
 use std::time::Duration;
 
 // Структура, чтобы хранить информацию о процессе TTS
-struct TTSProcess {
+pub struct TTSProcess {
     child: Option<Child>,
     stop_requested: bool,
+    active: bool,
 }
 
 impl TTSProcess {
@@ -18,7 +20,12 @@ impl TTSProcess {
         TTSProcess {
             child: None,
             stop_requested: false,
+            active: false,
         }
+    }
+
+    pub fn is_active(&self) -> bool {
+        self.active
     }
 
     fn stop_tts_static(process: &mut TTSProcess) {
@@ -35,10 +42,14 @@ impl TTSProcess {
         // Добавьте небольшую задержку перед возвращением из функции
         // Это может дать процессу TTS немного времени на полное завершение
         thread::sleep(Duration::from_millis(200));
+
+        process.active = false;
     }
 
     fn start_tts(&mut self, text: &str) -> Result<(), String> {
         println!("TTS процесс запущен");
+
+        self.active = true;
 
         // Проверяем, не запущен ли уже процесс TTS
         if self.child.is_some() {
@@ -95,30 +106,13 @@ impl TTSProcess {
             Err(err) => Err(format!("Error running Python script: {}", err)),
         }
     }
-
-    #[allow(dead_code)]
-    fn stop_tts(&mut self) {
-        self.stop_requested = true;
-
-        events::tts_stopped(TAURI_APP_HANDLE.get().unwrap());
-
-        // Прерываем процесс TTS, если он запущен
-        if let Some(mut child) = self.child.take() {
-            // Посылаем сигнал завершения процесса
-            let _ = child.kill();
-            // Ждем завершения процесса
-            let _ = child.wait();
-        }
-    }
 }
 
 // Общая переменная для использования внутри асинхронных функций
 // Мьютекс (Mutex) используется для обеспечения безопасности доступа к структуре TTSProcess
 lazy_static::lazy_static! {
-    static ref TTS_PROCESS: Arc<Mutex<TTSProcess>> = Arc::new(Mutex::new(TTSProcess::new()));
+    pub static ref TTS_PROCESS: Arc<Mutex<TTSProcess>> = Arc::new(Mutex::new(TTSProcess::new()));
 }
-
-use crate::tauri_commands::TAURI_APP_HANDLE;
 
 #[tauri::command]
 pub async fn speak_text(text: String) -> Result<(), String> {

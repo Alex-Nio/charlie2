@@ -6,10 +6,12 @@ extern crate lazy_static; // better switch to once_cell ?
 use log::info;
 use log::LevelFilter;
 use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
+use std::env;
 use std::fs::File;
 use std::sync::Mutex;
+use tauri::Manager;
+use tauri::SystemTrayEvent;
 use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem};
-
 // expose the config
 mod config;
 use config::*;
@@ -66,10 +68,6 @@ lazy_static! {
 lazy_static! {
     static ref COMMANDS: Vec<AssistantCommand> = assistant_commands::parse_commands().unwrap();
 }
-
-use std::env;
-use tauri::Manager;
-use tauri::SystemTrayEvent;
 
 fn main() {
     // Добавляем путь к папке libs в переменную окружения PATH

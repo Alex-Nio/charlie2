@@ -21,7 +21,7 @@ pub const VOSK_MIN_RATIO: f64 = 70.0;
 
 // ETC
 pub const CMD_RATIO_THRESHOLD: f64 = 65f64;
-pub const CMS_WAIT_DELAY: std::time::Duration = std::time::Duration::from_secs(15);
+pub const CMS_WAIT_DELAY: std::time::Duration = std::time::Duration::from_secs(10);
 
 pub const ASSISTANT_GREET_PHRASES: [&str; 2] = ["greet1", "greet2"];
 
@@ -29,7 +29,7 @@ pub const ASSISTANT_WAIT_PHRASES: [&str; 8] = [
     "wait1", "wait2", "wait3", "wait4", "wait5", "wait6", "wait7", "wait8",
 ];
 
-pub const ASSISTANT_PHRASES_TBR: [&str; 18] = [
+pub const ASSISTANT_PHRASES_TBR: [&str; 17] = [
     "чарли",
     "сэр",
     "слушаю сэр",
@@ -37,7 +37,6 @@ pub const ASSISTANT_PHRASES_TBR: [&str; 18] = [
     "произнеси",
     "ответь",
     "покажи",
-    "скажи",
     "давай",
     "да сэр",
     "к вашим услугам сэр",
@@ -48,4 +47,20 @@ pub const ASSISTANT_PHRASES_TBR: [&str; 18] = [
     "загружаю сэр",
     "очень тонкое замечание сэр",
     "мы подключены и готовы",
+];
+
+pub const ASSISTANT_STOP_PHRASES: [&str; 13] = [
+    "стоп",
+    "я и сам знаю",
+    "отмена",
+    "хватит",
+    "тихо",
+    "утихни",
+    "замолчи",
+    "замолкни",
+    "перестань",
+    "перестань неси чушь",
+    "не неси чушь",
+    "перестань нести чушь",
+    "да я и сам знаю",
 ];

@@ -2,8 +2,9 @@ use crate::events;
 use crate::tauri_commands::TAURI_APP_HANDLE;
 use dotenv::dotenv;
 use std::env;
-use std::os::windows::process::CommandExt;
-use std::process::{Child, Command, Stdio};
+// use std::os::windows::process::CommandExt;
+use std::process::{Child, Command};
+// use std::process::{Stdio};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
@@ -84,16 +85,16 @@ impl TTSProcess {
             .arg(text);
 
         // Если цель - Windows, устанавливаем CREATE_NO_WINDOW
-        if cfg!(target_os = "windows") {
-            let stdout = Stdio::null();
-            let stderr = Stdio::null();
+        // if cfg!(target_os = "windows") {
+        //     let stdout = Stdio::null();
+        //     let stderr = Stdio::null();
 
-            // Устанавливаем флаги создания процесса
-            command
-                .stdout(stdout)
-                .stderr(stderr)
-                .creation_flags(winapi::um::winbase::CREATE_NO_WINDOW);
-        }
+        //     // Устанавливаем флаги создания процесса
+        //     command
+        //         .stdout(stdout)
+        //         .stderr(stderr)
+        //         .creation_flags(winapi::um::winbase::CREATE_NO_WINDOW);
+        // }
 
         println!("Подготовка TTS...");
 

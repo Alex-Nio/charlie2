@@ -295,15 +295,31 @@ async def main_async():
         3,
         0,
         0.25,
-        "mp3",
-        320,
+        "wav",
+        128,
     )
 
 
-def main():
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main_async())
+"""
+TTS Params:
 
+model_name,
+f0_key,
+f0_method,
+volume,
+vc_gain,
+is_normal,
+index_rate,
+protect,
+tts_text,
+tts_voice,
+speed,
+filter_radius,
+resample_sr,
+rms_mix_rate,
+audio_format,
+bitrate,
+"""
 
 if __name__ == "__main__":
     config = Config()
@@ -319,5 +335,15 @@ if __name__ == "__main__":
     # Загрузка модели "charlie"
     tgt_sr, net_g, vc, version, index_file, if_f0 = model_data("charlie")
 
-    print("Models loaded. Starting main...")
-    main()
+    log_message("[+] Models loaded. Starting main...", Fore.GREEN)
+
+    # Проверяем, есть ли текущая асинхронная петля
+    if asyncio.get_event_loop().is_running():
+        loop = asyncio.get_event_loop()
+    else:
+        # Если петли нет, создаем новую
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
+    # Запускаем асинхронную функцию в петле
+    loop.run_until_complete(main_async())

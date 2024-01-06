@@ -5,9 +5,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - сверни все окна
       - сверни окна
@@ -22,9 +22,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - сверни текущее окно
       - сверни это окно
@@ -37,9 +37,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - разверни текущее окно
       - разверни это окно
@@ -52,9 +52,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - очисти корзину
       - почисти корзину
@@ -66,9 +66,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - запусти диспетчер задач
       - открой диспетчер задач
@@ -81,9 +81,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - закрой диспетчер задач
       - выключи диспетчер задач
@@ -96,9 +96,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - сделай скриншот
       - сделай снимок экрана
@@ -111,9 +111,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - выключи компьютер
       - отключи компьютер
@@ -129,9 +129,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - не выключай
       - не выключай компьютер
@@ -150,10 +150,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - перезагрузи компьютер
       - перезагрузи комп
@@ -164,10 +164,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - заблокируй компьютер
       - заблокируй комп
@@ -178,10 +178,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - спящий режим
       - ждущий режим
@@ -194,9 +194,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - открой буфер обмена
       - покажи буфер обмена
@@ -209,9 +209,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - смени раскладку
       - поменяй раскладку
@@ -234,9 +234,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - открой загрузки
       - запусти загрузки
@@ -249,9 +249,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - открой параметры
       - запусти параметры
@@ -268,9 +268,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - закрой параметры
       - выключи параметры
@@ -285,9 +285,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - открой мой комп
       - открой мой компютер
@@ -301,12 +301,29 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - закрой мой комп
       - закрой мой компютер
       - закрой папку мой компютер
       - закрой папку компютера
       - закрой компютер
+
+  - command:
+      action: ahk
+      exe_path: ahk/Open terminal.exe
+      exe_args:
+    voice:
+      sounds:
+        - confirm1
+        - confirm2
+        - confirm3
+    phrases:
+      - открой терминал
+      - открыть терминал
+      - запусти терминал
+      - запуск командной строки
+      - командная строка
+      - запусти командную строку

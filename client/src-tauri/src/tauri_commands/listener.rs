@@ -82,12 +82,13 @@ fn keyword_callback(_keyword_index: i32) {
     let mut start: SystemTime = SystemTime::now();
     let mut frame_buffer = vec![0; recorder::FRAME_LENGTH.load(Ordering::SeqCst) as usize];
 
-    // play greet phrase
+    // play callback phrase
     events::play(
-        config::ASSISTANT_GREET_PHRASES
+        config::ASSISTANT_CALLBACK_PHRASES
             .choose(&mut rand::thread_rng())
             .unwrap(),
         TAURI_APP_HANDLE.get().unwrap(),
+        "callback",
     );
 
     // emit assistant greet event
@@ -120,6 +121,7 @@ fn keyword_callback(_keyword_index: i32) {
                     // println!("Recognized (filtered): {}", test);
                     println!("[+] Команда найдена: {:?}", cmd_path);
                     println!("Исполнение ...");
+                    println!("[+] Конфигурация команды: {:?}", cmd_config);
 
                     let cmd_result = assistant_commands::execute_command(
                         &cmd_path,
@@ -160,6 +162,7 @@ fn keyword_callback(_keyword_index: i32) {
                             .choose(&mut rand::thread_rng())
                             .unwrap(),
                         TAURI_APP_HANDLE.get().unwrap(),
+                        "wait",
                     );
 
                     break; // return to picovoice after command execution (no matter successful or not)
@@ -172,7 +175,7 @@ fn keyword_callback(_keyword_index: i32) {
 
                         println!("Выход из цикла. Остановка TTS");
 
-                        events::play("stop", TAURI_APP_HANDLE.get().unwrap());
+                        events::play("stop", TAURI_APP_HANDLE.get().unwrap(), "default");
 
                         break;
                     }
@@ -237,6 +240,7 @@ fn keyword_callback(_keyword_index: i32) {
                                     .choose(&mut rand::thread_rng())
                                     .unwrap(),
                                 TAURI_APP_HANDLE.get().unwrap(),
+                                "wait",
                             ),
                         )
                         .unwrap();
@@ -250,7 +254,6 @@ fn keyword_callback(_keyword_index: i32) {
 }
 
 pub fn data_callback(frame_buffer: &[i16]) {
-    // println!("DATA CALLBACK {}", frame_buffer.len());
     match get_wake_word_engine() {
         config::WakeWordEngine::Vosk => {
             // recognize & convert to sequence
@@ -259,6 +262,9 @@ pub fn data_callback(frame_buffer: &[i16]) {
             if !recognized_phrase.trim().is_empty() {
                 info!("Rec: {}", recognized_phrase);
                 let recognized_phrases = recognized_phrase.split_whitespace();
+
+                println!("[+] Input phrase: {:?}", recognized_phrase);
+
                 for phrase in recognized_phrases {
                     let recognized_phrase_chars =
                         phrase.trim().to_lowercase().chars().collect::<Vec<_>>();
@@ -306,7 +312,13 @@ fn start_recording() -> Result<bool, String> {
     info!("[+] Запуск слушателя...");
 
     // greet user
-    events::play("run", TAURI_APP_HANDLE.get().unwrap());
+    events::play(
+        config::ASSISTANT_GREET_PHRASES
+            .choose(&mut rand::thread_rng())
+            .unwrap(),
+        TAURI_APP_HANDLE.get().unwrap(),
+        "greet",
+    );
 
     // record
     match recorder::RECORDER_TYPE.load(Ordering::SeqCst) {

@@ -140,7 +140,7 @@ pub fn execute_command(
                 .sounds
                 .choose(&mut rand::thread_rng())
                 .unwrap();
-            events::play(random_cmd_sound, app_handle);
+            events::play(random_cmd_sound, app_handle, "default");
 
             Ok(true)
         }
@@ -151,7 +151,7 @@ pub fn execute_command(
                 .sounds
                 .choose(&mut rand::thread_rng())
                 .unwrap();
-            events::play(random_cmd_sound, app_handle);
+            events::play(random_cmd_sound, app_handle, "reactions");
 
             Ok(true)
         }
@@ -173,7 +173,7 @@ pub fn execute_command(
                     .sounds
                     .choose(&mut rand::thread_rng())
                     .unwrap();
-                events::play(random_cmd_sound, app_handle);
+                events::play(random_cmd_sound, app_handle, "confirm");
 
                 Ok(true)
             } else {
@@ -182,6 +182,7 @@ pub fn execute_command(
             }
         }
         "cli" => {
+            // TODO: провести разбор запуска cli команд
             // CLI command type
             let cli_cmd = &cmd_config.command.cli_cmd;
 
@@ -192,7 +193,7 @@ pub fn execute_command(
                         .sounds
                         .choose(&mut rand::thread_rng())
                         .unwrap();
-                    events::play(random_cmd_sound, app_handle);
+                    events::play(random_cmd_sound, app_handle, "confirm");
 
                     Ok(true)
                 }
@@ -209,7 +210,7 @@ pub fn execute_command(
                 .sounds
                 .choose(&mut rand::thread_rng())
                 .unwrap();
-            events::play(random_cmd_sound, app_handle);
+            events::play(random_cmd_sound, app_handle, "terminate");
 
             std::thread::sleep(Duration::from_secs(2));
             std::process::exit(0);
@@ -221,7 +222,7 @@ pub fn execute_command(
                 .sounds
                 .choose(&mut rand::thread_rng())
                 .unwrap();
-            events::play(random_cmd_sound, app_handle);
+            events::play(random_cmd_sound, app_handle, "default");
 
             Ok(false)
         }

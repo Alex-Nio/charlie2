@@ -5,9 +5,9 @@ list:
   #     exe_args:
   #   voice:
   #     sounds:
-  #     - ok1
-  #     - ok2
-  #     - ok3
+  #     - confirm1
+  #     - confirm2
+  #     - confirm3
   #   phrases:
   #   - пауза
   #   - поставь на паузу
@@ -20,9 +20,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - во весь экран
       - открой во весь экран
@@ -35,9 +35,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - следующее видео
       - включи следующее видео
@@ -49,10 +49,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - перемотка вперед
       - перемотка вправо
@@ -66,10 +66,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - перемотка назад
       - перемотка влево
@@ -87,10 +87,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - выключи звук
       - беззвучный режим
@@ -106,10 +106,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - сделай громче
       - громче
@@ -125,10 +125,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - сделай тише
       - тише
@@ -143,10 +143,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - переключи на наушники
       - включи наушники
@@ -160,10 +160,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - переключи на колонку
       - включи колонку
@@ -186,10 +186,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук пятнадцать
       - громкость пятнадцать
@@ -208,10 +208,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук двадцать
       - громкость двадцать
@@ -226,10 +226,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук двадцать пять
       - громкость двадцать пять
@@ -244,10 +244,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук тридцать
       - громкость тридцать
@@ -262,10 +262,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук тридцать пять
       - громкость тридцать пять
@@ -280,10 +280,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук сорок
       - громкость сорок
@@ -298,10 +298,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук сорок пять
       - громкость сорок пять
@@ -316,10 +316,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук пятьдесят
       - громкость пятьдесят
@@ -334,10 +334,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук пятьдесят пять
       - громкость пятьдесят пять
@@ -352,10 +352,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук шестьдесят
       - громкость шестьдесят
@@ -370,10 +370,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук шестьдесят пять
       - громкость шестьдесят пять
@@ -388,10 +388,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук семьдесят
       - громкость семьдесят
@@ -406,10 +406,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук семьдесят пять
       - громкость семьдесят пять
@@ -424,10 +424,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук восемьдесят
       - громкость восемьдесят
@@ -442,10 +442,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук восемьдесят пять
       - громкость восемьдесят пять
@@ -460,10 +460,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук девяносто
       - громкость девяносто
@@ -478,10 +478,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук девяносто пять
       - громкость девяносто пять
@@ -496,10 +496,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - звук сто
       - громкость сто
@@ -521,10 +521,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - пауза
       - поставь на паузу
@@ -537,10 +537,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - останови воспроизведение
       - выключи музыку
@@ -552,10 +552,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - следующий трек
       - включи следующий трек
@@ -569,10 +569,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - предыдущий трек
       - включи предыдущий трек

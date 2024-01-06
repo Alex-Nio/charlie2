@@ -4,7 +4,7 @@ list:
     voice:
       sounds:
         - thanks
-        - ok1
+        - confirm1
     phrases:
       - всё
       - не слушай

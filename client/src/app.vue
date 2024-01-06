@@ -13,7 +13,7 @@
   const isListening = ref(true);
   const isReactorActive = ref(false);
   const isTTSActive = ref(false);
-  const assistantVoiceVal = "jarvis-og";
+  const assistantVoiceVal = "charlie-voices";
 
   // Functions
   const startListening = async () => {
@@ -46,7 +46,11 @@
   const playAudio = async (event) => {
     isReactorActive.value = true;
 
-    let filename = "sound/" + assistantVoiceVal + "/" + event.payload["data"] + ".wav";
+    let folder = event.payload.folder;
+
+    console.log(folder);
+
+    let filename = "sound/" + assistantVoiceVal + "/" + folder + "/" + event.payload["data"] + ".wav";
 
     try {
       await invoke("play_sound", { filename, sleep: true });
@@ -60,7 +64,7 @@
   };
 
   const listenToAudioPlay = async () => {
-    await listen("audio-play", playAudio);
+      await listen("audio-play", playAudio);
   };
 
   const listenToTtsStart = async () => {

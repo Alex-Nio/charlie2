@@ -5,9 +5,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - открой нексус
       - запусти нексус
@@ -19,9 +19,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - закрой нексус
       - отключи нексус
@@ -33,9 +33,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - перезапусти нексус
       - перезапуск нексус

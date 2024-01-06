@@ -5,9 +5,9 @@ list:
     exe_args:
   voice:
     sounds:
-    - ok1
-    - ok2
-    - ok3
+    - confirm1
+    - confirm2
+    - confirm3
   phrases:
   - открой погоду
   - покажи погоду
@@ -20,9 +20,9 @@ list:
     exe_args:
   voice:
     sounds:
-    - ok1
-    - ok2
-    - ok3
+    - confirm1
+    - confirm2
+    - confirm3
   phrases:
   - закрой погоду
   - отключи погоду

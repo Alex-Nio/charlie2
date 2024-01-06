@@ -4,6 +4,7 @@ use std::io::BufReader;
 
 #[tauri::command(async)]
 pub fn play_sound(filename: &str, sleep: bool) {
+    println!("{}", filename);
     // Get a output stream handle to the default physical sound device
     let (_stream, stream_handle) = OutputStream::try_default().unwrap();
     let sink = Sink::try_new(&stream_handle).unwrap();

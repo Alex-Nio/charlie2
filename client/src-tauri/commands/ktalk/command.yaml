@@ -5,9 +5,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - открой толк
       - запусти толк
@@ -19,9 +19,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - закрой толк
       - отключи толк

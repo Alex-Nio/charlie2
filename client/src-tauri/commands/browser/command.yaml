@@ -5,9 +5,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - открой браузер
       - запусти браузер
@@ -18,10 +18,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - закрой браузер
       - выключи браузер
@@ -32,10 +32,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - вернись назад
 
@@ -45,10 +45,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - вернись вперед
 
@@ -58,12 +58,13 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - обнови вкладку
+      - обнови страницу
 
   - command:
       action: ahk
@@ -71,13 +72,14 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - закрой вкладку
       - закрой эту вкладку
+      - и эту вкладку закрой
       - закрой текущую вкладку
 
   - command:
@@ -86,9 +88,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - следующая вкладка
       - вкладка право
@@ -101,9 +103,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - предыдущая вкладка
       - вкладка лево
@@ -116,9 +118,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - переключи на первую вкладку
       - включи первую вкладку
@@ -131,9 +133,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - переключи на вторую вкладку
       - включи вторую вкладку
@@ -146,9 +148,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - переключи на третью вкладку
       - включи третью вкладку
@@ -161,9 +163,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - переключи на четвертую вкладку
       - включи четвертую вкладку
@@ -176,9 +178,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - переключи на пятую вкладку
       - включи пятую вкладку
@@ -191,9 +193,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - переключи на шестую вкладку
       - включи шестую вкладку
@@ -206,9 +208,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - переключи на седьмую вкладку
       - включи седьмую вкладку
@@ -221,9 +223,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - переключи на восьмую вкладку
       - включи восьмую вкладку
@@ -236,9 +238,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - открой новую вкладку
       - открой новое вкладку
@@ -251,9 +253,9 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - переключи на последнюю вкладку
       - включи последнюю вкладку
@@ -270,10 +272,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - открой яндекс почту
       - запусти яндекс почту
@@ -286,10 +288,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - открой гугл почту
       - запусти гугл почту
@@ -306,10 +308,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - открой ютуб
       - ютуб
@@ -321,10 +323,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - открой переводчик
       - запусти переводчик
@@ -337,10 +339,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - открой вконтакте
       - запусти вконтакте
@@ -361,10 +363,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - открой кинопоиск
       - запусти кинопоиск
@@ -381,10 +383,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - открой гитхаб
       - запусти гитхаб
@@ -402,10 +404,10 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
-        - ok4
+        - confirm1
+        - confirm2
+        - confirm3
+        - confirm4
     phrases:
       - открой скрам
       - запусти скрам

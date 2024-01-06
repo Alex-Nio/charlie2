@@ -5,9 +5,9 @@ list:
     exe_args:
   voice:
     sounds:
-    - ok1
-    - ok2
-    - ok3
+    - confirm1
+    - confirm2
+    - confirm3
   phrases:
   - запусти телеграмм
   - открой телеграмм
@@ -22,9 +22,9 @@ list:
     exe_args:
   voice:
     sounds:
-    - ok1
-    - ok2
-    - ok3
+    - confirm1
+    - confirm2
+    - confirm3
   phrases:
   - закрой телеграмм
   - выключи телеграмм

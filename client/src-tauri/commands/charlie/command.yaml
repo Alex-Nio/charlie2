@@ -72,47 +72,13 @@ list:
       exe_path: ahk/reboot.exe
     voice:
       sounds:
-        - ok1
-        - ok2
-        - ok3
+        - confirm1
+        - confirm2
+        - confirm3
     phrases:
       - перезагрузись
       - перезагрузи себя
       - выполни перезагрузку
-
-  - command:
-      action: ahk
-      exe_path: ahk/open_commands.exe
-      exe_args:
-    voice:
-      sounds:
-        - ok1
-        - ok2
-    phrases:
-      - открой команды
-      - открыть команды
-      - разработка команд
-      - твои настройки
-      - твоя настройка
-      - открой свои настройки
-      - открой свои команды
-
-  - command:
-      action: ahk
-      exe_path: ahk/current_location.exe
-      exe_args:
-    voice:
-      sounds:
-        - ok1
-        - ok2
-    phrases:
-      - открой свою папку
-      - открой своё расположение
-      - открой свою директорию
-      - твоя директория
-      - твоя разработка
-      - разработка
-      - давай тебя подлатаем
 
   - command:
       action: ahk
@@ -137,8 +103,8 @@ list:
       exe_args:
     voice:
       sounds:
-        - ok1
-        - ok2
+        - confirm1
+        - confirm2
     phrases:
       - перейди в обычный режим
       - включи обычный режим

@@ -4,10 +4,10 @@ list:
     exe_path: ahk/Mute volume.exe
   voice:
     sounds:
-    - ok1
-    - ok2
-    - ok3
-    - ok4
+    - confirm1
+    - confirm2
+    - confirm3
+    - confirm4
   phrases:
   - выключи звук
   - беззвучный режим
@@ -19,10 +19,10 @@ list:
     exe_path: ahk/Mute volume.exe
   voice:
     sounds:
-    - ok1
-    - ok2
-    - ok3
-    - ok4
+    - confirm1
+    - confirm2
+    - confirm3
+    - confirm4
   phrases:
   - включи звук
   - режим со звуком
@@ -35,10 +35,10 @@ list:
     - 25
   voice:
     sounds:
-    - ok1
-    - ok2
-    - ok3
-    - ok4
+    - confirm1
+    - confirm2
+    - confirm3
+    - confirm4
   phrases:
   - звук на минимум
   - громкость на минимум
@@ -58,10 +58,10 @@ list:
     - 50
   voice:
     sounds:
-    - ok1
-    - ok2
-    - ok3
-    - ok4
+    - confirm1
+    - confirm2
+    - confirm3
+    - confirm4
   phrases:
   - звук пятьдесят
   - громкость пятьдесят
@@ -82,10 +82,10 @@ list:
     - 75
   voice:
     sounds:
-    - ok1
-    - ok2
-    - ok3
-    - ok4
+    - confirm1
+    - confirm2
+    - confirm3
+    - confirm4
   phrases:
   - звук семьдесят пять
   - громкость семьдесят пять
@@ -102,10 +102,10 @@ list:
     - 100
   voice:
     sounds:
-    - ok1
-    - ok2
-    - ok3
-    - ok4
+    - confirm1
+    - confirm2
+    - confirm3
+    - confirm4
   phrases:
   - звук сто
   - громкость сто

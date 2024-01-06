@@ -281,7 +281,7 @@ async def main_async():
     config = Config()
     text_from_command_line = config.text
     await tts_process_async(
-        "charlie",
+        "charlie3",
         0,
         "rmvpe",
         100,
@@ -296,7 +296,7 @@ async def main_async():
         0,
         0.25,
         "mp3",
-        128,
+        320,
     )
 
 

@@ -7,9 +7,9 @@
 #       exe_args:
 #     voice:
 #       sounds:
-#         - ok1
-#         - ok2
-#         - ok3
+#         - confirm1
+#         - confirm2
+#         - confirm3
 #     phrases:
 #       - открой музыку
 #       - запусти музыку
@@ -21,10 +21,10 @@
 #       exe_args:
 #     voice:
 #       sounds:
-#         - ok1
-#         - ok2
-#         - ok3
-#         - ok4
+#         - confirm1
+#         - confirm2
+#         - confirm3
+#         - confirm4
 #     phrases:
 #       - выключи музыку
 #       - отключи музыку
@@ -36,10 +36,10 @@
 #       exe_args:
 #     voice:
 #       sounds:
-#         - ok1
-#         - ok2
-#         - ok3
-#         - ok4
+#         - confirm1
+#         - confirm2
+#         - confirm3
+#         - confirm4
 #     phrases:
 #       - сохрани музыку
 #       - лайк
@@ -58,10 +58,10 @@
 #       exe_args:
 #     voice:
 #       sounds:
-#         - ok1
-#         - ok2
-#         - ok3
-#         - ok4
+#         - confirm1
+#         - confirm2
+#         - confirm3
+#         - confirm4
 #     phrases:
 #       - переключи на следующий трек
 #       - следующий трек
@@ -76,10 +76,10 @@
 #       exe_args:
 #     voice:
 #       sounds:
-#         - ok1
-#         - ok2
-#         - ok3
-#         - ok4
+#         - confirm1
+#         - confirm2
+#         - confirm3
+#         - confirm4
 #     phrases:
 #       - переключи на предыдущий трек
 #       - предыдущий трек

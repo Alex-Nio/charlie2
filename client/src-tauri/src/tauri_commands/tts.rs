@@ -44,6 +44,7 @@ impl TTSProcess {
         thread::sleep(Duration::from_millis(200));
 
         process.active = false;
+        events::tts_stopped(TAURI_APP_HANDLE.get().unwrap());
     }
 
     fn start_tts(&mut self, text: &str) -> Result<(), String> {

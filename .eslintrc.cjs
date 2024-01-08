@@ -1,9 +1,15 @@
 module.exports = {
   root: true,
   env: {
+    browser: true,
+    es6: true,
     node: true,
   },
-  plugins: ['prettier'],
+  globals: {
+    Atomics: 'readonly',
+    SharedArrayBuffer: 'readonly',
+  },
+  plugins: ['prettier', 'vue'],
   extends: [
     'plugin:vue/vue3-essential',
     'eslint:recommended',
@@ -177,8 +183,9 @@ module.exports = {
         attribute: 1,
         baseIndent: 1,
         closeBracket: 0,
+        switchCase: 0,
         alignAttributesVertically: true,
-        ignores: [],
+        ignores: ['LogicalExpression'],
       },
     ],
 

@@ -9,6 +9,7 @@
     "plusplus",
     "pvrecorder",
     "rstm",
+    "rustfmt",
     "smic"
-  ]
+  ],
 }

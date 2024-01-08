@@ -1,7 +1,25 @@
 root = true
 
 [*]
+indent_style = space
+indent_size = 2
 end_of_line = lf
 insert_final_newline = true
-charset = utf-8
 trim_trailing_whitespace = true
+charset = utf-8
+
+[*.min.*]
+indent_style = ignore
+trim_trailing_whitespace = false
+insert_final_newline = ignore
+
+[*.{md,txt}]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+
+[Makefile.toml]
+indent_style = space
+
+[CHANGELOG.md]
+indent_size = false

@@ -8,7 +8,6 @@
   import Titlebar from './modules/titlebar/title-bar.vue';
   import Details from './modules/details/resource-details.vue';
   import Reactor from './modules/reactor/reactor-decoration.vue';
-  // import Mic from './modules/mic/mic-selection.vue';
 
   // Consts
   const isListening = ref(true);
@@ -87,7 +86,7 @@
     isTTSActive.value = true;
   };
 
-  const handleTTSStopped = () => {
+  const handleTTSStopped = () => {    
     // Обновляем состояние в соответствии с вашими нуждами
     isTTSActive.value = false;
   };
@@ -108,7 +107,6 @@
       :isTTSActive="isTTSActive"
     />
     <Details />
-    <!-- <Mic /> -->
   </div>
 </template>
 

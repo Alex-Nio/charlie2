@@ -82,13 +82,11 @@ pub fn get_selected_microphone_index() -> i32 {
 
 #[tauri::command]
 pub fn update_selected_microphone(index: usize) -> Result<(), String> {
-    // Ваш код для обновления выбранного микрофона
-    // Используйте полученный индекс для обновления значения в вашем хранилище
     let _ = DB.lock().unwrap().set("selected_microphone", &index.to_string());
     get_selected_microphone_index();
 
-    // Обновить используемый микрофон в вашем модуле аудиозаписи
-    RECORDER_TYPE.store(RecorderType::PvRecorder, Ordering::SeqCst); // Используйте свой тип записи
+    // Обновить используемый микрофон
+    RECORDER_TYPE.store(RecorderType::PvRecorder, Ordering::SeqCst);
 
     // Перезапустить запись с новым микрофоном
     restart_audio_capture(Some(index));

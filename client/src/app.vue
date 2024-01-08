@@ -1,6 +1,6 @@
 <script setup>
   // imports
-  import { ref, onMounted } from 'vue';
+  import { ref } from 'vue';
   import { invoke } from '@tauri-apps/api/tauri';
   import { listen } from '@tauri-apps/api/event';
 
@@ -8,13 +8,12 @@
   import Titlebar from './modules/titlebar/title-bar.vue';
   import Details from './modules/details/resource-details.vue';
   import Reactor from './modules/reactor/reactor-decoration.vue';
+  import Mic from './modules/mic/mic-selection.vue';
 
   // Consts
   const isListening = ref(true);
   const isReactorActive = ref(false);
   const isTTSActive = ref(false);
-  const availableMicrophones = ref([]);
-  const selectedMicrophone = ref(0);
   const assistantVoiceVal = 'charlie-voices';
 
   // Functions
@@ -28,7 +27,7 @@
       isListening.value = false;
       isReactorActive.value = false;
 
-      // console.error(error);
+      console.error(error);
     }
   };
 
@@ -62,7 +61,7 @@
     try {
       await invoke('play_sound', { filename, sleep: true });
     } catch (error) {
-      // console.error(error);
+      console.error(error);
     }
 
     setTimeout(() => {
@@ -98,37 +97,6 @@
   listenToAudioPlay();
   listenToTtsStart();
   listenToTtsStop();
-
-  //! TESTS
-  const handleMicrophoneChange = async () => {
-    try {
-      getMicrophoneList();
-
-      const selectedIndex = availableMicrophones.value.indexOf(
-        selectedMicrophone.value
-      );
-
-      // console.log(selectedIndex);
-
-      await invoke('update_selected_microphone', { index: selectedIndex });
-    } catch (error) {
-      // console.error('Error updating selected microphone:', error);
-    }
-  };
-
-  const getMicrophoneList = async () => {
-    try {
-      const devices = await invoke('pv_get_audio_devices');
-      availableMicrophones.value = devices;
-    } catch (error) {
-      // console.error('Error getting microphone list:', error);
-    }
-  };
-
-  // Call the function to get the microphone list when needed (e.g., component mounted)
-  onMounted(() => {
-    getMicrophoneList();
-  });
 </script>
 
 <template>
@@ -140,22 +108,7 @@
       :isTTSActive="isTTSActive"
     />
     <Details />
-
-    <div>
-      <label for="microphone">Select Microphone:</label>
-      <select
-        v-model="selectedMicrophone"
-        @change="handleMicrophoneChange"
-      >
-        <option
-          v-for="(mic, i) in availableMicrophones"
-          :key="i"
-          :value="mic"
-        >
-          {{ mic }}
-        </option>
-      </select>
-    </div>
+    <Mic />
   </div>
 </template>
 

@@ -21,8 +21,6 @@ pub static FRAME_LENGTH: AtomicU32 = AtomicU32::new(0);
 pub fn init() {
     match RECORDER_TYPE.load(Ordering::SeqCst) {
         RecorderType::PvRecorder => {
-            // Init Pv Recorder
-            info!("Initializing Pv Recorder audio backend.");
             match pvrecorder::init_microphone(
                 get_selected_microphone_index(),
                 FRAME_LENGTH.load(Ordering::SeqCst),
@@ -30,9 +28,6 @@ pub fn init() {
                 false => {
                     // Switch to CPAL recorder
                     warn!("Pv Recorder audio backend failed.");
-                    // RECORDER_TYPE.store(RecorderType::PortAudio, Ordering::SeqCst);
-
-                    // init again
                     init();
                 }
                 _ => (),
@@ -42,25 +37,11 @@ pub fn init() {
             // Init PortAudio
             info!("Initializing PortAudio audio backend");
             todo!();
-            // match portaudio::init_microphone(get_selected_microphone_index(), FRAME_LENGTH.load(Ordering::SeqCst)) {
-            //     false => {
-            //         // Switch to PortAudio recorder
-            //         error!("PortAudio audio backend failed.");
-            //     },
-            //     _ => ()
-            // }
         }
         RecorderType::Cpal => {
             // Init CPAL
             info!("Initializing CPAL audio backend");
             todo!();
-            // match cpal::init_microphone(get_selected_microphone_index(), FRAME_LENGTH.load(Ordering::SeqCst)) {
-            //     false => {
-            //         // Switch to CPAL recorder
-            //         error!("CPAL audio backend failed.");
-            //     },
-            //     _ => ()
-            // }
         }
     }
 }
@@ -72,10 +53,8 @@ pub fn read_microphone(frame_buffer: &mut [i16]) {
         }
         RecorderType::PortAudio => {
             todo!();
-            // portaudio::read_microphone(frame_buffer);
         }
         RecorderType::Cpal => {
-            // cpal::read_microphone(frame_buffer);
             panic!("Cpal should be used via callback assignment");
         }
     }
@@ -91,11 +70,8 @@ pub fn start_recording() {
         }
         RecorderType::PortAudio => {
             todo!();
-            // portaudio::start_recording(get_selected_microphone_index(), FRAME_LENGTH.load(Ordering::SeqCst));
         }
-        RecorderType::Cpal => {
-            // cpal::start_recording(get_selected_microphone_index(), FRAME_LENGTH.load(Ordering::SeqCst));
-        }
+        RecorderType::Cpal => {}
     }
 }
 
@@ -106,11 +82,8 @@ pub fn stop_recording() {
         }
         RecorderType::PortAudio => {
             todo!();
-            // portaudio::stop_recording();
         }
-        RecorderType::Cpal => {
-            // cpal::stop_recording();
-        }
+        RecorderType::Cpal => {}
     }
 }
 
@@ -123,6 +96,8 @@ pub fn get_selected_microphone_index() -> i32 {
     } else {
         selected_microphone = -1;
     }
+
+    println!("[+] selected_microphone: {}", selected_microphone);
 
     selected_microphone
 }

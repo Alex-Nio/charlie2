@@ -308,6 +308,7 @@ fn start_recording() -> Result<bool, String> {
     // init stuff
     recorder::init(); // init
     recorder::start_recording(); // start
+
     LISTENING.store(true, Ordering::SeqCst);
     info!("[+] Запуск слушателя...");
 

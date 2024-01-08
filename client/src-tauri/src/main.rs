@@ -156,6 +156,7 @@ fn main() {
             tauri_commands::get_author_name,
             tauri_commands::get_repository_link,
             tauri_commands::get_log_file_path,
+            tauri_commands::update_selected_microphone,
         ])
         .system_tray(system_tray)
         .on_system_tray_event(|app, event| match event {

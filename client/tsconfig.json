@@ -1,11 +1,7 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "extends": "./node_modules/@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
-    // "target": "ESNext",
-    // "jsx": "preserve",
-    // "lib": ["DOM", "ESNext"],
     "baseUrl": ".",
-    // "module": "ESNext",
     "moduleResolution": "node",
     "paths": {
       "@/*": [

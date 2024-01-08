@@ -1,6 +1,6 @@
 // use once_cell::sync::OnceCell;
 use atomic_enum::atomic_enum;
-use log::{info, warn};
+use log::warn;
 use std::sync::atomic::{AtomicU32, Ordering};
 
 mod pvrecorder;
@@ -10,9 +10,7 @@ use crate::DB;
 #[atomic_enum]
 #[derive(PartialEq)]
 pub enum RecorderType {
-    Cpal,
     PvRecorder,
-    PortAudio,
 }
 
 pub static RECORDER_TYPE: AtomicRecorderType = AtomicRecorderType::new(RecorderType::PvRecorder); // use pvrecorder as default
@@ -32,16 +30,8 @@ pub fn init() {
                 }
                 _ => (),
             }
-        }
-        RecorderType::PortAudio => {
-            // Init PortAudio
-            info!("Initializing PortAudio audio backend");
-            todo!();
-        }
-        RecorderType::Cpal => {
-            // Init CPAL
-            info!("Initializing CPAL audio backend");
-            todo!();
+
+            println!("[+] Init done for {}", get_selected_microphone_index());
         }
     }
 }
@@ -50,12 +40,6 @@ pub fn read_microphone(frame_buffer: &mut [i16]) {
     match RECORDER_TYPE.load(Ordering::SeqCst) {
         RecorderType::PvRecorder => {
             pvrecorder::read_microphone(frame_buffer);
-        }
-        RecorderType::PortAudio => {
-            todo!();
-        }
-        RecorderType::Cpal => {
-            panic!("Cpal should be used via callback assignment");
         }
     }
 }
@@ -67,11 +51,8 @@ pub fn start_recording() {
                 get_selected_microphone_index(),
                 FRAME_LENGTH.load(Ordering::SeqCst),
             );
+            println!("Recording started successfully");
         }
-        RecorderType::PortAudio => {
-            todo!();
-        }
-        RecorderType::Cpal => {}
     }
 }
 
@@ -79,11 +60,8 @@ pub fn stop_recording() {
     match RECORDER_TYPE.load(Ordering::SeqCst) {
         RecorderType::PvRecorder => {
             pvrecorder::stop_recording();
+            println!("Recording stopped");
         }
-        RecorderType::PortAudio => {
-            todo!();
-        }
-        RecorderType::Cpal => {}
     }
 }
 
@@ -100,4 +78,32 @@ pub fn get_selected_microphone_index() -> i32 {
     println!("[+] selected_microphone: {}", selected_microphone);
 
     selected_microphone
+}
+
+#[tauri::command]
+pub fn update_selected_microphone(index: usize) -> Result<(), String> {
+    // Ваш код для обновления выбранного микрофона
+    // Используйте полученный индекс для обновления значения в вашем хранилище
+    let _ = DB.lock().unwrap().set("selected_microphone", &index.to_string());
+    get_selected_microphone_index();
+
+    // Обновить используемый микрофон в вашем модуле аудиозаписи
+    RECORDER_TYPE.store(RecorderType::PvRecorder, Ordering::SeqCst); // Используйте свой тип записи
+
+    // Перезапустить запись с новым микрофоном
+    restart_audio_capture(Some(index));
+
+    Ok(())
+}
+
+// Пример функции restart_audio_capture (адаптируйте под ваш код)
+fn restart_audio_capture(new_microphone_index: Option<usize>) {
+    // Остановить текущую запись, если она активна
+    stop_recording();
+
+    // Обновить настройки записи с новым микрофоном
+    init();
+
+    // Начать новую запись
+    start_recording();
 }

@@ -334,20 +334,6 @@ fn start_recording() -> Result<bool, String> {
 
             Ok(true)
         }
-        recorder::RecorderType::PortAudio => {
-            while !STOP_LISTENING.load(Ordering::SeqCst) {
-                recorder::read_microphone(&mut frame_buffer);
-                data_callback(&frame_buffer);
-            }
-
-            // stop
-            stop_recording();
-
-            Ok(true)
-        }
-        recorder::RecorderType::Cpal => {
-            todo!()
-        }
     }
 }
 

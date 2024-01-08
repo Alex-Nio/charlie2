@@ -7,7 +7,6 @@
   const availableMicrophones = ref([]);
   const selectedMicrophone = ref(0);
 
-  //! TESTS
   const handleMicrophoneChange = async () => {
     try {
       getMicrophoneList();

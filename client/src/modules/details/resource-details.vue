@@ -7,6 +7,7 @@
   const resourcesRamUsage = ref('-');
   const selectedMicrophone = ref(0);
   const microphoneLabel = ref('');
+  const availableMicrophones = ref([]);
 
   // State
   const nnDetails = ref({
@@ -31,10 +32,15 @@
     };
 
     try {
+      // Fetch available microphones
+      availableMicrophones.value = await invoke('pv_get_audio_devices');
+
+      // Set selected microphone
       selectedMicrophone.value = +Number(
         await invoke('db_read', { key: 'selected_microphone' })
       );
 
+      // Set microphone label
       microphoneLabel.value = await invoke('pv_get_audio_device_name', {
         idx: selectedMicrophone.value,
       });
@@ -47,8 +53,37 @@
     }
   };
 
+  // Function to fetch available microphones
+  const fetchAvailableMicrophones = async () => {
+    try {
+      availableMicrophones.value = await invoke('pv_get_audio_devices');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Function to handle microphone change
+  const handleMicrophoneChange = async () => {
+    try {
+      console.log('change microphone', selectedMicrophone.value);
+
+      // Update the selected microphone in the database
+      await invoke('db_write', {
+        key: 'selected_microphone',
+        val: selectedMicrophone.value.toString(),
+      });
+
+      await invoke('update_selected_microphone', {
+        index: selectedMicrophone.value,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // Lifecycle hook
   onMounted(async () => {
+    setInterval(fetchAvailableMicrophones, 1500);
     setInterval(updateResourcesRamUsage, 1000);
     await setupMicrophone();
   });
@@ -60,7 +95,18 @@
     <div class="online">
       <div class="info">
         <span class="num">Микрофон:</span>
-        <small title="{{ microphoneLabel }}">{{ microphoneLabel }}</small>
+        <select
+          v-model="selectedMicrophone"
+          @change="handleMicrophoneChange"
+        >
+          <option
+            v-for="(mic, i) in availableMicrophones"
+            :key="i"
+            :value="i"
+          >
+            {{ mic }}
+          </option>
+        </select>
       </div>
     </div>
 
@@ -100,6 +146,7 @@
 
   .info {
     display: flex;
+    align-items: center;
     color: rgb(255, 255, 255);
     gap: 8px;
     z-index: 10;
@@ -108,5 +155,25 @@
   .num {
     font-weight: bold;
     color: #00bf08;
+  }
+
+  select {
+    padding: 4px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s;
+
+    &:focus {
+      outline: none;
+      border-color: #00bf08;
+    }
+
+    &:hover {
+      border-color: #00bf08;
+    }
   }
 </style>

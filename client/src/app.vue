@@ -8,7 +8,7 @@
   import Titlebar from './modules/titlebar/title-bar.vue';
   import Details from './modules/details/resource-details.vue';
   import Reactor from './modules/reactor/reactor-decoration.vue';
-  import Mic from './modules/mic/mic-selection.vue';
+  // import Mic from './modules/mic/mic-selection.vue';
 
   // Consts
   const isListening = ref(true);
@@ -108,7 +108,7 @@
       :isTTSActive="isTTSActive"
     />
     <Details />
-    <Mic />
+    <!-- <Mic /> -->
   </div>
 </template>
 
